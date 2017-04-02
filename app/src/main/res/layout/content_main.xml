@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="100dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <ToggleButton
+        android:id="@+id/togglebutton"
+        android:layout_width="150px"
+        android:layout_height="100px"
+        android:textOff="Switch to SILENT"
+        android:textOn="Switch to LOUD" />
+
+
+    <SeekBar
+        android:id="@+id/seekBarRingerVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/txtViewRingerVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBarRingerVolume"
+        android:layout_centerHorizontal="true"
+        android:text="Ringer Volume Show Here"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <SeekBar
+        android:id="@+id/seekBarMediaVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/txtViewMediaVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBarRingerVolume"
+        android:layout_centerHorizontal="true"
+        android:text="Media Volume Show Here"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <SeekBar
+        android:id="@+id/seekBarAlarmVolume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/txtViewAlarmVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBarRingerVolume"
+        android:layout_centerHorizontal="true"
+        android:text="Alarm Volume Show Here"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</LinearLayout>

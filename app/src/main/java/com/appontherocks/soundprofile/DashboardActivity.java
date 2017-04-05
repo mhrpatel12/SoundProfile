@@ -15,7 +15,9 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -88,78 +90,25 @@ public class DashboardActivity extends BaseActivity
 
         defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(DashboardActivity.this.getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
 
-        if ((ContextCompat.checkSelfPermission(DashboardActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.READ_CONTACTS)
-                        != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.WRITE_CONTACTS)
-                        != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.WRITE_SETTINGS)
-                        != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.CHANGE_CONFIGURATION)
-                        != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.MODIFY_AUDIO_SETTINGS)
-                        != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(DashboardActivity.this,
-                        Manifest.permission.RECEIVE_BOOT_COMPLETED)
-                        != PackageManager.PERMISSION_GRANTED)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(getApplicationContext())) {
 
-            // Should we show an explanation?
-            if ((ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.READ_CONTACTS))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.WRITE_CONTACTS))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.ACCESS_COARSE_LOCATION))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.WRITE_SETTINGS))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.CHANGE_CONFIGURATION))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.MODIFY_AUDIO_SETTINGS))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(DashboardActivity.this,
-                            Manifest.permission.RECEIVE_BOOT_COMPLETED))) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(DashboardActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_SETTINGS, Manifest.permission.CHANGE_CONFIGURATION, Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.RECEIVE_BOOT_COMPLETED},
-                        6);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(getResources().getString(R.string.prompt_system_write_permission))
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
+                                startActivityForResult(intent, 200);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
             }
         }
 

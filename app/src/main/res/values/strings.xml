@@ -25,6 +25,8 @@
 
     <string name="prompt_discard_profile_changes">Discard profile changes ?</string>
 
+    <string name="prompt_system_write_permission">Allow modifying system changes automate ringtones !</string>
+
     <string name="prompt_profile_name">Profile Name</string>
 
     <string name="title_notification_volume">Notifications</string>

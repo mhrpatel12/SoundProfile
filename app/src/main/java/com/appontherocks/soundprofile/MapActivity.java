@@ -102,6 +102,17 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName());
+
+                mMap.clear();
+
+                mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName() + "").draggable(true));
+                CameraUpdate center = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16);
+                mMap.moveCamera(center);
+                circle = mMap.addCircle(new CircleOptions()
+                        .center(place.getLatLng())
+                        .radius(100)
+                        .strokeColor(Color.argb(50, 70, 70, 70))
+                        .fillColor(Color.argb(100, 150, 150, 150)));
             }
 
             @Override
@@ -203,6 +214,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                             50
                     )
                     .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
+                    .setNotificationResponsiveness(150000)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                             Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
@@ -289,7 +301,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 mGoogleApiClient);
 
         if (latLng != null) {
-            CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+            CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 16);
 
             mMap.addMarker(new MarkerOptions().position(latLng).title("Sydney").draggable(true));
             mMap.moveCamera(center);

@@ -3,13 +3,17 @@ package com.appontherocks.soundprofile;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -51,12 +55,15 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
 
     List<Geofence> mGeofenceList;
 
+    private final int STEP_ONE_COMPLETE = 0;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         mContext = context;
-        Toast.makeText(context, "Booting Completed", Toast.LENGTH_LONG).show();
 
         mGeofenceList = new ArrayList<Geofence>();
+        Toast.makeText(context, "Booting Completed", Toast.LENGTH_LONG).show();
+        fetchGeoFences();
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -66,58 +73,103 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
                     .build();
         }
         mGoogleApiClient.connect();
-
-        FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                profileArrayList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    SoundProfile profile = ds.getValue(SoundProfile.class);
-                    if ((profile.mKey != null) && (profile.latitude != null) && (profile.longitude != null) && !((profile.latitude + "").equals("")) && !((profile.longitude + "").equals(""))) {
-                        mGeofenceList.add(new Geofence.Builder()
-                                // Set the request ID of the geofence. This is a string to identify this
-                                // geofence.
-                                .setRequestId(profile.mKey)
-                                .setCircularRegion(
-                                        Double.parseDouble(profile.latitude),
-                                        Double.parseDouble(profile.longitude),
-                                        50
-                                )
-                                .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
-                                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                        Geofence.GEOFENCE_TRANSITION_EXIT)
-                                .build());
-                    }
-                }
-
-                if (mGeofenceList.size() <= 0) {
-                    return;
-                } else {
-                    if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    LocationServices.GeofencingApi.addGeofences(
-                            mGoogleApiClient,
-                            getGeofencingRequest(),
-                            getGeofencePendingIntent()
-                    ).setResultCallback(BootReceiver.this);
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(this);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
+
+    private void fetchGeoFences() {
+        Thread backgroundThread = new Thread() {
+            @Override
+            public void run() {
+                FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profileArrayList.clear();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            SoundProfile profile = ds.getValue(SoundProfile.class);
+                            if ((profile.mKey != null) && (profile.latitude != null) && (profile.longitude != null) && !((profile.latitude + "").equals("")) && !((profile.longitude + "").equals(""))) {
+                                mGeofenceList.add(new Geofence.Builder()
+                                        // Set the request ID of the geofence. This is a string to identify this
+                                        // geofence.
+                                        .setRequestId(profile.mKey)
+                                        .setCircularRegion(
+                                                Double.parseDouble(profile.latitude),
+                                                Double.parseDouble(profile.longitude),
+                                                50
+                                        )
+                                        .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
+                                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                                Geofence.GEOFENCE_TRANSITION_EXIT)
+                                        .build());
+                            }
+                        }
+                        Message msg = Message.obtain();
+                        msg.what = STEP_ONE_COMPLETE;
+                        handler.sendMessage(msg);
+                        FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        };
+        backgroundThread.start();
+
+    }
+
+    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> {
+
+        /**
+         * Before starting background thread
+         * Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(Void... f_url) {
+            if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+
+            LocationServices.GeofencingApi.addGeofences(
+                    mGoogleApiClient,
+                    getGeofencingRequest(),
+                    getGeofencePendingIntent()
+            ).setResultCallback(BootReceiver.this);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case STEP_ONE_COMPLETE:
+                    new saveGeoFerncesAyncTask().execute();
+                    break;
+            }
+        }
+    };
 
     private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();

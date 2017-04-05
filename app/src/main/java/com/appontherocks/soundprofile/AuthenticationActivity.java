@@ -1,13 +1,23 @@
 package com.appontherocks.soundprofile;
 
+import android.*;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.models.SoundProfile;
 import com.appontherocks.soundprofile.models.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -25,6 +35,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -33,11 +46,17 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuthenticationActivity extends BaseActivity implements
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, ResultCallback<Status> {
 
     private static final String TAG = "Facebook/Google Login";
     private static final int RC_SIGN_IN = 9001;
@@ -53,7 +72,15 @@ public class AuthenticationActivity extends BaseActivity implements
     // [END declare_auth_listener]
 
     private CallbackManager mCallbackManager;
+
+    private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
+    private GoogleApiClient mGoogleApiClientAuth;
     private GoogleApiClient mGoogleApiClient;
+    private Context mContext;
+
+    List<Geofence> mGeofenceList;
+
+    private final int STEP_ONE_COMPLETE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +101,95 @@ public class AuthenticationActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
 
+        mContext = AuthenticationActivity.this;
+
+        if ((ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.WRITE_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.WRITE_SETTINGS)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.CHANGE_CONFIGURATION)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        android.Manifest.permission.RECEIVE_BOOT_COMPLETED)
+                        != PackageManager.PERMISSION_GRANTED)) {
+
+            // Should we show an explanation?
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.READ_CONTACTS))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.WRITE_CONTACTS))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.WRITE_SETTINGS))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.CHANGE_CONFIGURATION))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.MODIFY_AUDIO_SETTINGS))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            android.Manifest.permission.RECEIVE_BOOT_COMPLETED))) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(AuthenticationActivity.this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.READ_CONTACTS, android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.WRITE_SETTINGS, android.Manifest.permission.CHANGE_CONFIGURATION, android.Manifest.permission.MODIFY_AUDIO_SETTINGS, android.Manifest.permission.RECEIVE_BOOT_COMPLETED},
+                        6);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
+        mGeofenceList = new ArrayList<Geofence>();
+
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        mGoogleApiClient.connect();
+
         // [START auth_state_listener]
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -82,6 +198,7 @@ public class AuthenticationActivity extends BaseActivity implements
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    //fetchGeoFences();
                     Intent intent = new Intent(AuthenticationActivity.this, DashboardActivity.class);
                     startActivity(intent);
                 } else {
@@ -133,11 +250,156 @@ public class AuthenticationActivity extends BaseActivity implements
                 .build();
         // [END config_signin]
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClientAuth = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+    }
+
+    private void fetchGeoFences() {
+        Thread backgroundThread = new Thread() {
+            @Override
+            public void run() {
+                FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profileArrayList.clear();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            SoundProfile profile = ds.getValue(SoundProfile.class);
+                            if ((profile.mKey != null) && (profile.latitude != null) && (profile.longitude != null) && !((profile.latitude + "").equals("")) && !((profile.longitude + "").equals(""))) {
+                                mGeofenceList.add(new Geofence.Builder()
+                                        // Set the request ID of the geofence. This is a string to identify this
+                                        // geofence.
+                                        .setRequestId(profile.mKey)
+                                        .setCircularRegion(
+                                                Double.parseDouble(profile.latitude),
+                                                Double.parseDouble(profile.longitude),
+                                                50
+                                        )
+                                        .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
+                                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                                Geofence.GEOFENCE_TRANSITION_EXIT)
+                                        .build());
+                            }
+                        }
+                        Message msg = Message.obtain();
+                        msg.what = STEP_ONE_COMPLETE;
+                        handler.sendMessage(msg);
+                        FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        };
+        backgroundThread.start();
+
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case STEP_ONE_COMPLETE:
+
+                    if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                    }
+
+                    LocationServices.GeofencingApi.addGeofences(
+                            mGoogleApiClient,
+                            getGeofencingRequest(),
+                            getGeofencePendingIntent()
+                    ).setResultCallback(AuthenticationActivity.this);
+
+/*                    startActivity(new Intent(AuthenticationActivity.this, DashboardActivity.class));
+                    finish();*/
+
+                    //new saveGeoFerncesAyncTask().execute();
+                    break;
+            }
+        }
+    };
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+
+
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+/*        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }*/
+        Intent intent = new Intent(mContext, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        return PendingIntent.getService(mContext, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+
+    }
+
+    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> {
+
+        /**
+         * Before starting background thread
+         * Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(Void... f_url) {
+            if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+
+            LocationServices.GeofencingApi.addGeofences(
+                    mGoogleApiClient,
+                    getGeofencingRequest(),
+                    getGeofencePendingIntent()
+            ).setResultCallback(AuthenticationActivity.this);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // Go to MainActivity
+            startActivity(new Intent(AuthenticationActivity.this, DashboardActivity.class));
+            finish();
+        }
     }
 
     // [START on_start_add_listener]
@@ -259,7 +521,7 @@ public class AuthenticationActivity extends BaseActivity implements
 
     // [START signin]
     private void signInGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClientAuth);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     // [END signin]
@@ -269,7 +531,7 @@ public class AuthenticationActivity extends BaseActivity implements
         mAuth.signOut();
 
         // Google sign out
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+        Auth.GoogleSignInApi.signOut(mGoogleApiClientAuth).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
@@ -283,7 +545,7 @@ public class AuthenticationActivity extends BaseActivity implements
         mAuth.signOut();
 
         // Google revoke access
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClientAuth).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
@@ -316,9 +578,7 @@ public class AuthenticationActivity extends BaseActivity implements
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
-        // Go to MainActivity
-        startActivity(new Intent(AuthenticationActivity.this, DashboardActivity.class));
-        finish();
+        fetchGeoFences();
     }
 
     private String usernameFromEmail(String email) {
@@ -339,6 +599,16 @@ public class AuthenticationActivity extends BaseActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 }

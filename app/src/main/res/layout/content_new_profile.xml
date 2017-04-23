@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/layout_margin_seek"
+    android:layout_marginTop="@dimen/layout_margin_seek"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.appontherocks.soundprofile.NewProfileActivity"
     tools:showIn="@layout/activity_new_profile">
@@ -11,8 +13,32 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="@dimen/layout_margin_seek"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_default_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/default_profile_description" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkDefaultProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:checked="false" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_profile_name"
@@ -27,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.09"
-                android:src="@drawable/ic_profile_black_24dp" />
+                app:srcCompat="@drawable/ic_profile_black_24dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
@@ -52,37 +78,79 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_seek"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkRingerVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.01"
-                android:checked="true" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_left_icon"
+                app:srcCompat="@drawable/ic_notifications_black_24dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_title"
+                android:text="@string/title_notification_volume" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/title_notification_volume_disc" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkRingerVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
                 android:layout_weight="0.03"
-                android:src="@drawable/ic_notifications_black_24dp" />
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <SeekBar
                 android:id="@+id/seekBarRingerVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.92" />
+                android:layout_weight="0.90" />
 
             <TextView
                 android:id="@+id/txtViewRingerVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.04"
+                android:layout_weight="0.1"
                 android:gravity="center"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -92,37 +160,78 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_seek"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkMediaVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.01"
-                android:checked="true" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_left_icon"
+                app:srcCompat="@drawable/ic_music_note_black_24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_title"
+                android:text="@string/title_media_volume" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/title_media_volume_disc" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkMediaVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
                 android:layout_weight="0.03"
-                android:src="@drawable/ic_music_note_black_24dp" />
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <SeekBar
                 android:id="@+id/seekBarMediaVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.92" />
+                android:layout_weight="0.90" />
 
             <TextView
                 android:id="@+id/txtViewMediaVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.04"
+                android:layout_weight="0.1"
                 android:gravity="center"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -132,40 +241,136 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_seek"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkAlarmVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.01"
-                android:checked="true" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_left_icon"
+                app:srcCompat="@drawable/ic_access_alarm_black_24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_title"
+                android:text="@string/title_alarm_volume" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/title_alarm_volume_disc" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkAlarmVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
                 android:layout_weight="0.03"
-                android:src="@drawable/ic_access_alarm_black_24dp" />
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <SeekBar
                 android:id="@+id/seekBarAlarmVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.92" />
+                android:layout_weight="0.90" />
 
             <TextView
                 android:id="@+id/txtViewAlarmVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.04"
+                android:layout_weight="0.1"
                 android:gravity="center"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_left_icon"
+                app:srcCompat="@drawable/ic_call_black_24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_title"
+                android:text="@string/title_call_volume" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/title_call_volume_disc" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkCallVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_weight="0.03"
+                android:checked="true" />
 
         </LinearLayout>
 
@@ -176,52 +381,50 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkCallVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.01"
-                android:checked="true" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.03"
-                android:src="@drawable/ic_call_black_24dp" />
-
             <SeekBar
                 android:id="@+id/seekBarCallVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.92" />
+                android:layout_weight="0.90" />
 
             <TextView
                 android:id="@+id/txtCallVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.04"
+                android:layout_weight="0.1"
                 android:gravity="center"
                 android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_textview"
+            android:text="@string/title_ringtone_picker" />
+
         <ImageButton
             android:id="@+id/btnChangeRingTone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_seek"
-            android:src="@drawable/ic_music_note_black_24dp" />
+            app:srcCompat="@drawable/ic_music_note_black_24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_textview"
+            android:text="@string/title_notificationtone_picker" />
 
         <ImageButton
             android:id="@+id/btnChangeNotificationTone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_seek"
-            android:src="@drawable/ic_notifications_none_black_24dp" />
+            app:srcCompat="@drawable/ic_notifications_none_black_24dp" />
 
     </LinearLayout>
 

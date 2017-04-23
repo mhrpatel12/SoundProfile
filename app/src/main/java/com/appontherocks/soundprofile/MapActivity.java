@@ -2,23 +2,18 @@ package com.appontherocks.soundprofile;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,7 +26,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,34 +36,35 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
+    private final String TAG = getClass() + "";
+    PendingIntent mGeofencePendingIntent = null;
+    List<Geofence> mGeofenceList;
+    PlaceAutocompleteFragment autocompleteFragment;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    PendingIntent mGeofencePendingIntent = null;
     private LatLng latLng;
     private Circle circle;
-
-    List<Geofence> mGeofenceList;
-    PlaceAutocompleteFragment autocompleteFragment;
-
-    private final String TAG = getClass() + "";
-
     private ProgressDialog pDialog;
 
     private String mKey;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -77,7 +72,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
         autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setText("Ahmedabad");
 
         mGeofenceList = new ArrayList<Geofence>();
         // Create an instance of GoogleAPIClient.
@@ -103,8 +97,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName());
 
-                mMap.clear();
+                latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
 
+                mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName() + "").draggable(true));
                 CameraUpdate center = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16);
                 mMap.moveCamera(center);
@@ -121,6 +116,21 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("lat", (latLng.latitude + ""));
+        intent.putExtra("lng", (latLng.longitude + ""));
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private GeofencingRequest getGeofencingRequest() {
@@ -161,80 +171,25 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            new saveGeoFerncesAyncTask().execute();
+            Intent intent = new Intent();
+            intent.putExtra("lat", (latLng.latitude + ""));
+            intent.putExtra("lng", (latLng.longitude + ""));
+            setResult(RESULT_OK, intent);
+            finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> {
-
-        /**
-         * Before starting background thread
-         * Show Progress Bar Dialog
-         */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(MapActivity.this);
-            pDialog.setMessage("Loading...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-        }
-
-        /**
-         * Downloading file in background thread
-         */
-        @Override
-        protected String doInBackground(Void... f_url) {
-            if (ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return null;
-            }
-
-            FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("latitude").setValue((latLng.latitude + ""));
-            FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("longitude").setValue((latLng.longitude + ""));
-
-            mGeofenceList.add(new Geofence.Builder()
-                    // Set the request ID of the geofence. This is a string to identify this
-                    // geofence.
-                    .setRequestId(mKey)
-                    .setCircularRegion(
-                            latLng.latitude,
-                            latLng.longitude,
-                            50
-                    )
-                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
-                    .setNotificationResponsiveness(150000)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                            Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .build());
-
-            LocationServices.GeofencingApi.addGeofences(
-                    mGoogleApiClient,
-                    getGeofencingRequest(),
-                    getGeofencePendingIntent()
-            ).setResultCallback(MapActivity.this);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (pDialog != null) {
             pDialog.dismiss();
-            finish();
+            pDialog = null;
         }
     }
-
 
     /**
      * Manipulates the map once available.
@@ -267,8 +222,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
                 latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
                 circle.setCenter(latLng);
-                //FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("latitude").setValue((mLastLocation.getLongitude() + ""));
-                //FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("longitude").setValue((mLastLocation.getLongitude() + ""));
             }
         });
     }

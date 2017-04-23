@@ -1,10 +1,11 @@
 package com.appontherocks.soundprofile;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,16 @@ public class BaseActivity extends AppCompatActivity {
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+/*        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isBlackTheme", false)) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.AppThemeLight);
+        }*/
+        super.onCreate(savedInstanceState);
+    }
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {

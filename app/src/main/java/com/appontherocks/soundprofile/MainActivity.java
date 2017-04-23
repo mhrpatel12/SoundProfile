@@ -1,37 +1,43 @@
 package com.appontherocks.soundprofile;
 
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,36 +52,41 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.List;
 
-    private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
+public class MainActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, ResultCallback<Status> {
 
-    private MapFragment mapFragment;
-
+    private static final String TAG = "MainActivty";
+    final int RQS_RINGTONEPICKER = 1;
+    final int REQUEST_CODE_MAP_ACTIVITY = 99;
     TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume;
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume;
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume;
-
     EditText edtProfileName;
-
     ImageButton btnChangeRingtone, btnChangeNotificationtone;
-
-    final int RQS_RINGTONEPICKER = 1;
-
+    Ringtone ringTone;
     LatLng latLng;
-
+    List<Geofence> mGeofenceList;
+    private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private MapFragment mapFragment;
+    private Uri uri;
     private ProgressDialog pDialog;
-
-    private static final String TAG = "MainActivty";
-
     private String mKey;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_profile);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getIntent().getStringExtra("name") + "");
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -85,6 +96,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        mGeofenceList = new ArrayList<Geofence>();
 
         mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -134,20 +147,11 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             }
         });
 
-        edtProfileName.addTextChangedListener(new TextWatcher() {
+
+        findViewById(R.id.fabSave).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("profileName").setValue(charSequence + "");
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public void onClick(View view) {
+                new saveGeoFerncesAyncTask().execute();
             }
         });
 
@@ -166,19 +170,15 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         seekbarRingerVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
                 textviewRingerVolume.setText(i + "");
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("notificationVolume").setValue(seekbarRingerVolume.getProgress() + "");
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -187,19 +187,15 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         seekBarMediaVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
                 textViewMediaVolume.setText(i + "");
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("musicVolume").setValue(seekBarMediaVolume.getProgress() + "");
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -208,19 +204,15 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         seekBarAlarmVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
                 textviewAlarmVolume.setText(i + "");
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("alarmVolume").setValue(seekBarAlarmVolume.getProgress() + "");
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -229,19 +221,15 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         seekBarCallVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
                 textviewCallVolume.setText(i + "");
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("callVolume").setValue(seekBarCallVolume.getProgress() + "");
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -263,6 +251,35 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             }
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDismissWarning();
+    }
+
+    public void showDismissWarning() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.prompt_discard_profile_changes))
+                .setCancelable(true)
+                .setPositiveButton("DISCARD", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        MainActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -331,6 +348,29 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case RQS_RINGTONEPICKER:
+                    uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    ringTone = RingtoneManager.getRingtone(getApplicationContext(), uri);
+                    Toast.makeText(MainActivity.this,
+                            ringTone.getTitle(MainActivity.this),
+                            Toast.LENGTH_LONG).show();
+                    break;
+                case REQUEST_CODE_MAP_ACTIVITY:
+                    if (data.getStringExtra("lat") != null && (data.getStringExtra("lng") != null)) {
+                        try {
+                            latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat") + ""), Double.parseDouble(data.getStringExtra("lng") + ""));
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
     public void onConnectionSuspended(int i) {
 
     }
@@ -338,6 +378,38 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+
+
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+/*        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }*/
+        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        return PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mGoogleApiClient.connect();
     }
 
     public class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
@@ -377,12 +449,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                     break;
             }
         }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mGoogleApiClient.connect();
     }
 
     public class loadDataAyncTask extends AsyncTask<Void, String, String> {
@@ -440,6 +506,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                         chkAlarmVolume.setEnabled(profile.chkAlarm);
                         chkCallVolume.setEnabled(profile.chkCall);
                     }
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).removeEventListener(this);
                 }
 
                 @Override
@@ -455,6 +522,114 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         @Override
         protected void onPostExecute(String result) {
             pDialog.dismiss();
+        }
+    }
+
+    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> {
+
+        private String profileName;
+
+        private String ringerVolume;
+        private String mediaVolume;
+        private String alarmVolume;
+        private String callVolume;
+
+        private Boolean isRingToneChecked;
+        private Boolean isMediaChecked;
+        private Boolean isAlarmChecked;
+        private Boolean isCallChecked;
+
+        private DatabaseReference mProfileReference;
+
+        /**
+         * Before starting background thread
+         * Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+            profileName = (edtProfileName.getText() + "").trim();
+
+            ringerVolume = seekbarRingerVolume.getProgress() + "";
+            mediaVolume = seekBarMediaVolume.getProgress() + "";
+            alarmVolume = seekBarAlarmVolume.getProgress() + "";
+            callVolume = seekBarCallVolume.getProgress() + "";
+
+            isRingToneChecked = chkRingerVolume.isChecked();
+            isMediaChecked = chkMediaVolume.isChecked();
+            isAlarmChecked = chkAlarmVolume.isChecked();
+            isCallChecked = chkCallVolume.isChecked();
+
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey);
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(Void... f_url) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+
+            mProfileReference.child("profileName").setValue((profileName + ""));
+
+            mProfileReference.child("latitude").setValue((latLng.latitude + ""));
+            mProfileReference.child("longitude").setValue((latLng.longitude + ""));
+
+            mProfileReference.child("notificationVolume").setValue(ringerVolume);
+            mProfileReference.child("musicVolume").setValue(mediaVolume);
+            mProfileReference.child("alarmVolume").setValue(alarmVolume);
+            mProfileReference.child("callVolume").setValue(callVolume);
+
+            mProfileReference.child("chkRinger").setValue(isRingToneChecked);
+            mProfileReference.child("chkMedia").setValue(isMediaChecked);
+            mProfileReference.child("chkAlarm").setValue(isAlarmChecked);
+            mProfileReference.child("chkCall").setValue(isCallChecked);
+
+            mProfileReference.child("ringToneURI").setValue(uri + "");
+
+            mGeofenceList.add(new Geofence.Builder()
+                    // Set the request ID of the geofence. This is a string to identify this
+                    // geofence.
+                    .setRequestId(mKey)
+                    .setCircularRegion(
+                            latLng.latitude,
+                            latLng.longitude,
+                            50
+                    )
+                    .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
+                    .setNotificationResponsiveness(Constants.GEOFENCE_NOTIFICATION_RESPONSIVENESS)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build());
+
+            LocationServices.GeofencingApi.addGeofences(
+                    mGoogleApiClient,
+                    getGeofencingRequest(),
+                    getGeofencePendingIntent()
+            ).setResultCallback(MainActivity.this);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+            finish();
         }
     }
 }

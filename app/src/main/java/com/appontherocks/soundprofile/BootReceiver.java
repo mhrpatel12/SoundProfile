@@ -1,15 +1,11 @@
 package com.appontherocks.soundprofile;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,8 +13,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.widget.Toast;
 
 import com.appontherocks.soundprofile.models.SoundProfile;
@@ -29,9 +23,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,21 +32,32 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 /**
  * Created by Mihir on 3/30/2017.
  */
 
 public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
+    private final int STEP_ONE_COMPLETE = 0;
+    List<Geofence> mGeofenceList;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Context mContext;
-
-    List<Geofence> mGeofenceList;
-
-    private final int STEP_ONE_COMPLETE = 0;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case STEP_ONE_COMPLETE:
+                    LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+                    if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        if (mGeofenceList.size() > 0) {
+                            new saveGeoFerncesAyncTask().execute();
+                        }
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -63,7 +65,10 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
 
         mGeofenceList = new ArrayList<Geofence>();
         Toast.makeText(context, "Booting Completed", Toast.LENGTH_LONG).show();
-        fetchGeoFences();
+        LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            fetchGeoFences();
+        }
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -79,42 +84,86 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
         Thread backgroundThread = new Thread() {
             @Override
             public void run() {
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profileArrayList.clear();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            SoundProfile profile = ds.getValue(SoundProfile.class);
-                            if ((profile.mKey != null) && (profile.latitude != null) && (profile.longitude != null) && !((profile.latitude + "").equals("")) && !((profile.longitude + "").equals(""))) {
-                                mGeofenceList.add(new Geofence.Builder()
-                                        // Set the request ID of the geofence. This is a string to identify this
-                                        // geofence.
-                                        .setRequestId(profile.mKey)
-                                        .setCircularRegion(
-                                                Double.parseDouble(profile.latitude),
-                                                Double.parseDouble(profile.longitude),
-                                                50
-                                        )
-                                        .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
-                                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                                Geofence.GEOFENCE_TRANSITION_EXIT)
-                                        .build());
+                try {
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            profileArrayList.clear();
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                SoundProfile profile = ds.getValue(SoundProfile.class);
+                                if ((profile.mKey != null) && (profile.latitude != null) && (profile.longitude != null) && !((profile.latitude + "").equals("")) && !((profile.longitude + "").equals(""))) {
+                                    mGeofenceList.add(new Geofence.Builder()
+                                            // Set the request ID of the geofence. This is a string to identify this
+                                            // geofence.
+                                            .setRequestId(profile.mKey)
+                                            .setCircularRegion(
+                                                    Double.parseDouble(profile.latitude),
+                                                    Double.parseDouble(profile.longitude),
+                                                    50
+                                            )
+                                            .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
+                                            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                                    Geofence.GEOFENCE_TRANSITION_EXIT)
+                                            .build());
+                                }
                             }
+                            Message msg = Message.obtain();
+                            msg.what = STEP_ONE_COMPLETE;
+                            handler.sendMessage(msg);
+                            FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(this);
                         }
-                        Message msg = Message.obtain();
-                        msg.what = STEP_ONE_COMPLETE;
-                        handler.sendMessage(msg);
-                        FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(this);
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                } catch (Exception e) {
+                }
             }
         };
         backgroundThread.start();
+
+    }
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+
+
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+/*        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }*/
+        Intent intent = new Intent(mContext, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        return PendingIntent.getService(mContext, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
 
     }
 
@@ -158,57 +207,5 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
         @Override
         protected void onPostExecute(String result) {
         }
-    }
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case STEP_ONE_COMPLETE:
-                    new saveGeoFerncesAyncTask().execute();
-                    break;
-            }
-        }
-    };
-
-    private GeofencingRequest getGeofencingRequest() {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-
-
-        builder.addGeofences(mGeofenceList);
-        return builder.build();
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-/*        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        }*/
-        Intent intent = new Intent(mContext, GeofenceTransitionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
-        return PendingIntent.getService(mContext, 0, intent, PendingIntent.
-                FLAG_UPDATE_CURRENT);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onResult(@NonNull Status status) {
-
     }
 }

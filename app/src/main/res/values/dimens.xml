@@ -10,12 +10,21 @@
 
     <dimen name="list_item">24dp</dimen>
 
+    <dimen name="margin_view_top">5dp</dimen>
+    <dimen name="margin_view_bottom">5dp</dimen>
+    <dimen name="margin_view_left">20dp</dimen>
+    <dimen name="margin_view_right">20dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="app_bar_height">225dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="margin_seek">8dp</dimen>
+    <dimen name="margin_left_icon">13dp</dimen>
+    <dimen name="margin_textview_title">10dp</dimen>
+    <dimen name="margin_textview">13dp</dimen>
+    <dimen name="margin_textview_desc">10dp</dimen>
+    <dimen name="margin_seek">5dp</dimen>
     <dimen name="layout_margin_seek">15dp</dimen>
 </resources>

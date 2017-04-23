@@ -6,14 +6,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.appontherocks.soundprofile.models.SoundProfile;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,17 +28,18 @@ import java.util.ArrayList;
  * Created by Mihir on 3/15/2017.
  */
 
-public class ProfilesListAdapter extends BaseAdapter {
-
+public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapter.MyViewHolder> {
+    ImageLoader imageLoader;
+    private ArrayList<SoundProfile> profileArrayList;
     private Context mContext;
     private Activity activity;
-    private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
 
-    public ProfilesListAdapter(Activity activity, ArrayList<SoundProfile> soundProfiles) {
+    public ProfilesListAdapter(Activity activity, ArrayList<SoundProfile> data) {
+        this.profileArrayList = data;
         this.activity = activity;
         this.mContext = activity.getApplicationContext();
-        this.profileArrayList = soundProfiles;
+        this.imageLoader = new ImageLoader(mContext);
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(activity)
@@ -43,96 +47,95 @@ public class ProfilesListAdapter extends BaseAdapter {
                     .build();
         }
         mGoogleApiClient.connect();
-
-    }
-
-    private class ViewHolder {
-        TextView txtProfileName, txtNotificationVolume, txtMediaVolume, txtAlarmVolume;
-        CardView cardView;
     }
 
     @Override
-    public int getCount() {
-        return profileArrayList.size();
+    public MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                           int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_profile, parent, false);
+
+        //view.setOnClickListener(MainActivity.myOnClickListener);
+
+        MyViewHolder myViewHolder = new MyViewHolder(view);
+        return myViewHolder;
     }
 
     @Override
-    public Object getItem(int i) {
-        return i;
-    }
+    public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+        TextView txtProfileName = holder.txtProfileName;
+        CardView cardView = holder.cardView;
+        AppCompatImageView imageView = holder.imageView;
+        AppCompatImageView btnDelete = holder.btnDelete;
 
-    @Override
-    public int getViewTypeCount() {
-        if (getCount() != 0)
-            return getCount();
+        String getMapURL = "";
+        txtProfileName.setText(profileArrayList.get(listPosition).profileName);
 
-        else return 1;
-    }
+        if (((profileArrayList.get(listPosition).latitude != null) && (!(profileArrayList.get(listPosition).latitude + "").equals(""))) && ((profileArrayList.get(listPosition).longitude != null) && (!(profileArrayList.get(listPosition).longitude + "").equals("")))) {
 
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
+            getMapURL = "http://maps.googleapis.com/maps/api/staticmap?zoom=16&size=300x600&scale=2&markers=size:mid|color:red|"
+                    + profileArrayList.get(listPosition).latitude
+                    + ","
+                    + profileArrayList.get(listPosition).longitude
+                    + "&sensor=false";
+            Log.e("PROFILES ADAPTER", getMapURL);
+            Glide.with(mContext)
+                    .load(getMapURL)
+                    .into(imageView);
+            //new downloadMapImage().execute(getMapURL);
+            //imageLoader.DisplayImage(getMapURL, holder.imageView);
+        }
 
-    ViewHolder holder = null;
+        if ((profileArrayList.get(listPosition).profileName + "").equals("Default Profile")) {
+            cardView.setVisibility(View.GONE);
+        }
 
-    @Override
-    public View getView(final int position, View view, ViewGroup viewGroup) {
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        if (view == null) {
-            LayoutInflater vi = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = vi.inflate(R.layout.list_item_profile, null);
+                final LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
-            holder = new ViewHolder();
-            holder.cardView = (CardView) view.findViewById(R.id.cv);
-            holder.txtProfileName = (TextView) view.findViewById(R.id.txtProfileName);
-            holder.txtNotificationVolume = (TextView) view.findViewById(R.id.txtViewRingerVolume);
-            holder.txtMediaVolume = (TextView) view.findViewById(R.id.txtViewMediaVolume);
-            holder.txtAlarmVolume = (TextView) view.findViewById(R.id.txtViewAlarmVolume);
-
-            holder.txtProfileName.setText(profileArrayList.get(position).profileName);
-            holder.txtNotificationVolume.setText(profileArrayList.get(position).notificationVolume);
-            holder.txtMediaVolume.setText(profileArrayList.get(position).musicVolume);
-            holder.txtAlarmVolume.setText(profileArrayList.get(position).alarmVolume);
-
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    final LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-
-                    if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        buildAlertMessageNoGps();
-                    } else {
-                        Intent intent = new Intent(mContext, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("key", profileArrayList.get(position).mKey);
-                        intent.putExtra("lat", profileArrayList.get(position).latitude);
-                        intent.putExtra("lng", profileArrayList.get(position).longitude);
-                        mContext.startActivity(intent);
-                    }
-
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps();
+                } else {
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("name", profileArrayList.get(listPosition).profileName);
+                    intent.putExtra("key", profileArrayList.get(listPosition).mKey);
+                    intent.putExtra("lat", profileArrayList.get(listPosition).latitude);
+                    intent.putExtra("lng", profileArrayList.get(listPosition).longitude);
+                    mContext.startActivity(intent);
                 }
-            });
 
-            holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ((profileArrayList.get(listPosition).profileName + "").equals("Default Profile")) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage(mContext.getResources().getString(R.string.prompt_delete_default_profile))
+                            .setCancelable(true)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    final AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setMessage(mContext.getResources().getString(R.string.prompt_discard_profile))
                             .setCancelable(true)
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                                     ArrayList<String> list = new ArrayList<String>();
-                                    list.add(profileArrayList.get(position).mKey);
+                                    list.add(profileArrayList.get(listPosition).mKey);
                                     LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, list);
-                                    FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(profileArrayList.get(position).mKey).removeValue();
+                                    FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(profileArrayList.get(listPosition).mKey).removeValue();
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -142,13 +145,14 @@ public class ProfilesListAdapter extends BaseAdapter {
                             });
                     final AlertDialog alert = builder.create();
                     alert.show();
-                    return false;
                 }
-            });
+            }
+        });
+    }
 
-        }
-
-        return view;
+    @Override
+    public int getItemCount() {
+        return profileArrayList.size();
     }
 
     public void buildAlertMessageNoGps() {
@@ -167,5 +171,22 @@ public class ProfilesListAdapter extends BaseAdapter {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView txtProfileName;
+        CardView cardView;
+        AppCompatImageView imageView;
+        AppCompatImageView btnDelete;
+
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            this.cardView = (CardView) itemView.findViewById(R.id.cv);
+            this.txtProfileName = (TextView) itemView.findViewById(R.id.txtProfileName);
+            this.imageView = (AppCompatImageView) itemView.findViewById(R.id.map_lite);
+            this.btnDelete = (AppCompatImageView) itemView.findViewById(R.id.btnDelete);
+        }
     }
 }

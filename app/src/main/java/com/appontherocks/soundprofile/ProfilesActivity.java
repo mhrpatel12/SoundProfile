@@ -31,7 +31,6 @@ public class ProfilesActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         swipeCardView = (SwipeCardView) findViewById(R.id.card_stack_view);
-
         swipeCardView.setFlingListener(new SwipeCardView.OnCardFlingListener() {
             @Override
             public void onCardExitLeft(Object dataObject) {
@@ -39,19 +38,16 @@ public class ProfilesActivity extends BaseActivity {
 
             @Override
             public void onCardExitRight(Object dataObject) {
-
             }
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                if (itemsInAdapter == 0) {
-                    swipeCardView.requestLayout();
-                }
+                if (itemsInAdapter == 0)
+                    swipeCardView.restart();
             }
 
             @Override
             public void onScroll(float scrollProgressPercent) {
-
             }
 
             @Override
@@ -67,6 +63,7 @@ public class ProfilesActivity extends BaseActivity {
         swipeCardView.setOnItemClickListener(new SwipeCardView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
+
             }
         });
     }
@@ -93,8 +90,10 @@ public class ProfilesActivity extends BaseActivity {
                     profileArrayList.add(profile);
                 }
 
+                profileArrayList.remove(profileArrayList.size() - 1);
                 profilesSwipableAdapter = new ProfilesSwipableAdapter(ProfilesActivity.this, profileArrayList);
                 swipeCardView.setAdapter(profilesSwipableAdapter);
+                FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).removeEventListener(this);
             }
 
             @Override

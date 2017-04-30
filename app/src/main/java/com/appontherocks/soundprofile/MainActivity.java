@@ -45,6 +45,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -409,6 +410,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.google_maps_night_mode);
+        mMap.setMapStyle(style);
         mGoogleApiClient.connect();
     }
 

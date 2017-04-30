@@ -1,5 +1,7 @@
 package com.appontherocks.soundprofile;
 
+import android.app.ActivityManager;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,11 +14,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,12 +27,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.net.URL;
+import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,6 +47,7 @@ public class DashboardActivity extends BaseActivity
     private Uri defaultRintoneUri;
 
     private DatabaseReference mSoundProfileReference;
+    private boolean isServiceRunning = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class DashboardActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
+
         profilePicture = (de.hdodenhof.circleimageview.CircleImageView) headerView.findViewById(R.id.imgProfilePicture);
         txtDisplayName = (TextView) headerView.findViewById(R.id.txtUserName);
         txtEmail = (TextView) headerView.findViewById(R.id.txtEmail);
@@ -219,16 +223,32 @@ public class DashboardActivity extends BaseActivity
         } else if (id == R.id.nav_default_profile) {
             Intent intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_theme) {
-            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isBlackTheme", false)) {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isBlackTheme", false).commit();
-            } else {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isBlackTheme", true).commit();
+        } else if (id == R.id.nav_sleep_hours) {
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            isServiceRunning = false;
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (SleepyHoursService.class.getName().equals(service.service.getClassName())) {
+                    isServiceRunning = true;
+                }
             }
-            TaskStackBuilder.create(this)
-                    .addNextIntent(getIntent())
-                    .startActivities();
-
+            if (isServiceRunning) {
+                stopService(new Intent(DashboardActivity.this, SleepyHoursService.class));
+            } else {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        Intent intent = new Intent(DashboardActivity.this, SleepyHoursService.class);
+                        intent.putExtra("hour", selectedHour);
+                        intent.putExtra("minute", selectedMinute);
+                        startService(intent);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.show();
+            }
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_send) {

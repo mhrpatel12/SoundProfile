@@ -34,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -205,7 +206,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         // Add a marker and move the camera
-
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MapActivity.this, R.raw.google_maps_night_mode);
+        mMap.setMapStyle(style);
         mGoogleApiClient.connect();
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {

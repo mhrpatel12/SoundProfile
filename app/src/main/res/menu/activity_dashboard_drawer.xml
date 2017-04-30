@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_star_white_24dp"
             android:title="Default Profile" />
         <item
-            android:id="@+id/nav_theme"
-            android:icon="@drawable/ic_format_paint_white_24dp"
-            android:title="Change Theme" />
+            android:id="@+id/nav_sleep_hours"
+            android:icon="@drawable/ic_brightness_3_black_24dp"
+            android:title="Sleep Hours" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_white_24dp"

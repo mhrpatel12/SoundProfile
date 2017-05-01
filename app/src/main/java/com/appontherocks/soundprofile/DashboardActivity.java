@@ -235,18 +235,31 @@ public class DashboardActivity extends BaseActivity
                 stopService(new Intent(DashboardActivity.this, SleepyHoursService.class));
             } else {
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                final int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Intent intent = new Intent(DashboardActivity.this, SleepyHoursService.class);
-                        intent.putExtra("hour", selectedHour);
-                        intent.putExtra("minute", selectedMinute);
-                        startService(intent);
+                        TimePickerDialog mTimePicker;
+                        final int selectedStartHour = selectedHour;
+                        final int selectedStartMinute = selectedMinute;
+                        mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                Intent intent = new Intent(DashboardActivity.this, SleepyHoursService.class);
+                                intent.putExtra("startHour", selectedStartHour);
+                                intent.putExtra("startMinute", selectedStartMinute);
+                                intent.putExtra("endHour", selectedHour);
+                                intent.putExtra("endMinute", selectedMinute);
+                                startService(intent);
+                            }
+                        }, hour, minute, true);//Yes 24 hour time
+                        mTimePicker.setMessage("Start Time");
+                        mTimePicker.show();
                     }
                 }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setMessage("Start Time");
                 mTimePicker.show();
             }
         } else if (id == R.id.nav_settings) {

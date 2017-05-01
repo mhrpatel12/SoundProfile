@@ -2,12 +2,14 @@ package com.appontherocks.soundprofile;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 public class SleepyHoursService extends Service {
     private static final String TAG = "SleepyHoursService";
-    SleepyHours sleepyHours = new SleepyHours();
+    SleepyHoursStart sleepyHoursStart = new SleepyHoursStart();
+    SleepyHoursEnd sleepyHoursEnd = new SleepyHoursEnd();
 
     public void onCreate() {
         Log.e(TAG, "onCreate");
@@ -17,14 +19,20 @@ public class SleepyHoursService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand");
-        sleepyHours.setSleepyHours(SleepyHoursService.this);
+        Bundle extras = intent.getExtras();
+        if (extras == null)
+            Log.d("Service", "null");
+        else {
+            Log.d("Service", "not null");
+            sleepyHoursStart.setSleepyHoursStart(SleepyHoursService.this, (int) extras.get("startHour"), (int) extras.get("startMinute"));
+            sleepyHoursEnd.setSleepyHoursEnd(SleepyHoursService.this, (int) extras.get("endHour"), (int) extras.get("endMinute"));
+        }
         return START_STICKY;
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         Log.e(TAG, "onStart");
-        sleepyHours.setSleepyHours(SleepyHoursService.this);
     }
 
     @Override
@@ -35,7 +43,8 @@ public class SleepyHoursService extends Service {
     @Override
     public void onDestroy() {
         Log.e(TAG, "onDestroy");
-        sleepyHours.cancelSleepyHours(SleepyHoursService.this);
+        sleepyHoursStart.cancelSleepyHoursStart(SleepyHoursService.this);
+        sleepyHoursEnd.cancelSleepyHoursEnd(SleepyHoursService.this);
         super.onDestroy();
     }
 }

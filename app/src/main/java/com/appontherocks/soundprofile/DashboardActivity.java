@@ -255,7 +255,7 @@ public class DashboardActivity extends BaseActivity
                                 startService(intent);
                             }
                         }, hour, minute, true);//Yes 24 hour time
-                        mTimePicker.setMessage("Start Time");
+                        mTimePicker.setMessage("End Time");
                         mTimePicker.show();
                     }
                 }, hour, minute, true);//Yes 24 hour time

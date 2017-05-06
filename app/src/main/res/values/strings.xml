@@ -76,4 +76,6 @@
     <string name="title_activity_map">Map</string>
     <string name="title_activity_default_profile">Default Profile</string>
     <string name="default_profile_description">Activate this profile when I am in unknown area.</string>
+    <string name="sign_in_facebook">Log in with Facebook</string>
+    <string name="sign_in_google">Log in with Google</string>
 </resources>

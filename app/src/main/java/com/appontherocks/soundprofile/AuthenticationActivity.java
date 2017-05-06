@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -119,7 +120,6 @@ public class AuthenticationActivity extends BaseActivity implements
         findViewById(R.id.sign_in_button_google).setOnClickListener(this);
         findViewById(R.id.sign_out_button_google).setOnClickListener(this);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -247,7 +247,7 @@ public class AuthenticationActivity extends BaseActivity implements
         // [START initialize_fblogin]
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.button_facebook_login);
+        final LoginButton loginButton = (LoginButton) findViewById(R.id.button_facebook_login);
         loginButton.setReadPermissions("email", "public_profile");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -272,6 +272,12 @@ public class AuthenticationActivity extends BaseActivity implements
                 // [END_EXCLUDE]
             }
         });
+        ((AppCompatButton) findViewById(R.id.button_facebook)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginButton.performClick();
+            }
+        });
         // [END initialize_fblogin]
 
         // [START config_signin]
@@ -287,6 +293,12 @@ public class AuthenticationActivity extends BaseActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        ((AppCompatButton) findViewById(R.id.button_google)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInGoogle();
+            }
+        });
     }
 
     private void fetchGeoFences() {

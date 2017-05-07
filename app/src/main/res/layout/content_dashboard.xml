@@ -126,6 +126,7 @@
             android:id="@+id/toggle_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:textOff="Switch to SILENT"
             android:textOn="Switch to LOUD" />
 

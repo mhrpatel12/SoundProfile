@@ -116,7 +116,10 @@ public class AuthenticationActivity extends BaseActivity implements
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
         }
-
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        } catch (Exception e) {
+        }
         findViewById(R.id.sign_in_button_google).setOnClickListener(this);
         findViewById(R.id.sign_out_button_google).setOnClickListener(this);
 

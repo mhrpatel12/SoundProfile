@@ -9,6 +9,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 
 import in.arjsna.swipecardlib.SwipeCardView;
@@ -68,6 +72,17 @@ public class ProfilesActivity extends BaseActivity {
         });
     }
 
+    // This method will be called when a MessageEvent is posted (in the UI thread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ProfileDeletedEvent profileDeletedEvent) {
+        if (profileDeletedEvent != null) {
+            int profileDeleted = profileDeletedEvent.profileDeleted;
+            profileArrayList.remove(profileDeleted);
+            profilesSwipableAdapter.notifyDataSetChanged();
+            swipeCardView.throwBottom();
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -102,5 +117,21 @@ public class ProfilesActivity extends BaseActivity {
             }
         });
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        super.onDestroy();
     }
 }

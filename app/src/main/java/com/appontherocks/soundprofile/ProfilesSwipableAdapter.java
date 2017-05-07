@@ -19,6 +19,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 /**
@@ -46,7 +48,7 @@ public class ProfilesSwipableAdapter extends ArrayAdapter<SoundProfile> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final SoundProfile card = cards.get(position);
         View view = layoutInflater.inflate(R.layout.list_item_profile, parent, false);
         String getMapURL = "http://maps.googleapis.com/maps/api/staticmap?zoom=16&size=300x600&scale=2&markers=size:mid|color:red|"
@@ -91,6 +93,7 @@ public class ProfilesSwipableAdapter extends ArrayAdapter<SoundProfile> {
                                 list.add(card.mKey);
                                 LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, list);
                                 FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(card.mKey).removeValue();
+                                EventBus.getDefault().post(new ProfileDeletedEvent(position));
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

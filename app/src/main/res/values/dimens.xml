@@ -27,4 +27,5 @@
     <dimen name="margin_textview_desc">10dp</dimen>
     <dimen name="margin_seek">5dp</dimen>
     <dimen name="layout_margin_seek">15dp</dimen>
+    <dimen name="margin_top_current_profile_layout">7dp</dimen>
 </resources>

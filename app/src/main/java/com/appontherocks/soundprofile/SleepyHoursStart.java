@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,12 +45,10 @@ public class SleepyHoursStart extends BroadcastReceiver implements GoogleApiClie
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case STEP_ONE_COMPLETE:
-                    LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-                    if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        if (mGeofenceList.size() > 0) {
-                            LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, mGeofenceList);
-                        }
+                    if (mGeofenceList.size() > 0) {
+                        LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, mGeofenceList);
                     }
+
                     break;
             }
         }
@@ -68,10 +65,7 @@ public class SleepyHoursStart extends BroadcastReceiver implements GoogleApiClie
 
         mGeofenceList = new ArrayList<String>();
         Toast.makeText(mContext, "Booting Completed", Toast.LENGTH_LONG).show();
-        LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            fetchGeoFences();
-        }
+        fetchGeoFences();
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(mContext)

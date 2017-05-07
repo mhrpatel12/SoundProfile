@@ -19,7 +19,7 @@
     <string name="hint_password">Password</string>
     <string name="desc_firebase_lockup">Firebase logo and name</string>
     <string name="auth_failed">Authentication failed</string>
-    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_activity_dashboard">Smart Profile Manager</string>
 
     <string name="prompt_delete_default_profile">You cannot remove default profile !</string>
 
@@ -78,4 +78,5 @@
     <string name="default_profile_description">Activate this profile when I am in unknown area.</string>
     <string name="sign_in_facebook">Log in with Facebook</string>
     <string name="sign_in_google">Log in with Google</string>
+    <string name="current_profile">Your current audio settings</string>
 </resources>

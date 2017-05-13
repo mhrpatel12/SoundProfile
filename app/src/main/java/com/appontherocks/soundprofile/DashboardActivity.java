@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,8 +27,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.firebase.database.DatabaseReference;
@@ -44,8 +48,8 @@ public class DashboardActivity extends BaseActivity
     private static final String TAG = "Dashboard";
     CircleImageView profilePicture;
     TextView txtDisplayName, txtEmail;
+    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume;
     private Uri defaultRintoneUri;
-
     private DatabaseReference mSoundProfileReference;
     private boolean isServiceRunning = false;
 
@@ -131,6 +135,77 @@ public class DashboardActivity extends BaseActivity
                     Intent intent = new Intent(DashboardActivity.this, NewProfileActivity.class);
                     intent.putExtra("key", key + "");
                     startActivity(intent);
+                }
+            }
+        });
+
+        seekbarRingerVolume = (SeekBar) findViewById(R.id.seekBarRingerVolume);
+        seekBarMediaVolume = (SeekBar) findViewById(R.id.seekBarMediaVolume);
+        seekBarAlarmVolume = (SeekBar) findViewById(R.id.seekBarAlarmVolume);
+
+        final AudioManager mobilemode = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+
+        seekbarRingerVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+
+        seekbarRingerVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mobilemode.setStreamVolume(AudioManager.STREAM_RING, i, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekBarMediaVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+
+        seekBarMediaVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mobilemode.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekBarAlarmVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+
+        seekBarAlarmVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                mobilemode.setStreamVolume(AudioManager.STREAM_ALARM, i, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        ((ToggleButton) findViewById(R.id.toggle_profile)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((ToggleButton) findViewById(R.id.toggle_profile)).getText().toString().equals("Switch to LOUD")) {
+                    mobilemode.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    Toast.makeText(getBaseContext(), "SILENT profile activated ", Toast.LENGTH_LONG).show();
+                } else if (((ToggleButton) findViewById(R.id.toggle_profile)).getText().toString().equals("Switch to SILENT")) {
+                    mobilemode.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    Toast.makeText(getBaseContext(), "LOUD profile activated !", Toast.LENGTH_LONG).show();
+
                 }
             }
         });

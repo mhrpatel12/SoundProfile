@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -202,10 +203,10 @@ public class DashboardActivity extends BaseActivity
         ((ToggleButton) findViewById(R.id.toggle_profile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((ToggleButton) findViewById(R.id.toggle_profile)).getText().toString().equals("Switch to LOUD")) {
+                if (((ToggleButton) findViewById(R.id.toggle_profile)).getText().toString().equals(getString(R.string.text_on))) {
                     mobilemode.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     Toast.makeText(getBaseContext(), "SILENT profile activated ", Toast.LENGTH_LONG).show();
-                } else if (((ToggleButton) findViewById(R.id.toggle_profile)).getText().toString().equals("Switch to SILENT")) {
+                } else if (((ToggleButton) findViewById(R.id.toggle_profile)).getText().toString().equals(getString(R.string.text_off))) {
                     mobilemode.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                     Toast.makeText(getBaseContext(), "LOUD profile activated !", Toast.LENGTH_LONG).show();
 
@@ -310,7 +311,29 @@ public class DashboardActivity extends BaseActivity
                 }
             }
             if (isServiceRunning) {
-                stopService(new Intent(DashboardActivity.this, SleepyHoursService.class));
+                SharedPreferences prefs = getSharedPreferences(getString(R.string.sleep_hours), MODE_PRIVATE);
+                int startHour = prefs.getInt("startHour", 0); //0 is the default value.
+                int startMinute = prefs.getInt("startMinute", 0); //0 is the default value.
+                int endHour = prefs.getInt("endHour", 0); //0 is the default value.
+                int endMinute = prefs.getInt("endMinute", 0); //0 is the default value.
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getResources().getString(R.string.sleep_hours))
+                        .setMessage(getResources().getString(R.string.sleep_hours_warning_start) + " " + startHour + ":" + startMinute + " to " + endHour + ":" + endMinute
+                                + getResources().getString(R.string.sleep_hours_warning_end))
+                        .setCancelable(true)
+                        .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                stopService(new Intent(DashboardActivity.this, SleepyHoursService.class));
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
             } else {
                 Calendar mcurrentTime = Calendar.getInstance();
                 final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
@@ -325,6 +348,12 @@ public class DashboardActivity extends BaseActivity
                         mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sleep_hours), MODE_PRIVATE).edit();
+                                editor.putInt("startHour", selectedStartHour);
+                                editor.putInt("startMinute", selectedStartMinute);
+                                editor.putInt("endHour", selectedHour);
+                                editor.putInt("endMinute", selectedMinute);
+                                editor.commit();
                                 Intent intent = new Intent(DashboardActivity.this, SleepyHoursService.class);
                                 intent.putExtra("startHour", selectedStartHour);
                                 intent.putExtra("startMinute", selectedStartMinute);

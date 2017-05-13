@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="55dp"
         android:orientation="vertical">
 
         <TextView
@@ -42,17 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.9" />
-
-            <TextView
-                android:id="@+id/txtViewRingerVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.05"
-                android:gravity="center"
-                android:text="0"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0.95" />
 
         </LinearLayout>
 
@@ -75,17 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.9" />
-
-            <TextView
-                android:id="@+id/txtViewMediaVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.05"
-                android:gravity="center"
-                android:text="0"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0.95" />
 
         </LinearLayout>
 
@@ -108,27 +88,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.9" />
-
-            <TextView
-                android:id="@+id/txtViewAlarmVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.05"
-                android:gravity="center"
-                android:text="0"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0.95" />
 
         </LinearLayout>
 
         <ToggleButton
             android:id="@+id/toggle_profile"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textOff="Switch to SILENT"
-            android:textOn="Switch to LOUD" />
+            android:layout_marginTop="@dimen/margin_top_current_profile_layout"
+            android:textOff="@string/text_off"
+            android:textOn="@string/text_on" />
 
     </LinearLayout>
 

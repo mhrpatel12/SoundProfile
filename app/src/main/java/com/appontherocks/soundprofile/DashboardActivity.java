@@ -146,6 +146,9 @@ public class DashboardActivity extends BaseActivity
         final AudioManager mobilemode = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 
         seekbarRingerVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        seekbarRingerVolume.setProgress(mobilemode.getStreamVolume(AudioManager.STREAM_RING));
+        seekBarMediaVolume.setProgress(AudioManager.STREAM_MUSIC);
+        seekBarAlarmVolume.setProgress(AudioManager.STREAM_ALARM);
 
         seekbarRingerVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

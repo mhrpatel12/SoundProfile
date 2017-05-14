@@ -84,4 +84,5 @@
     <string name="sleep_hours">Sleepy Hours</string>
     <string name="sleep_hours_warning_start">You\'ve Defined sleepy hours from </string>
     <string name="sleep_hours_warning_end">\n Remove Sleepy Hours ?</string>
+    <string name="wifi_setting_description">Auto disable Wi-Fi during sleepy hours.</string>
 </resources>

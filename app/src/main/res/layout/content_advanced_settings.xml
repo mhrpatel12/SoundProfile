@@ -6,4 +6,28 @@
     android:layout_marginTop="@dimen/layout_margin_seek"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/layout_wifi_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_seek"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_textview_desc"
+            android:layout_weight="0.95"
+            android:text="@string/wifi_setting_description" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/chkAutoWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"
+            android:checked="false" />
+
+    </LinearLayout>
+
 </LinearLayout>

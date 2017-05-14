@@ -140,6 +140,10 @@ public class AuthenticationActivity extends BaseActivity implements
                         != PackageManager.PERMISSION_GRANTED)
                 ||
                 (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
+                        Manifest.permission.CHANGE_WIFI_STATE)
+                        != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(AuthenticationActivity.this,
                         android.Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED)
                 ||
@@ -175,6 +179,9 @@ public class AuthenticationActivity extends BaseActivity implements
                             Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     &&
                     (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
+                            Manifest.permission.CHANGE_WIFI_STATE))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
                             android.Manifest.permission.READ_CONTACTS))
                     &&
                     (ActivityCompat.shouldShowRequestPermissionRationale(AuthenticationActivity.this,
@@ -204,7 +211,7 @@ public class AuthenticationActivity extends BaseActivity implements
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(AuthenticationActivity.this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_CONTACTS, android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.WRITE_SETTINGS, android.Manifest.permission.CHANGE_CONFIGURATION, android.Manifest.permission.MODIFY_AUDIO_SETTINGS, android.Manifest.permission.RECEIVE_BOOT_COMPLETED},
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CHANGE_WIFI_STATE, android.Manifest.permission.READ_CONTACTS, android.Manifest.permission.WRITE_CONTACTS, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.WRITE_SETTINGS, android.Manifest.permission.CHANGE_CONFIGURATION, android.Manifest.permission.MODIFY_AUDIO_SETTINGS, android.Manifest.permission.RECEIVE_BOOT_COMPLETED},
                         6);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an

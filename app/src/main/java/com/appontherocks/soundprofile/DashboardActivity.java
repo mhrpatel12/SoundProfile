@@ -369,7 +369,7 @@ public class DashboardActivity extends BaseActivity
                 mTimePicker.setMessage("Start Time");
                 mTimePicker.show();
             }
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_advanced_settings) {
 
         } else if (id == R.id.nav_send) {
 

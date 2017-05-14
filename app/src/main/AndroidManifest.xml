@@ -25,14 +25,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <receiver android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.location.PROVIDERS_CHANGED" />
 
@@ -100,7 +98,6 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <service android:name=".GeofenceTransitionsIntentService" />
-
         <service
             android:name=".SleepyHoursService"
             android:enabled="true"
@@ -113,6 +110,7 @@
             android:name=".SleepyHoursEnd"
             android:process=":SleepyHours_Service" />
 
+        <activity android:name=".AdvancedSettingsActivity"></activity>
     </application>
 
 </manifest>

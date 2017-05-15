@@ -5,7 +5,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,12 +30,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
  * Created by Mihir on 4/30/2017.
  */
 
 public class SleepyHoursStart extends BroadcastReceiver implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SleepyHoursStart";
+    final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     private final int STEP_ONE_COMPLETE = 0;
     List<String> mGeofenceList;
     private AudioManager audioManager;
@@ -62,6 +68,13 @@ public class SleepyHoursStart extends BroadcastReceiver implements GoogleApiClie
         Toast.makeText(mContext, "Alarm !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
         audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+
+        SharedPreferences prefs = mContext.getSharedPreferences(mContext.getString(R.string.advanced_settings), MODE_PRIVATE);
+        boolean autoDisableWifi = prefs.getBoolean(mContext.getString(R.string.auto_disable_wifi), false); //false is the default value.
+
+        if (autoDisableWifi) {
+            wifiManager.setWifiEnabled(false);
+        }
 
         mGeofenceList = new ArrayList<String>();
         Toast.makeText(mContext, "Booting Completed", Toast.LENGTH_LONG).show();

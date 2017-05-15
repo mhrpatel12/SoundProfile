@@ -85,4 +85,7 @@
     <string name="sleep_hours_warning_start">You\'ve Defined sleepy hours from </string>
     <string name="sleep_hours_warning_end">\n Remove Sleepy Hours ?</string>
     <string name="wifi_setting_description">Auto disable Wi-Fi during sleepy hours.</string>
+    <string name="title_activity_advanced_settings">Advanced Settings</string>
+    <string name="auto_disable_wifi">autoDisableWifi</string>
+    <string name="advanced_settings">Advanced Settings</string>
 </resources>

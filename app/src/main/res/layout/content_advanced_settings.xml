@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/layout_margin_seek"
     android:layout_marginTop="@dimen/layout_margin_seek"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_advanced_settings">
 
     <LinearLayout
-        android:id="@+id/layout_wifi_setting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_seek"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/layout_wifi_setting"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_textview_desc"
-            android:layout_weight="0.95"
-            android:text="@string/wifi_setting_description" />
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/chkAutoWifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.05"
-            android:checked="false" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.95"
+                android:text="@string/wifi_setting_description" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkAutoWifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05"
+                android:checked="false" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

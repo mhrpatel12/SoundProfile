@@ -20,7 +20,7 @@ public class AdvancedSettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    wifiManager.setWifiEnabled(true);
+                    wifiManager.setWifiEnabled(false);
                 } else {
                     wifiManager.setWifiEnabled(true);
                 }

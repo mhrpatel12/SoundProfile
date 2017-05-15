@@ -370,7 +370,8 @@ public class DashboardActivity extends BaseActivity
                 mTimePicker.show();
             }
         } else if (id == R.id.nav_advanced_settings) {
-
+            Intent intent = new Intent(DashboardActivity.this, AdvancedSettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_send) {
 
         }

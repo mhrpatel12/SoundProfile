@@ -98,6 +98,11 @@
             android:label="@string/title_activity_default_profile"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
+        <activity
+            android:name=".AdvancedSettingsActivity"
+            android:label="@string/title_activity_advanced_settings"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <service android:name=".GeofenceTransitionsIntentService" />
         <service
             android:name=".SleepyHoursService"
@@ -111,7 +116,6 @@
             android:name=".SleepyHoursEnd"
             android:process=":SleepyHours_Service" />
 
-        <activity android:name=".AdvancedSettingsActivity"></activity>
     </application>
 
 </manifest>

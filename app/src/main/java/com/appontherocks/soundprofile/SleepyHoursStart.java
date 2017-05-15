@@ -31,7 +31,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Mihir on 4/30/2017.
@@ -39,13 +38,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SleepyHoursStart extends BroadcastReceiver implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SleepyHoursStart";
-    final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     private final int STEP_ONE_COMPLETE = 0;
     List<String> mGeofenceList;
     private AudioManager audioManager;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Context mContext;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -69,6 +68,7 @@ public class SleepyHoursStart extends BroadcastReceiver implements GoogleApiClie
         audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
+        final WifiManager wifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         SharedPreferences prefs = mContext.getSharedPreferences(mContext.getString(R.string.advanced_settings), MODE_PRIVATE);
         boolean autoDisableWifi = prefs.getBoolean(mContext.getString(R.string.auto_disable_wifi), false); //false is the default value.
 

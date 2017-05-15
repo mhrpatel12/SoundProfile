@@ -39,7 +39,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Mihir on 4/30/2017.
@@ -47,7 +46,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SleepyHoursEnd extends BroadcastReceiver implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
     private static final String TAG = "SleepyHoursEnd";
-    final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     private final int STEP_ONE_COMPLETE = 0;
     List<Geofence> mGeofenceList;
     private AudioManager audioManager;
@@ -79,6 +77,7 @@ public class SleepyHoursEnd extends BroadcastReceiver implements GoogleApiClient
         audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
+        final WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         SharedPreferences prefs = mContext.getSharedPreferences(mContext.getString(R.string.advanced_settings), MODE_PRIVATE);
         boolean autoDisableWifi = prefs.getBoolean(mContext.getString(R.string.auto_disable_wifi), false); //false is the default value.
 

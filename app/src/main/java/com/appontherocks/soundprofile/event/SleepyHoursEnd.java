@@ -1,11 +1,15 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.event;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,9 +17,13 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.Utility.Constants;
 import com.appontherocks.soundprofile.models.SoundProfile;
+import com.appontherocks.soundprofile.service.GeofenceTransitionsIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -30,16 +38,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
- * Created by Mihir on 3/30/2017.
+ * Created by Mihir on 4/30/2017.
  */
 
-public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
-
+public class SleepyHoursEnd extends BroadcastReceiver implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
+    private static final String TAG = "SleepyHoursEnd";
     private final int STEP_ONE_COMPLETE = 0;
     List<Geofence> mGeofenceList;
+    private AudioManager audioManager;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Context mContext;
@@ -51,7 +63,7 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
                     LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                     if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         if (mGeofenceList.size() > 0) {
-                            new saveGeoFerncesAyncTask().execute();
+                            new SleepyHoursEnd.saveGeoFerncesAyncTask().execute();
                         }
                     }
                     break;
@@ -60,24 +72,62 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
     };
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        mContext = context;
+    public void onReceive(Context mContext, Intent intent) {
+        // Put here YOUR code.
+        mContext = mContext;
+        Log.e(TAG, "End Hours !!!!!!!!!!");
+        Toast.makeText(mContext, "Alarm !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
+        audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
+        final WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        SharedPreferences prefs = mContext.getSharedPreferences(mContext.getString(R.string.advanced_settings), MODE_PRIVATE);
+        boolean autoDisableWifi = prefs.getBoolean(mContext.getString(R.string.auto_disable_wifi), false); //false is the default value.
+
+        if (autoDisableWifi) {
+            wifiManager.setWifiEnabled(true);
+        }
 
         mGeofenceList = new ArrayList<Geofence>();
-        Toast.makeText(context, "Booting Completed", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "Booting Completed", Toast.LENGTH_LONG).show();
         LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             fetchGeoFences();
         }
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context)
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
         }
         mGoogleApiClient.connect();
+    }
+
+    public void setSleepyHoursEnd(Context context, int endHours, int endMinutes) {
+        // Set the alarm to start at approximately 2:00 p.m.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, endHours);
+        calendar.set(Calendar.MINUTE, endMinutes);
+
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, SleepyHoursEnd.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        Log.e(TAG, "onSleepyHoursEnd");
+    }
+
+    public void cancelSleepyHoursEnd(Context context) {
+        Intent intent = new Intent(context, SleepyHoursEnd.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
+        Log.e(TAG, "onSleepyHoursEndCancelled");
     }
 
     private void fetchGeoFences() {
@@ -199,7 +249,7 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
                     mGoogleApiClient,
                     getGeofencingRequest(),
                     getGeofencePendingIntent()
-            ).setResultCallback(BootReceiver.this);
+            ).setResultCallback(SleepyHoursEnd.this);
 
             return null;
         }

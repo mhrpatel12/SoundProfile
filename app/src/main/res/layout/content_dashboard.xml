@@ -5,7 +5,7 @@
     android:id="@+id/content_dashboard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.appontherocks.soundprofile.DashboardActivity"
+    tools:context="com.appontherocks.soundprofile.activities.DashboardActivity"
     tools:showIn="@layout/app_bar_dashboard">
 
     <LinearLayout

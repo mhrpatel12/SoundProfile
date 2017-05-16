@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -10,6 +10,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.appontherocks.soundprofile.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity {

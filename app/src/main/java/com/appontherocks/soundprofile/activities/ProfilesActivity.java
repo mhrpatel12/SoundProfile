@@ -1,8 +1,11 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.adapter.ProfilesSwipableAdapter;
+import com.appontherocks.soundprofile.event.ProfileDeletedEvent;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

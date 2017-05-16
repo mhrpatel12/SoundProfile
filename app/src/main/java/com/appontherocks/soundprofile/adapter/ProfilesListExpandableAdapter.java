@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.bumptech.glide.Glide;
 import com.ramotion.expandingcollection.ECCardContentListItemAdapter;

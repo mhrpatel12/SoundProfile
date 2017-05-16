@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.Utility.ImageLoader;
+import com.appontherocks.soundprofile.activities.MainActivity;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;

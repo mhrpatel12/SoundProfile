@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.widget.CompoundButton;
+
+import com.appontherocks.soundprofile.R;
 
 public class AdvancedSettingsActivity extends AppCompatActivity {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.Utility;
 
 import android.net.Uri;
 

@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.application;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;

@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

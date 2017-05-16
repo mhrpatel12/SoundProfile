@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.Utility;
 
 
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.widget.ImageView;
+
+import com.appontherocks.soundprofile.R;
 
 import java.io.File;
 import java.io.FileInputStream;

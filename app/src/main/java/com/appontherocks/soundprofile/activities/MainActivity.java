@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -31,7 +31,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.Utility.Constants;
 import com.appontherocks.soundprofile.models.SoundProfile;
+import com.appontherocks.soundprofile.service.GeofenceTransitionsIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;

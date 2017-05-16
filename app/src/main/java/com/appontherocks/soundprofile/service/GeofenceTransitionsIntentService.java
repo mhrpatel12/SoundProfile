@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.service;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -36,6 +36,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,7 +52,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.appontherocks.soundprofile.Constants.TAG;
+import static com.appontherocks.soundprofile.Utility.Constants.TAG;
 
 /**
  * Listens for geofence transition changes.

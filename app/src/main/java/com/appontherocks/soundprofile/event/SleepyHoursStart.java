@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.event;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;

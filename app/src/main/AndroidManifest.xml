@@ -20,13 +20,13 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
 
     <application
-        android:name=".AppController"
+        android:name=".application.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".service.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -44,11 +44,11 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".AuthenticationActivity"
+            android:name=".activities.AuthenticationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,15 +63,15 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
         <activity
-            android:name=".DashboardActivity"
+            android:name=".activities.DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".ProfilesActivity"
+            android:name=".activities.ProfilesActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".NewProfileActivity"
+            android:name=".activities.NewProfileActivity"
             android:label="@string/title_activity_new_profile"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <!--
@@ -87,33 +87,33 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".MapActivity"
+            android:name=".activities.MapActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".DefaultProfileActivity"
+            android:name=".activities.DefaultProfileActivity"
             android:label="@string/title_activity_default_profile"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
-            android:name=".AdvancedSettingsActivity"
+            android:name=".activities.AdvancedSettingsActivity"
             android:label="@string/title_activity_advanced_settings"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <service android:name=".GeofenceTransitionsIntentService" />
+        <service android:name=".service.GeofenceTransitionsIntentService" />
         <service
-            android:name=".SleepyHoursService"
+            android:name=".service.SleepyHoursService"
             android:enabled="true"
             android:process=":SleepyHours_Service" />
 
         <receiver
-            android:name=".SleepyHoursStart"
+            android:name=".event.SleepyHoursStart"
             android:process=":SleepyHours_Service" />
         <receiver
-            android:name=".SleepyHoursEnd"
+            android:name=".event.SleepyHoursEnd"
             android:process=":SleepyHours_Service" />
 
     </application>

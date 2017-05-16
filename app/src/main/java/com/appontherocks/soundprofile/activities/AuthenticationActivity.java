@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -18,8 +18,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.Utility.Constants;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.appontherocks.soundprofile.models.User;
+import com.appontherocks.soundprofile.service.GeofenceTransitionsIntentService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

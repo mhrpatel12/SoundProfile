@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.event;
 
 /**
  * Created by Mihir on 5/7/2017.

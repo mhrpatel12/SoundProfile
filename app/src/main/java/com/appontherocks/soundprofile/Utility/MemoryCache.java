@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.Utility;
 
 import android.graphics.Bitmap;
 import android.util.Log;

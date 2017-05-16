@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.activities;
 
 import android.app.ActivityManager;
 import android.app.TimePickerDialog;
@@ -34,7 +34,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.models.SoundProfile;
+import com.appontherocks.soundprofile.service.SleepyHoursService;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

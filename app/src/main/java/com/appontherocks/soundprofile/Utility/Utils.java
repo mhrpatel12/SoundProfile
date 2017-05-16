@@ -1,4 +1,4 @@
-package com.appontherocks.soundprofile;
+package com.appontherocks.soundprofile.Utility;
 
 import java.io.InputStream;
 import java.io.OutputStream;

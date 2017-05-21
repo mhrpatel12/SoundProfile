@@ -55,7 +55,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_new_profile">NewProfile</string>
+    <string name="title_activity_new_profile">New Profile</string>
     <string name="title_activity_profile">Profiles</string>
 
     <string name="title_activity_maps">Map</string>
@@ -88,4 +88,7 @@
     <string name="title_activity_advanced_settings">Advanced Settings</string>
     <string name="auto_disable_wifi">autoDisableWifi</string>
     <string name="advanced_settings">Advanced Settings</string>
+    <string name="geofence_radius_setting_description">Geofence radius in meters.</string>
+    <string name="geofence_radius_setting">Apply this radius to my existing profiles.</string>
+    <string name="geofence_radius">Geofence Radius</string>
 </resources>

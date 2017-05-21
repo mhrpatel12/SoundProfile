@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -15,7 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.Utility.Constants;
+import com.appontherocks.soundprofile.activities.AdvancedSettingsActivity;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,6 +36,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Mihir on 3/30/2017.
  */
@@ -44,6 +49,8 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Context mContext;
+    private SharedPreferences advancedSettings;
+    private int radius;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,6 +72,8 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
         mContext = context;
 
         mGeofenceList = new ArrayList<Geofence>();
+        advancedSettings = mContext.getSharedPreferences(mContext.getString(R.string.advanced_settings), MODE_PRIVATE);
+        radius = advancedSettings.getInt(mContext.getString(R.string.geofence_radius), 50);
         Toast.makeText(context, "Booting Completed", Toast.LENGTH_LONG).show();
         LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -100,7 +109,7 @@ public class BootReceiver extends BroadcastReceiver implements GoogleApiClient.C
                                             .setCircularRegion(
                                                     Double.parseDouble(profile.latitude),
                                                     Double.parseDouble(profile.longitude),
-                                                    50
+                                                    radius
                                             )
                                             .setExpirationDuration(Constants.GEOFENCE_EXPIRATION_TIME)
                                             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |

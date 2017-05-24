@@ -107,8 +107,10 @@ public class AdvancedSettingsActivity extends AppCompatActivity implements Googl
         ((AppCompatCheckBox) findViewById(R.id.chkGeofenceRadius)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    fetchGeoFences();
+                if (isChecked) {
+                    if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        fetchGeoFences();
+                    }
                 }
             }
         });

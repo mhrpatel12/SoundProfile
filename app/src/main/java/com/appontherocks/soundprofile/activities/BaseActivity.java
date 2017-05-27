@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
@@ -20,11 +21,11 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-/*        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isBlackTheme", false)) {
-            setTheme(R.style.AppTheme);
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isBlackTheme", false)) {
+            setTheme(R.style.GreenTheme);
         } else {
-            setTheme(R.style.AppThemeLight);
-        }*/
+            setTheme(R.style.DarkTheme);
+        }
         super.onCreate(savedInstanceState);
     }
 

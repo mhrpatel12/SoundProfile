@@ -29,4 +29,8 @@
     <dimen name="layout_margin_seek">15dp</dimen>
     <dimen name="margin_top_current_profile_layout">40dp</dimen>
     <dimen name="margin_left_edit_text">5dp</dimen>
+
+    <dimen name="auth_method_button_width">208dp</dimen>
+    <dimen name="auth_method_button_marginBottom">8dp</dimen>
+    <dimen name="auth_method_button_drawablePadding">12dp</dimen>
 </resources>

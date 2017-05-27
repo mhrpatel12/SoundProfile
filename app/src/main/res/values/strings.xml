@@ -91,4 +91,7 @@
     <string name="geofence_radius_setting_description">Geofence radius in meters.</string>
     <string name="geofence_radius_setting">Apply this radius to my existing profiles.</string>
     <string name="geofence_radius">Geofence Radius</string>
+
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
 </resources>

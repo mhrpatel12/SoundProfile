@@ -15,10 +15,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.Utility.Constants;
@@ -43,7 +47,7 @@ import java.util.List;
 public class AdvancedSettingsActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, ResultCallback<Status>, GoogleApiClient.OnConnectionFailedListener {
 
     private final int STEP_ONE_COMPLETE = 0;
-    SharedPreferences.Editor advancedSettingsEdit;
+    SharedPreferences.Editor advancedSettingsEdit, themeSettingEdit;
     SharedPreferences advancedSettings;
     List<Geofence> mGeofenceList;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
@@ -77,7 +81,8 @@ public class AdvancedSettingsActivity extends BaseActivity implements GoogleApiC
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         advancedSettingsEdit = getSharedPreferences(getString(R.string.advanced_settings), MODE_PRIVATE).edit();
-        advancedSettings = AdvancedSettingsActivity.this.getSharedPreferences(AdvancedSettingsActivity.this.getString(R.string.advanced_settings), MODE_PRIVATE);
+        themeSettingEdit = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE).edit();
+        advancedSettings = AdvancedSettingsActivity.this.getSharedPreferences(getString(R.string.advanced_settings), MODE_PRIVATE);
 
         mContext = AdvancedSettingsActivity.this;
 
@@ -138,6 +143,47 @@ public class AdvancedSettingsActivity extends BaseActivity implements GoogleApiC
         ((TextInputEditText) findViewById(R.id.edtGeofenceRadius)).setText(advancedSettings.getInt(getString(R.string.geofence_radius), 50) + "");
 
         ((AppCompatCheckBox) findViewById(R.id.chkAutoWifi)).setChecked(advancedSettings.getBoolean(getString(R.string.auto_disable_wifi), false));
+
+        ((TextView) findViewById(R.id.txtChangeTheme)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showThemeSelectorPopup(v);
+            }
+        });
+    }
+
+    // Display anchored popup menu based on view selected
+    private void showThemeSelectorPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        // Inflate the menu from xml
+        popup.getMenuInflater().inflate(R.menu.popup_themes, popup.getMenu());
+        // Setup menu item selection
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.theme_dark:
+                        themeSettingEdit.putString(getString(R.string.theme), getString(R.string.theme_dark)).commit();
+                        setTheme(R.style.DarkTheme);
+                        recreate();
+                        return true;
+                    case R.id.theme_green:
+                        themeSettingEdit.putString(getString(R.string.theme), getString(R.string.theme_green)).commit();
+                        setTheme(R.style.GreenTheme);
+                        recreate();
+                        return true;
+                    case R.id.theme_purple:
+                        themeSettingEdit.putString(getString(R.string.theme), getString(R.string.theme_purple)).commit();
+                        setTheme(R.style.PurpleTheme);
+                        recreate();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        // Handle dismissal with: popup.setOnDismissListener(...);
+        // Show the menu
+        popup.show();
     }
 
     private void fetchGeoFences() {

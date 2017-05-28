@@ -79,6 +79,7 @@
                 app:srcCompat="@drawable/ic_format_paint_black_24dp" />
 
             <TextView
+                android:id="@+id/txtChangeTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

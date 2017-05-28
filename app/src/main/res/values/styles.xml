@@ -38,19 +38,6 @@
         <item name="android:divider">@color/divider</item>
     </style>
 
-    <style name="GreenTheme" parent="FirebaseUI">
-        <item name="colorPrimary">@color/material_green_500</item>
-        <item name="colorPrimaryDark">@color/material_green_700</item>
-        <item name="colorAccent">@color/material_purple_a700</item>
-        <item name="colorControlNormal">@color/material_green_500</item>
-        <item name="colorControlActivated">@color/material_lime_a700</item>
-        <item name="colorControlHighlight">@color/material_green_a200</item>
-        <item name="android:windowBackground">@color/material_green_50</item>
-        <item name="android:textColor">@color/material_gray_900</item>
-        <item name="android:textColorPrimary">@color/material_deep_purple_50</item>
-        <item name="colorButtonNormal">@color/material_green_500</item>
-    </style>
-
     <style name="PurpleTheme" parent="FirebaseUI">
         <item name="colorPrimary">@color/material_deep_purple_500</item>
         <item name="colorPrimaryDark">@color/material_deep_purple_700</item>
@@ -62,6 +49,19 @@
         <item name="android:textColor">@color/material_gray_900</item>
         <item name="android:textColorPrimary">@color/material_deep_purple_50</item>
         <item name="colorButtonNormal">@color/material_deep_purple_500</item>
+    </style>
+
+    <style name="GreenTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/material_green_500</item>
+        <item name="colorPrimaryDark">@color/material_green_700</item>
+        <item name="colorAccent">@color/material_purple_a700</item>
+        <item name="colorControlNormal">@color/material_green_500</item>
+        <item name="colorControlActivated">@color/material_lime_a700</item>
+        <item name="colorControlHighlight">@color/material_green_a200</item>
+        <item name="android:windowBackground">@color/material_green_50</item>
+        <item name="android:textColor">@color/material_gray_900</item>
+        <item name="android:textColorPrimary">@color/material_deep_purple_50</item>
+        <item name="colorButtonNormal">@color/material_green_500</item>
     </style>
 
     <style name="DarkTheme" parent="FirebaseUI">
@@ -79,6 +79,8 @@
             @color/text_default_material_light_secondary
         </item>
         <item name="android:windowBackground">@color/material_gray_850</item>
+        <item name="android:alertDialogTheme">@style/DarkAlertDialogTheme</item>
+        <item name="android:alertDialogStyle">@style/DarkAlertDialogStyle</item>
     </style>
 
     <style name="MyCardViewStyle" parent="Theme.AppCompat.Light">
@@ -322,4 +324,45 @@
     </style>
 
     <color name="tw__solid_white">#FFFFFFFF</color>
+
+    <style name="MyAlertDialogTitle">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="DarkAlertTextAppearance">
+        <!-- Set text size and color of title and message here -->
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="DarkAlertDialogTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTitleStyle">@style/MyAlertDialogTitle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:textAppearanceMedium">@style/DarkAlertTextAppearance</item>
+        <!-- If you don't want your own button bar style use
+                @android:style/Holo.Light.ButtonBar.AlertDialog
+                and
+                ?android:attr/borderlessButtonStyle
+             instead of @style/MyButtonBar and @style/MyBorderlessButton -->
+    </style>
+
+    <style name="DarkAlertDialogStyle">
+        <!-- Define background colors of title, message, buttons, etc. here -->
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/black</item>
+        <!--        <item name="android:topDark">...</item>
+                <item name="android:centerDark">...</item>
+                <item name="android:bottomDark">...</item>
+                <item name="android:fullBright">...</item>
+                <item name="android:topBright">...</item>
+                <item name="android:centerBright">...</item>
+                <item name="android:bottomBright">...</item>
+                <item name="android:bottomMedium">...</item>
+                <item name="android:centerMedium">...</item>-->
+    </style>
+
 </resources>

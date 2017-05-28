@@ -95,4 +95,8 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="change_theme">Change app theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_purple">Purple</string>
+    <string name="theme_green">Green</string>
+    <string name="theme">theme</string>
 </resources>

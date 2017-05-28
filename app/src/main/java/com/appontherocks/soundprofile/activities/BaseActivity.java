@@ -3,9 +3,9 @@ package com.appontherocks.soundprofile.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
@@ -21,10 +21,16 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isBlackTheme", false)) {
-            setTheme(R.style.GreenTheme);
-        } else {
+
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE);
+        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_dark));
+
+        if (selectedTheme.equals(getString(R.string.theme_dark))) {
             setTheme(R.style.DarkTheme);
+        } else if (selectedTheme.equals(getString(R.string.theme_green))) {
+            setTheme(R.style.GreenTheme);
+        } else if (selectedTheme.equals(getString(R.string.theme_purple))) {
+            setTheme(R.style.PurpleTheme);
         }
         super.onCreate(savedInstanceState);
     }

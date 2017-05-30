@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="FirebaseUI" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="FirebaseUI" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/authui_colorPrimary</item>
         <item name="colorPrimaryDark">@color/authui_colorPrimaryDark</item>
         <item name="colorAccent">@color/authui_colorAccent</item>
@@ -10,7 +10,10 @@
         <item name="colorControlHighlight">@color/authui_colorAccent</item>
         <item name="android:textColor">@color/authui_inputTextColorDark</item>
         <item name="android:textColorPrimary">@color/authui_inputTextColor</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="android:buttonStyle">@style/FirebaseUI.Button</item>
+        <item name="android:icon">@color/icons</item>
+        <item name="android:divider">@color/divider</item>
         <item name="android:editTextStyle">@style/FirebaseUI.EditText</item>
     </style>
 

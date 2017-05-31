@@ -1,6 +1,5 @@
 package com.appontherocks.soundprofile.models;
 
-import com.appontherocks.soundprofile.R;
 import com.ramotion.expandingcollection.ECCardData;
 
 import java.util.ArrayList;
@@ -58,16 +57,6 @@ public class SoundProfile implements ECCardData<SoundProfile> {
         this.mainBackgroundResource = mainBackgroundResource;
         this.headBackgroundResource = headBackgroundResource;
         this.listItems = listItems;
-    }
-
-    public static ArrayList<ECCardData> generateListData() {
-        ArrayList<ECCardData> list = new ArrayList<>();
-        list.add(new SoundProfile("Profile 1", R.drawable.staticmap, R.drawable.staticmap, createItemsList("Profile 1")));
-        list.add(new SoundProfile("Profile 2", R.drawable.staticmap, R.drawable.staticmap, createItemsList("Profile 2")));
-        list.add(new SoundProfile("Profile 3", R.drawable.staticmap, R.drawable.staticmap, createItemsList("Profile 3")));
-        list.add(new SoundProfile("Profile 4", R.drawable.staticmap, R.drawable.staticmap, createItemsList("Profile 4")));
-
-        return list;
     }
 
     private static List<SoundProfile> createItemsList(String cardName) {

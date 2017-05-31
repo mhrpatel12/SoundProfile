@@ -173,7 +173,7 @@ public class AdvancedSettingsActivity extends BaseActivity implements GoogleApiC
                         return true;
                     case R.id.theme_purple:
                         themeSettingEdit.putString(getString(R.string.theme), getString(R.string.theme_purple)).commit();
-                        setTheme(R.style.PurpleTheme);
+                        setTheme(R.style.RedTheme);
                         recreate();
                         return true;
                     default:

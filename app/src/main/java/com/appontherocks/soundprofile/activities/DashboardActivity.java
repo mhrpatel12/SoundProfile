@@ -50,7 +50,7 @@ public class DashboardActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         super.onCreate(savedInstanceState);
-        //setTheme(R.style.AppThemeLight);
+        setContentView(R.layout.activity_dashboard);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(DashboardActivity.this);

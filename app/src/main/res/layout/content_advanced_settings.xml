@@ -28,7 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/wifi_setting_description" />
+                android:text="@string/wifi_setting_description"
+                android:textColor="?attr/checkbox_text_color" />
 
         </LinearLayout>
 
@@ -60,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.05"
                 android:checked="false"
-                android:text="@string/geofence_radius_setting" />
+                android:text="@string/geofence_radius_setting"
+                android:textColor="?attr/checkbox_text_color" />
 
         </LinearLayout>
 

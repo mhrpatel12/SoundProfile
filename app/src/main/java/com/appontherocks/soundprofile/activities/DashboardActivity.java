@@ -28,6 +28,7 @@ import android.widget.TimePicker;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.fragments.DashboardFragment;
+import com.appontherocks.soundprofile.fragments.ProfilesFragment;
 import com.appontherocks.soundprofile.service.SleepyHoursService;
 import com.google.firebase.database.DatabaseReference;
 
@@ -182,9 +183,9 @@ public class DashboardActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profiles) {
-            DashboardFragment dashboardFragment = new DashboardFragment();
+            ProfilesFragment profilesFragment = new ProfilesFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_Content, dashboardFragment);
+            fragmentTransaction.replace(R.id.frame_Content, profilesFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 

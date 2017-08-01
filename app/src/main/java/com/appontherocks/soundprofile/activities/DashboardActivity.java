@@ -18,6 +18,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +46,7 @@ public class DashboardActivity extends BaseActivity
     private Uri defaultRintoneUri;
     private DatabaseReference mSoundProfileReference;
     private boolean isServiceRunning = false;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,9 +54,16 @@ public class DashboardActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(DashboardActivity.this);
         View headerView = navigationView.getHeaderView(0);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // You were missing this setHomeAsUpIndicator
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
         profilePicture = (de.hdodenhof.circleimageview.CircleImageView) headerView.findViewById(R.id.imgProfilePicture);
         txtDisplayName = (TextView) headerView.findViewById(R.id.txtUserName);
@@ -157,16 +166,12 @@ public class DashboardActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            // THIS IS YOUR DRAWER/HAMBURGER BUTTON
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -177,8 +182,14 @@ public class DashboardActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profiles) {
-            Intent intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
-            startActivity(intent);
+            DashboardFragment dashboardFragment = new DashboardFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame_Content, dashboardFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+
+            /*Intent intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
+            startActivity(intent);*/
         } else if (id == R.id.nav_default_profile) {
             Intent intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);
             startActivity(intent);
@@ -256,8 +267,7 @@ public class DashboardActivity extends BaseActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

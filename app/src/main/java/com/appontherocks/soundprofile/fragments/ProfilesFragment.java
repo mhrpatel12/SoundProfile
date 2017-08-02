@@ -51,18 +51,13 @@ public class ProfilesFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profiles, container, false);
 
-        mContext = view.getContext();
+        mContext = getContext();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        try {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        } catch (NullPointerException e) {
-        }
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         swipeCardView = (SwipeCardView) view.findViewById(R.id.card_stack_view);
+        swipeCardView.setVisibility(View.VISIBLE);
         swipeCardView.setFlingListener(new SwipeCardView.OnCardFlingListener() {
             @Override
             public void onCardExitLeft(Object dataObject) {
@@ -127,7 +122,7 @@ public class ProfilesFragment extends Fragment {
                 if (profileArrayList.size() > 0) {
                     profileArrayList.remove(profileArrayList.size() - 1);
                 }
-                profilesSwipableAdapter = new ProfilesSwipableAdapter(mContext, profileArrayList);
+                profilesSwipableAdapter = new ProfilesSwipableAdapter(getActivity(), R.layout.list_item_profile, profileArrayList);
                 swipeCardView.setAdapter(profilesSwipableAdapter);
                 FirebaseDatabase.getInstance().getReference().child("profiles").child(((BaseActivity) getActivity()).getUid()).removeEventListener(this);
             }

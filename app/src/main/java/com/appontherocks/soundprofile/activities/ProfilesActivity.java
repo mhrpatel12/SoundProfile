@@ -111,7 +111,7 @@ public class ProfilesActivity extends BaseActivity {
                 if (profileArrayList.size() > 0) {
                     profileArrayList.remove(profileArrayList.size() - 1);
                 }
-                profilesSwipableAdapter = new ProfilesSwipableAdapter(ProfilesActivity.this, profileArrayList);
+                profilesSwipableAdapter = new ProfilesSwipableAdapter(ProfilesActivity.this, R.layout.list_item_profile, profileArrayList);
                 swipeCardView.setAdapter(profilesSwipableAdapter);
                 FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).removeEventListener(this);
             }

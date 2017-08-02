@@ -36,11 +36,12 @@ public class ProfilesSwipableAdapter extends ArrayAdapter<SoundProfile> {
     private GoogleApiClient mGoogleApiClient;
     private Context mContext;
 
-    public ProfilesSwipableAdapter(Context context, ArrayList<SoundProfile> cards) {
-        super(context, -1);
+    public ProfilesSwipableAdapter(Context context, int resource, ArrayList<SoundProfile> cards) {
+        super(context, 0, cards);
         this.mContext = context;
         this.cards = cards;
-        this.layoutInflater = LayoutInflater.from(context);
+        //this.layoutInflater = LayoutInflater.from(context);
+        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(mContext)
@@ -142,6 +143,11 @@ public class ProfilesSwipableAdapter extends ArrayAdapter<SoundProfile> {
     @Override
     public SoundProfile getItem(int position) {
         return cards.get(position);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
     }
 
     @Override

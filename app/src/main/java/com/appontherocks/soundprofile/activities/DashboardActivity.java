@@ -13,9 +13,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +28,6 @@ import android.widget.TimePicker;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.fragments.DashboardFragment;
-import com.appontherocks.soundprofile.fragments.ProfilesFragment;
 import com.appontherocks.soundprofile.service.SleepyHoursService;
 import com.google.firebase.database.DatabaseReference;
 
@@ -48,6 +47,7 @@ public class DashboardActivity extends BaseActivity
     private DatabaseReference mSoundProfileReference;
     private boolean isServiceRunning = false;
     private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,15 +56,19 @@ public class DashboardActivity extends BaseActivity
         setContentView(R.layout.activity_dashboard);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(DashboardActivity.this);
-        View headerView = navigationView.getHeaderView(0);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(DashboardActivity.this);
+        View headerView = mNavigationView.getHeaderView(0);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // You were missing this setHomeAsUpIndicator
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
+
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         profilePicture = (de.hdodenhof.circleimageview.CircleImageView) headerView.findViewById(R.id.imgProfilePicture);
         txtDisplayName = (TextView) headerView.findViewById(R.id.txtUserName);
@@ -86,22 +90,18 @@ public class DashboardActivity extends BaseActivity
         }
 
         setInitialFragment();
-
-/*        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();*/
-
-        // Initialize Database
     }
 
     public void setInitialFragment() {
-        DashboardFragment dashboardFragment = new DashboardFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frame_Content, new DashboardFragment())
+                .commit();
+
+        /*DashboardFragment dashboardFragment = new DashboardFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_Content, dashboardFragment);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
         //setUpToolbar();
     }
 
@@ -181,91 +181,96 @@ public class DashboardActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_profiles) {
-            ProfilesFragment profilesFragment = new ProfilesFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_Content, profilesFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
-            /*Intent intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
-            startActivity(intent);*/
-        } else if (id == R.id.nav_default_profile) {
-            Intent intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_sleep_hours) {
-            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            isServiceRunning = false;
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if (SleepyHoursService.class.getName().equals(service.service.getClassName())) {
-                    isServiceRunning = true;
-                }
-            }
-            if (isServiceRunning) {
-                SharedPreferences prefs = getSharedPreferences(getString(R.string.sleep_hours), MODE_PRIVATE);
-                int startHour = prefs.getInt("startHour", 0); //0 is the default value.
-                int startMinute = prefs.getInt("startMinute", 0); //0 is the default value.
-                int endHour = prefs.getInt("endHour", 0); //0 is the default value.
-                int endMinute = prefs.getInt("endMinute", 0); //0 is the default value.
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(getResources().getString(R.string.sleep_hours))
-                        .setMessage(getResources().getString(R.string.sleep_hours_warning_start) + " " + startHour + ":" + startMinute + " to " + endHour + ":" + endMinute
-                                + getResources().getString(R.string.sleep_hours_warning_end))
-                        .setCancelable(true)
-                        .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                                stopService(new Intent(DashboardActivity.this, SleepyHoursService.class));
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                                dialog.cancel();
-                            }
-                        });
-                final AlertDialog alert = builder.create();
-                alert.show();
-            } else {
-                Calendar mcurrentTime = Calendar.getInstance();
-                final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                final int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        TimePickerDialog mTimePicker;
-                        final int selectedStartHour = selectedHour;
-                        final int selectedStartMinute = selectedMinute;
-                        mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sleep_hours), MODE_PRIVATE).edit();
-                                editor.putInt("startHour", selectedStartHour);
-                                editor.putInt("startMinute", selectedStartMinute);
-                                editor.putInt("endHour", selectedHour);
-                                editor.putInt("endMinute", selectedMinute);
-                                editor.commit();
-                                Intent intent = new Intent(DashboardActivity.this, SleepyHoursService.class);
-                                intent.putExtra("startHour", selectedStartHour);
-                                intent.putExtra("startMinute", selectedStartMinute);
-                                intent.putExtra("endHour", selectedHour);
-                                intent.putExtra("endMinute", selectedMinute);
-                                startService(intent);
-                            }
-                        }, hour, minute, true);//Yes 24 hour time
-                        mTimePicker.setMessage("End Time");
-                        mTimePicker.show();
+        Intent intent;
+        switch (id) {
+            case R.id.nav_dashboard:
+                setInitialFragment();
+                break;
+            case R.id.nav_profiles:
+/*                ProfilesFragment profilesFragment = new ProfilesFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_Content, profilesFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();*/
+                intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_default_profile:
+                intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_sleep_hours:
+                ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                isServiceRunning = false;
+                for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                    if (SleepyHoursService.class.getName().equals(service.service.getClassName())) {
+                        isServiceRunning = true;
                     }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setMessage("Start Time");
-                mTimePicker.show();
-            }
-        } else if (id == R.id.nav_advanced_settings) {
-            Intent intent = new Intent(DashboardActivity.this, AdvancedSettingsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_send) {
+                }
+                if (isServiceRunning) {
+                    SharedPreferences prefs = getSharedPreferences(getString(R.string.sleep_hours), MODE_PRIVATE);
+                    int startHour = prefs.getInt("startHour", 0); //0 is the default value.
+                    int startMinute = prefs.getInt("startMinute", 0); //0 is the default value.
+                    int endHour = prefs.getInt("endHour", 0); //0 is the default value.
+                    int endMinute = prefs.getInt("endMinute", 0); //0 is the default value.
 
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getResources().getString(R.string.sleep_hours))
+                            .setMessage(getResources().getString(R.string.sleep_hours_warning_start) + " " + startHour + ":" + startMinute + " to " + endHour + ":" + endMinute
+                                    + getResources().getString(R.string.sleep_hours_warning_end))
+                            .setCancelable(true)
+                            .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                                public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                    stopService(new Intent(DashboardActivity.this, SleepyHoursService.class));
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    final AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    final int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            TimePickerDialog mTimePicker;
+                            final int selectedStartHour = selectedHour;
+                            final int selectedStartMinute = selectedMinute;
+                            mTimePicker = new TimePickerDialog(DashboardActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                    SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sleep_hours), MODE_PRIVATE).edit();
+                                    editor.putInt("startHour", selectedStartHour);
+                                    editor.putInt("startMinute", selectedStartMinute);
+                                    editor.putInt("endHour", selectedHour);
+                                    editor.putInt("endMinute", selectedMinute);
+                                    editor.commit();
+                                    Intent intent = new Intent(DashboardActivity.this, SleepyHoursService.class);
+                                    intent.putExtra("startHour", selectedStartHour);
+                                    intent.putExtra("startMinute", selectedStartMinute);
+                                    intent.putExtra("endHour", selectedHour);
+                                    intent.putExtra("endMinute", selectedMinute);
+                                    startService(intent);
+                                }
+                            }, hour, minute, true);//Yes 24 hour time
+                            mTimePicker.setMessage("End Time");
+                            mTimePicker.show();
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setMessage("Start Time");
+                    mTimePicker.show();
+                }
+                break;
+            case R.id.nav_advanced_settings:
+                intent = new Intent(DashboardActivity.this, AdvancedSettingsActivity.class);
+                startActivity(intent);
+                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);

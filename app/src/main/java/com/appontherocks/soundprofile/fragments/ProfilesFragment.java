@@ -4,8 +4,6 @@ package com.appontherocks.soundprofile.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +43,6 @@ public class ProfilesFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,11 +50,12 @@ public class ProfilesFragment extends Fragment {
 
         mContext = getContext();
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
         swipeCardView = (SwipeCardView) view.findViewById(R.id.card_stack_view);
         swipeCardView.setVisibility(View.VISIBLE);
+
+        profilesSwipableAdapter = new ProfilesSwipableAdapter(getActivity(), R.layout.list_item_profile, profileArrayList);
+        swipeCardView.setAdapter(profilesSwipableAdapter);
+
         swipeCardView.setFlingListener(new SwipeCardView.OnCardFlingListener() {
             @Override
             public void onCardExitLeft(Object dataObject) {
@@ -85,7 +83,6 @@ public class ProfilesFragment extends Fragment {
             public void onCardExitBottom(Object dataObject) {
             }
         });
-
         // Optionally add an OnItemClickListener
         swipeCardView.setOnItemClickListener(new SwipeCardView.OnItemClickListener() {
             @Override
@@ -122,8 +119,8 @@ public class ProfilesFragment extends Fragment {
                 if (profileArrayList.size() > 0) {
                     profileArrayList.remove(profileArrayList.size() - 1);
                 }
-                profilesSwipableAdapter = new ProfilesSwipableAdapter(getActivity(), R.layout.list_item_profile, profileArrayList);
-                swipeCardView.setAdapter(profilesSwipableAdapter);
+
+                profilesSwipableAdapter.notifyDataSetChanged();
                 FirebaseDatabase.getInstance().getReference().child("profiles").child(((BaseActivity) getActivity()).getUid()).removeEventListener(this);
             }
 

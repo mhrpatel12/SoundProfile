@@ -12,9 +12,7 @@
         android:id="@+id/cv"
         style="@style/MyCardViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        map:layout_editor_absoluteX="8dp"
-        map:layout_editor_absoluteY="10dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"

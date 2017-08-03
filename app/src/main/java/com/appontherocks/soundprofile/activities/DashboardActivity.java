@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,6 +29,7 @@ import android.widget.TimePicker;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.fragments.DashboardFragment;
+import com.appontherocks.soundprofile.fragments.ProfilesFragment;
 import com.appontherocks.soundprofile.service.SleepyHoursService;
 import com.google.firebase.database.DatabaseReference;
 
@@ -93,15 +95,11 @@ public class DashboardActivity extends BaseActivity
     }
 
     public void setInitialFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.frame_Content, new DashboardFragment())
-                .commit();
-
-        /*DashboardFragment dashboardFragment = new DashboardFragment();
+        DashboardFragment dashboardFragment = new DashboardFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_Content, dashboardFragment);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();*/
+        fragmentTransaction.commit();
         //setUpToolbar();
     }
 
@@ -187,13 +185,13 @@ public class DashboardActivity extends BaseActivity
                 setInitialFragment();
                 break;
             case R.id.nav_profiles:
-/*                ProfilesFragment profilesFragment = new ProfilesFragment();
+                ProfilesFragment profilesFragment = new ProfilesFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.frame_Content, profilesFragment);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();*/
-                intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
-                startActivity(intent);
+                fragmentTransaction.commit();
+/*                intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
+                startActivity(intent);*/
                 break;
             case R.id.nav_default_profile:
                 intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);

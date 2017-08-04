@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,9 +27,11 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.fragments.DashboardFragment;
+import com.appontherocks.soundprofile.fragments.DefaultProfileFragment;
 import com.appontherocks.soundprofile.fragments.ProfilesFragment;
 import com.appontherocks.soundprofile.service.SleepyHoursService;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +53,8 @@ public class DashboardActivity extends BaseActivity
     private boolean isServiceRunning = false;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+
+    DefaultProfileFragment mDefaultProfileFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,6 +185,16 @@ public class DashboardActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Intent intent;
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_Content);
+        if ((currentFragment instanceof DefaultProfileFragment) && !(id == R.id.nav_default_profile)) {
+            Toast.makeText(this, "Default profile", Toast.LENGTH_LONG).show();
+            mDefaultProfileFragment = new DefaultProfileFragment();
+            ((DefaultProfileFragment) currentFragment).alertForDiscardDefaultProfileChanges(id);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return false;
+        }
+
         switch (id) {
             case R.id.nav_dashboard:
                 setInitialFragment();
@@ -194,8 +209,13 @@ public class DashboardActivity extends BaseActivity
                 startActivity(intent);*/
                 break;
             case R.id.nav_default_profile:
-                intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);
-                startActivity(intent);
+                DefaultProfileFragment defaultProfileFragment = new DefaultProfileFragment();
+                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_Content, defaultProfileFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                /*intent = new Intent(DashboardActivity.this, DefaultProfileActivity.class);
+                startActivity(intent);*/
                 break;
             case R.id.nav_sleep_hours:
                 ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

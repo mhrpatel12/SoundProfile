@@ -30,6 +30,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.fragments.AdvancedSettingsFragment;
 import com.appontherocks.soundprofile.fragments.DashboardFragment;
 import com.appontherocks.soundprofile.fragments.DefaultProfileFragment;
 import com.appontherocks.soundprofile.fragments.ProfilesFragment;
@@ -286,8 +287,14 @@ public class DashboardActivity extends BaseActivity
                 }
                 break;
             case R.id.nav_advanced_settings:
-                intent = new Intent(DashboardActivity.this, AdvancedSettingsActivity.class);
-                startActivity(intent);
+                AdvancedSettingsFragment advancedSettingsFragment = new AdvancedSettingsFragment();
+                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_Content, advancedSettingsFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                /*intent = new Intent(DashboardActivity.this, AdvancedSettingsActivity.class);
+                startActivity(intent);*/
                 break;
         }
 

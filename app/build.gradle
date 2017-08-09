@@ -1,9 +1,10 @@
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
         applicationId "com.appontherocks.soundprofile"
@@ -38,22 +39,18 @@ dependencies {
     compile project(':swipecardlib')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.google.firebase:firebase-auth:10.2.6'
+    compile 'com.google.firebase:firebase-auth:11.0.4'
     compile 'com.facebook.android:facebook-android-sdk:4.9.0'
-    compile 'com.google.android.gms:play-services-auth:10.2.6'
-    compile 'com.google.firebase:firebase-database:10.2.6'
-    compile 'com.google.android.gms:play-services:10.2.6'
+    compile 'com.google.android.gms:play-services-auth:11.0.4'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.android.gms:play-services-places:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.firebase:firebase-database:11.0.4'
     compile 'com.android.support:multidex:1.0.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.ramotion.expandingcollection:expanding-collection:0.9.0'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.google.firebase:firebase-perf:10.2.6'
+    compile 'com.google.firebase:firebase-perf:11.0.4'
+    compile 'com.android.support:support-v4:25.3.1'
 }
-
-
-
-
-
-
-apply plugin: 'com.google.gms.google-services'

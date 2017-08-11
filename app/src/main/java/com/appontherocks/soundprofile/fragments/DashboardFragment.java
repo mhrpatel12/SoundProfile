@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -26,7 +27,6 @@ import android.widget.ToggleButton;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.activities.BaseActivity;
-import com.appontherocks.soundprofile.activities.NewProfileActivity;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -103,9 +103,17 @@ public class DashboardFragment extends Fragment {
                     String key = mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).push().getKey();
                     mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).setValue(profile);
                     mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).child("mKey").setValue(key + "");
-                    Intent intent = new Intent(mContext, NewProfileActivity.class);
+                    /*Intent intent = new Intent(mContext, NewProfileActivity.class);
                     intent.putExtra("key", key + "");
-                    startActivity(intent);
+                    startActivity(intent);*/
+                    Bundle bundle = new Bundle();
+                    bundle.putString(getString(R.string.key), key + "");
+                    NewProfileFragment newProfileFragment = new NewProfileFragment();
+                    newProfileFragment.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_Content, newProfileFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
             }
         });

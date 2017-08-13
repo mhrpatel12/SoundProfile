@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +66,7 @@ public class DashboardFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(getApplicationContext())) {
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.AlertDialogCustom));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(getResources().getString(R.string.prompt_system_write_permission))
                         .setCancelable(true)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

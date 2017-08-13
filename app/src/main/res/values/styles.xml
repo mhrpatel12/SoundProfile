@@ -84,6 +84,8 @@
         <item name="android:textColorSecondary">@color/text_default_material_dark_secondary</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
 
+        <item name="alertDialogTheme">@style/dialog</item>
+
         <item name="android:colorBackground">@color/material_gray_850</item>
         <item name="android:colorForeground">@android:color/white</item>
 
@@ -105,12 +107,11 @@
         <item name="android:popupBackground">@color/material_gray_900</item>
     </style>
 
-    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!-- Used for the buttons -->
-        <item name="colorAccent">#FFC107</item>
-        <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <!-- Used for the background -->
+    <style name="dialog" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="checkbox_text_color">@color/text_default_material_dark_primary</item>
+        <item name="android:textColor">@color/text_default_material_dark_primary</item>
+        <item name="android:textColorPrimary">@color/text_default_material_dark_primary</item>
+        <item name="android:textColorSecondary">@color/text_default_material_dark_secondary</item>
         <item name="android:background">@color/material_gray_900</item>
     </style>
 

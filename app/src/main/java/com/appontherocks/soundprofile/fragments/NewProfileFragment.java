@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.Utility.Constants;
@@ -38,7 +40,10 @@ import com.appontherocks.soundprofile.activities.MapActivity;
 import com.appontherocks.soundprofile.service.GeofenceTransitionsIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
@@ -56,10 +61,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewProfileFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
+public class NewProfileFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener, OnMapReadyCallback {
 
     final int RQS_RINGTONEPICKER = 1;
     final int REQUEST_CODE_MAP_ACTIVITY = 99;
@@ -263,6 +270,105 @@ public class NewProfileFragment extends Fragment implements GoogleApiClient.Conn
         return view;
     }
 
+    public void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+
+
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+/*        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }*/
+        Intent intent = new Intent(mContext, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        return PendingIntent.getService(mContext, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case RQS_RINGTONEPICKER:
+                    uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    ringTone = RingtoneManager.getRingtone(mContext.getApplicationContext(), uri);
+                    Toast.makeText(mContext,
+                            ringTone.getTitle(mContext),
+                            Toast.LENGTH_LONG).show();
+                    break;
+                case REQUEST_CODE_MAP_ACTIVITY:
+                    if (data.getStringExtra("lat") != null && (data.getStringExtra("lng") != null)) {
+                        try {
+                            latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat") + ""), Double.parseDouble(data.getStringExtra("lng") + ""));
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(mContext, R.raw.google_maps_night_mode);
+        mMap.setMapStyle(style);
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            //FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("latitude").setValue((mLastLocation.getLatitude() + ""));
+            //FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("longitude").setValue((mLastLocation.getLongitude() + ""));
+
+            LatLng ltLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            CameraUpdate center = CameraUpdateFactory.newLatLngZoom(ltLng, 15);
+            latLng = ltLng;
+            mMap.addMarker(new MarkerOptions().position(ltLng).title("Sydney").draggable(true));
+            mMap.moveCamera(center);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     public class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
         int position;
 
@@ -302,7 +408,7 @@ public class NewProfileFragment extends Fragment implements GoogleApiClient.Conn
         }
     }
 
-    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> {
+    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> implements ResultCallback<Status> {
 
         private String profileName;
 
@@ -398,7 +504,7 @@ public class NewProfileFragment extends Fragment implements GoogleApiClient.Conn
                     mGoogleApiClient,
                     getGeofencingRequest(),
                     getGeofencePendingIntent()
-            ).setResultCallback((ResultCallback<? super com.google.android.gms.common.api.Status>) mContext);
+            ).setResultCallback(this);
 
             return null;
         }
@@ -406,83 +512,16 @@ public class NewProfileFragment extends Fragment implements GoogleApiClient.Conn
         @Override
         protected void onPostExecute(String result) {
             pDialog.dismiss();
+            DashboardFragment dashboardFragment = new DashboardFragment();
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame_Content, dashboardFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+
+        @Override
+        public void onResult(@NonNull com.google.android.gms.common.api.Status status) {
+
         }
     }
-
-    public void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-                .setCancelable(true)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    private GeofencingRequest getGeofencingRequest() {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-
-
-        builder.addGeofences(mGeofenceList);
-        return builder.build();
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-/*        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        }*/
-        Intent intent = new Intent(mContext, GeofenceTransitionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
-        return PendingIntent.getService(mContext, 0, intent, PendingIntent.
-                FLAG_UPDATE_CURRENT);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(mContext, R.raw.google_maps_night_mode);
-        mMap.setMapStyle(style);
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            //FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("latitude").setValue((mLastLocation.getLatitude() + ""));
-            //FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("longitude").setValue((mLastLocation.getLongitude() + ""));
-
-            LatLng ltLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            CameraUpdate center = CameraUpdateFactory.newLatLngZoom(ltLng, 15);
-            latLng = ltLng;
-            mMap.addMarker(new MarkerOptions().position(ltLng).title("Sydney").draggable(true));
-            mMap.moveCamera(center);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
 }

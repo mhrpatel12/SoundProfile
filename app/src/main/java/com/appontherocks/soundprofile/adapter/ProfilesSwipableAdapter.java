@@ -76,11 +76,11 @@ public class ProfilesSwipableAdapter extends ArrayAdapter<SoundProfile> {
         String selectedTheme = prefs.getString(mContext.getString(R.string.theme), mContext.getString(R.string.theme_dark));
         if (selectedTheme.equals(mContext.getString(R.string.theme_dark))) {
             Glide.with(mContext)
-                    .load(getMapURL)
+                    .load(getMapURLBlack)
                     .into(((ImageView) view.findViewById(R.id.map_lite)));
         } else {
             Glide.with(mContext)
-                    .load(getMapURLBlack)
+                    .load(getMapURL)
                     .into(((ImageView) view.findViewById(R.id.map_lite)));
         }
 

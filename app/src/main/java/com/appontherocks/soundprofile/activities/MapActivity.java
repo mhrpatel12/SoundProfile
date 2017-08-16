@@ -3,6 +3,7 @@ package com.appontherocks.soundprofile.activities;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -207,9 +208,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker and move the camera
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MapActivity.this, R.raw.google_maps_night_mode);
-        mMap.setMapStyle(style);
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE);
+        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_dark));
+        if (selectedTheme.equals(getString(R.string.theme_dark))) {
+            MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MapActivity.this, R.raw.google_maps_night_mode);
+            mMap.setMapStyle(style);
+        }
         mGoogleApiClient.connect();
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {

@@ -95,16 +95,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_view_bottom"
-            android:layout_marginLeft="@dimen/margin_view_left"
-            android:layout_marginRight="@dimen/margin_view_right"
-            android:layout_marginTop="@dimen/margin_view_top"
-            android:background="@android:color/black"
-            android:visibility="visible" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,6 +145,16 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -175,16 +175,6 @@
                 android:text="@string/title_media_volume" />
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_view_bottom"
-            android:layout_marginLeft="@dimen/margin_view_left"
-            android:layout_marginRight="@dimen/margin_view_right"
-            android:layout_marginTop="@dimen/margin_view_top"
-            android:background="@android:color/black"
-            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -236,6 +226,16 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -256,16 +256,6 @@
                 android:text="@string/title_alarm_volume" />
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_view_bottom"
-            android:layout_marginLeft="@dimen/margin_view_left"
-            android:layout_marginRight="@dimen/margin_view_right"
-            android:layout_marginTop="@dimen/margin_view_top"
-            android:background="@android:color/black"
-            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -317,6 +307,16 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -337,16 +337,6 @@
                 android:text="@string/title_call_volume" />
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_view_bottom"
-            android:layout_marginLeft="@dimen/margin_view_left"
-            android:layout_marginRight="@dimen/margin_view_right"
-            android:layout_marginTop="@dimen/margin_view_top"
-            android:background="@android:color/black"
-            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -397,6 +387,16 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -413,8 +414,12 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.google_maps_night_mode);
-        mMap.setMapStyle(style);
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE);
+        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_dark));
+        if (selectedTheme.equals(getString(R.string.theme_dark))) {
+            MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.google_maps_night_mode);
+            mMap.setMapStyle(style);
+        }
         mGoogleApiClient.connect();
     }
 

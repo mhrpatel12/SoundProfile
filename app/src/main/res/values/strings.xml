@@ -33,7 +33,7 @@
 
     <string name="prompt_profile_name">Profile Name</string>
 
-    <string name="title_notification_volume">Notification / Ringtone volume</string>
+    <string name="title_notification_volume">Notification volume</string>
     <string name="title_media_volume">Media/Music volume</string>
     <string name="title_alarm_volume">Alarms volume</string>
     <string name="title_call_volume">Voice call volume</string>
@@ -103,4 +103,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="key">key</string>
+    <string name="title_ringtone_volume">Ringtone volume</string>
+    <string name="title_system_volume"><![CDATA[Touch feedback & System]]></string>
 </resources>

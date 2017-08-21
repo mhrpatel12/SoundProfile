@@ -84,14 +84,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/margin_left_icon"
-                app:srcCompat="@drawable/ic_notifications_black_24dp" />
+                app:srcCompat="@drawable/ic_ringtone_volume_24dp" />
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_textview_title"
-                android:text="@string/title_notification_volume" />
+                android:text="@string/title_ringtone_volume" />
 
         </LinearLayout>
 
@@ -216,6 +216,168 @@
 
             <TextView
                 android:id="@+id/txtViewMediaVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.1"
+                android:gravity="center"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_left_icon"
+                app:srcCompat="@drawable/ic_notifications_black_24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_title"
+                android:text="@string/title_notification_volume" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/title_media_volume_disc" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkNotificationVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_weight="0.03"
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <SeekBar
+                android:id="@+id/seekBarNotificationVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.90" />
+
+            <TextView
+                android:id="@+id/txtViewNotificationVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.1"
+                android:gravity="center"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_view_bottom"
+            android:layout_marginLeft="@dimen/margin_view_left"
+            android:layout_marginRight="@dimen/margin_view_right"
+            android:layout_marginTop="@dimen/margin_view_top"
+            android:background="@android:color/black"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_left_icon"
+                app:srcCompat="@drawable/ic_touch_black_24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_title"
+                android:text="@string/title_system_volume" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_textview_desc"
+                android:layout_weight="0.97"
+                android:text="@string/title_media_volume_disc" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chkSystemVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_weight="0.03"
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_seek"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <SeekBar
+                android:id="@+id/seekBarSystemVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.90" />
+
+            <TextView
+                android:id="@+id/txtViewSystemVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

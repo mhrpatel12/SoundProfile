@@ -34,4 +34,8 @@
     <dimen name="auth_method_button_marginBottom">8dp</dimen>
     <dimen name="auth_method_button_drawablePadding">12dp</dimen>
     <dimen name="margin_change_theme">3dp</dimen>
+    <dimen name="text_size_title">15sp</dimen>
+    <dimen name="text_size_value">13sp</dimen>
+    <dimen name="margin_layout_child">4dp</dimen>
+    <dimen name="margin_new_profile_control">8dp</dimen>
 </resources>

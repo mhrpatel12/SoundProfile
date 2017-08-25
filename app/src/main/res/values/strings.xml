@@ -38,9 +38,10 @@
     <string name="title_alarm_volume">Alarms volume</string>
     <string name="title_call_volume">Voice call volume</string>
 
-    <string name="title_notification_volume_disc">Whether to change the ringtone volume when this profile is activated</string>
+    <string name="title_notification_volume_disc">Whether to change the notification volume when this profile is activated</string>
     <string name="title_media_volume_disc">Whether to change the media volume when this profile is activated</string>
     <string name="title_alarm_volume_disc">Whether to change the alarm volume when this profile is activated</string>
+    <string name="title_system_volume_disc">Whether to change the system volume when this profile is activated</string>
     <string name="title_call_volume_disc">Whether to change the in call volume when this profile is activated</string>
 
     <string name="title_ringtone_picker">Ringtone</string>
@@ -105,4 +106,9 @@
     <string name="key">key</string>
     <string name="title_ringtone_volume">Ringtone volume</string>
     <string name="title_system_volume"><![CDATA[Touch feedback & System]]></string>
+    <string name="settings_wifi">Wi-Fi</string>
+    <string name="title_no_change">Make no change</string>
+    <string name="title_on">On</string>
+    <string name="title_off">Off</string>
+    <string name="settings_bluetooth">Bluetooth</string>
 </resources>

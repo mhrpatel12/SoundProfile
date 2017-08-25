@@ -21,7 +21,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -74,6 +76,8 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
     private String mKey;
     private ProgressDialog pDialog;
     private Uri uri;
+
+    private TextView txtWifiSetting, txtBluetoothSetting;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -246,6 +250,44 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
                 startActivityForResult(intent, RQS_RINGTONEPICKER);
+            }
+        });
+
+        txtWifiSetting = (TextView) findViewById(R.id.txtWifiSetting);
+        txtWifiSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(NewProfileActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.menu_wifi_bluetooth, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(NewProfileActivity.this,
+                                "Clicked popup menu item " + item.getTitle(),
+                                Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+
+        txtBluetoothSetting = (TextView) findViewById(R.id.txtBluetoothSetting);
+        txtBluetoothSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(NewProfileActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.menu_wifi_bluetooth, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(NewProfileActivity.this,
+                                "Clicked popup menu item " + item.getTitle(),
+                                Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
     }

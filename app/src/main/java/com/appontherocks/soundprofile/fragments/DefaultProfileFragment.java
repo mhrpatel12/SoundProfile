@@ -311,8 +311,8 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
                     if (profile != null) {
 
-                        if ((profile.notificationVolume != null)) {
-                            seekbarRingerVolume.setProgress(Integer.parseInt(profile.notificationVolume));
+                        if ((profile.ringtoneVolume != null)) {
+                            seekbarRingerVolume.setProgress(Integer.parseInt(profile.ringtoneVolume));
                             seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
                             seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
                             seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
@@ -324,7 +324,13 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                         chkAlarmVolume.setChecked(profile.chkAlarm);
                         chkCallVolume.setChecked(profile.chkCall);
                     } else {
-                        profile = new SoundProfile("Default Profile", false, true, true, true, true, "0", "0", "0", "0", "", "", defaultRintoneUri + "");
+                        profile = new SoundProfile("New Profile",//PROFILE NAME
+                                false,//ACTIVE DEFAULT PROFILE ON UNKNOWN AREA ?
+                                true, true, true, true, true, true, // DEFAULT VALUES FOR CHANGING SOUND SETTING
+                                "0", "0", "0", "0", "0", "0", //DEFAULT VOLUME LEVEL
+                                getString(R.string.title_no_change), getString(R.string.title_no_change), //DEFAULT STATE OF WIFI / BLUETOOTH
+                                "", "", //BLANK LATITUDE & LONGITUDE
+                                defaultRintoneUri + ""); //DEFAULT RINGTONE URI
                         mSoundProfileReference.child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").setValue(profile);
                     }
                     FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").removeEventListener(this);
@@ -397,7 +403,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                 return null;
             }
 
-            mProfileReference.child("notificationVolume").setValue(ringerVolume);
+            mProfileReference.child("ringtoneVolume").setValue(ringerVolume);
             mProfileReference.child("musicVolume").setValue(mediaVolume);
             mProfileReference.child("alarmVolume").setValue(alarmVolume);
             mProfileReference.child("callVolume").setValue(callVolume);

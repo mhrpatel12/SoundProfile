@@ -97,7 +97,14 @@ public class DashboardFragment extends Fragment {
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     ((BaseActivity) getActivity()).buildAlertMessageNoGps();
                 } else {
-                    SoundProfile profile = new SoundProfile("New Profile", false, true, true, true, true, "0", "0", "0", "0", "", "", defaultRintoneUri + "");
+                    SoundProfile profile = new SoundProfile("New Profile",//PROFILE NAME
+                            false,//ACTIVE DEFAULT PROFILE ON UNKNOWN AREA ?
+                            true, true, true, true, true, true, // DEFAULT VALUES FOR CHANGING SOUND SETTING
+                            "0", "0", "0", "0", "0", "0", //DEFAULT VOLUME LEVEL
+                            getString(R.string.title_no_change), getString(R.string.title_no_change), //DEFAULT STATE OF WIFI / BLUETOOTH
+                            "", "", //BLANK LATITUDE & LONGITUDE
+                            defaultRintoneUri + ""); //DEFAULT RINGTONE URI
+
                     String key = mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).push().getKey();
                     mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).setValue(profile);
                     mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).child("mKey").setValue(key + "");

@@ -473,7 +473,7 @@ public class NewProfileFragment extends Fragment implements ConnectionCallbacks,
             mProfileReference.child("latitude").setValue((latLng.latitude + ""));
             mProfileReference.child("longitude").setValue((latLng.longitude + ""));
 
-            mProfileReference.child("notificationVolume").setValue(ringerVolume);
+            mProfileReference.child("ringtoneVolume").setValue(ringerVolume);
             mProfileReference.child("musicVolume").setValue(mediaVolume);
             mProfileReference.child("alarmVolume").setValue(alarmVolume);
             mProfileReference.child("callVolume").setValue(callVolume);

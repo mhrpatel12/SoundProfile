@@ -60,9 +60,9 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
 
     final int RQS_RINGTONEPICKER = 1;
     final int REQUEST_CODE_MAP_ACTIVITY = 99;
-    TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume;
-    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume;
-    AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume;
+    TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume, textViewNotificationVolume, textViewSystemVolume;
+    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
+    AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     EditText edtProfileName;
     List<Geofence> mGeofenceList;
     ImageButton btnChangeRingtone, btnChangeNotificationtone;
@@ -129,6 +129,16 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
         textviewCallVolume = (TextView) findViewById(R.id.txtCallVolume);
         chkCallVolume = (AppCompatCheckBox) findViewById(R.id.chkCallVolume);
         chkCallVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(4));
+
+        seekBarNotificationVolume = (SeekBar) findViewById(R.id.seekBarNotificationVolume);
+        textViewNotificationVolume = (TextView) findViewById(R.id.txtViewNotificationVolume);
+        chkNotificationVolume = (AppCompatCheckBox) findViewById(R.id.chkNotificationVolume);
+        chkNotificationVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(5));
+
+        seekBarSystenVolume = (SeekBar) findViewById(R.id.seekBarSystemVolume);
+        textViewSystemVolume = (TextView) findViewById(R.id.txtViewSystemVolume);
+        chkSystemVolume = (AppCompatCheckBox) findViewById(R.id.chkSystemVolume);
+        chkSystemVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(6));
 
         edtProfileName = (EditText) findViewById(R.id.edtProfileName);
 
@@ -223,6 +233,44 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 textviewCallVolume.setText(i + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarNotificationVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION));
+
+        seekBarNotificationVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textViewNotificationVolume.setText(i + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarSystenVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
+
+        seekBarSystenVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textViewSystemVolume.setText(i + "");
             }
 
             @Override
@@ -474,11 +522,18 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
         private String mediaVolume;
         private String alarmVolume;
         private String callVolume;
+        private String notificationVolume;
+        private String systemVolume;
 
         private Boolean isRingToneChecked;
         private Boolean isMediaChecked;
         private Boolean isAlarmChecked;
         private Boolean isCallChecked;
+        private Boolean isNotificationChecked;
+        private Boolean isSystemChecked;
+
+        private String wifiSetting;
+        private String bluetoothSetting;
 
         private DatabaseReference mProfileReference;
 
@@ -501,13 +556,20 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
             mediaVolume = seekBarMediaVolume.getProgress() + "";
             alarmVolume = seekBarAlarmVolume.getProgress() + "";
             callVolume = seekBarCallVolume.getProgress() + "";
+            notificationVolume = seekBarNotificationVolume.getProgress() + "";
+            systemVolume = seekBarSystenVolume.getProgress() + "";
 
             isRingToneChecked = chkRingerVolume.isChecked();
             isMediaChecked = chkMediaVolume.isChecked();
             isAlarmChecked = chkAlarmVolume.isChecked();
             isCallChecked = chkCallVolume.isChecked();
+            isNotificationChecked = chkNotificationVolume.isChecked();
+            isSystemChecked = chkSystemVolume.isChecked();
 
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey);
+            wifiSetting = txtWifiSettingValue.getText().toString();
+            bluetoothSetting = txtBluetoothSettingValue.getText().toString();
+
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey);
         }
 
         /**
@@ -526,22 +588,29 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
                 return null;
             }
 
-            mProfileReference.child("profileName").setValue((profileName + ""));
+            mProfileReference.child(getString(R.string.firebase_profile_name)).setValue((profileName + ""));
 
-            mProfileReference.child("latitude").setValue((latLng.latitude + ""));
-            mProfileReference.child("longitude").setValue((latLng.longitude + ""));
+            mProfileReference.child(getString(R.string.firebase_profile_latitude)).setValue((latLng.latitude + ""));
+            mProfileReference.child(getString(R.string.firebase_profile_longitude)).setValue((latLng.longitude + ""));
 
-            mProfileReference.child("notificationVolume").setValue(ringerVolume);
-            mProfileReference.child("musicVolume").setValue(mediaVolume);
-            mProfileReference.child("alarmVolume").setValue(alarmVolume);
-            mProfileReference.child("callVolume").setValue(callVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_volume)).setValue(ringerVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_music_volume)).setValue(mediaVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_alarm_volume)).setValue(alarmVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_call_volume)).setValue(callVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_notification_volume)).setValue(notificationVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_system_volume)).setValue(systemVolume);
 
-            mProfileReference.child("chkRinger").setValue(isRingToneChecked);
-            mProfileReference.child("chkMedia").setValue(isMediaChecked);
-            mProfileReference.child("chkAlarm").setValue(isAlarmChecked);
-            mProfileReference.child("chkCall").setValue(isCallChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_chk)).setValue(isRingToneChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_music_chk)).setValue(isMediaChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_alarm_chk)).setValue(isAlarmChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_call_chl)).setValue(isCallChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_notification_chk)).setValue(isNotificationChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_system_chl)).setValue(isSystemChecked);
 
-            mProfileReference.child("ringToneURI").setValue(uri + "");
+            mProfileReference.child(getString(R.string.firebase_profile_wifi_setting)).setValue(wifiSetting);
+            mProfileReference.child(getString(R.string.firebase_profile_bluetooth_setting)).setValue(bluetoothSetting);
+
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uri + "");
 
             mGeofenceList.add(new Geofence.Builder()
                     // Set the request ID of the geofence. This is a string to identify this

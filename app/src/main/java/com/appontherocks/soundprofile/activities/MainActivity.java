@@ -494,8 +494,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                             edtProfileName.setText(profile.profileName + "");
                         }
 
-                        if ((profile.notificationVolume != null)) {
-                            seekbarRingerVolume.setProgress(Integer.parseInt(profile.notificationVolume));
+                        if ((profile.ringtoneVolume != null)) {
+                            seekbarRingerVolume.setProgress(Integer.parseInt(profile.ringtoneVolume));
                             seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
                             seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
                             seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
@@ -601,7 +601,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             mProfileReference.child("latitude").setValue((latLng.latitude + ""));
             mProfileReference.child("longitude").setValue((latLng.longitude + ""));
 
-            mProfileReference.child("notificationVolume").setValue(ringerVolume);
+            mProfileReference.child("ringtoneVolume").setValue(ringerVolume);
             mProfileReference.child("musicVolume").setValue(mediaVolume);
             mProfileReference.child("alarmVolume").setValue(alarmVolume);
             mProfileReference.child("callVolume").setValue(callVolume);

@@ -16,10 +16,18 @@ public class SoundProfile implements ECCardData<SoundProfile> {
     public boolean chkMedia;
     public boolean chkAlarm;
     public boolean chkCall;
-    public String notificationVolume;
+    public boolean chkNotification;
+    public boolean chkSystem;
+    public String ringtoneVolume;
     public String musicVolume;
     public String alarmVolume;
     public String callVolume;
+    public String notificationVolume;
+    public String systemVolume;
+
+    public String wifiState;
+    public String bluetoothState;
+
     public String latitude;
     public String longitude;
     public String ringToneURI;
@@ -30,24 +38,39 @@ public class SoundProfile implements ECCardData<SoundProfile> {
 
     public SoundProfile() {
     }
-    public SoundProfile(String profileName, String notificationVolume, String musicVolume, String alarmVolume) {
+
+    public SoundProfile(String profileName, String ringtoneVolume, String musicVolume, String alarmVolume) {
         this.profileName = profileName;
-        this.notificationVolume = notificationVolume;
+        this.ringtoneVolume = ringtoneVolume;
         this.musicVolume = musicVolume;
         this.alarmVolume = alarmVolume;
     }
 
-    public SoundProfile(String profileName, boolean chkDefaultProfile, boolean chkRinger, boolean chkMedia, boolean chkAlarm, boolean chkCall, String notificationVolume, String musicVolume, String alarmVolume, String callVolume, String latitude, String longitude, String ringToneURI) {
+    public SoundProfile(
+            String profileName,
+            boolean chkDefaultProfile, boolean chkRinger, boolean chkMedia, boolean chkAlarm, boolean chkCall, boolean chkNotification, boolean chkSystem,
+            String ringtoneVolume, String musicVolume, String alarmVolume, String callVolume, String notificationVolume, String systemVolume,
+            String wifiState, String bluetoothState,
+            String latitude, String longitude,
+            String ringToneURI) {
         this.profileName = profileName;
         this.chkDefaultProfile = chkDefaultProfile;
         this.chkRinger = chkRinger;
         this.chkMedia = chkMedia;
         this.chkAlarm = chkAlarm;
         this.chkCall = chkCall;
-        this.notificationVolume = notificationVolume;
+        this.chkNotification = chkNotification;
+        this.chkSystem = chkSystem;
+        this.wifiState = wifiState;
+        this.bluetoothState = bluetoothState;
+
+        this.ringtoneVolume = ringtoneVolume;
         this.musicVolume = musicVolume;
         this.alarmVolume = alarmVolume;
         this.callVolume = callVolume;
+        this.notificationVolume = notificationVolume;
+        this.systemVolume = systemVolume;
+
         this.latitude = latitude;
         this.longitude = longitude;
         this.ringToneURI = ringToneURI;

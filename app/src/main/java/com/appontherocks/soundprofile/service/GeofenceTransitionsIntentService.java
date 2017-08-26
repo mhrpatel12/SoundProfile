@@ -20,21 +20,21 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.models.SoundProfile;
@@ -162,84 +162,146 @@ public class GeofenceTransitionsIntentService extends IntentService
             final int geofenceTransition,
             List<Geofence> triggeringGeofences) {
         final AudioManager mobilemode = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        final WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Get the Ids of each geofence that was triggered.
         for (final Geofence geofence : triggeringGeofences) {
             if (checkGeoFenseExists(geofence.getRequestId())) {
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        SoundProfile profile = dataSnapshot.child("default").getValue(SoundProfile.class);
+                        SoundProfile profile = dataSnapshot.child(getString(R.string.firebase_default_profile)).getValue(SoundProfile.class);
                         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                            if (dataSnapshot.child((geofence.getRequestId() + "")).child("profileName").getValue() != null) {
+                            if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_ringtone_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_RING, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_ringtone_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child((geofence.getRequestId() + "")).child("notificationVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_RING, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child("notificationVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_music_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_MUSIC, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_music_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child((geofence.getRequestId() + "")).child("musicVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_MUSIC, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child("musicVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_alarm_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_ALARM, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_alarm_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child((geofence.getRequestId() + "")).child("alarmVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_ALARM, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child("alarmVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_call_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_call_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child((geofence.getRequestId() + "")).child("callVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child("alarmVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_notification_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_NOTIFICATION, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_notification_volume)).getValue() + ""), 0);
+                            }
+                            if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_system_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_SYSTEM, Integer.parseInt(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_system_volume)).getValue() + ""), 0);
+                            }
+                            if (dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_wifi_setting)).getValue() != null) {
+                                if ((dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_wifi_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_no_change) + ""))) {
+                                    //MAKE NO CHANGE
+                                } else if ((dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_wifi_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_on) + ""))) {
+                                    wifiManager.setWifiEnabled(true);
+                                } else if ((dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_wifi_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_off) + ""))) {
+                                    wifiManager.setWifiEnabled(false);
+                                }
+                            }
+                            if (dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() != null) {
+                                if ((dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_no_change) + ""))) {
+                                    //MAKE NO CHANGE
+                                } else if ((dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_on) + ""))) {
+                                    bluetoothAdapter.enable();
+                                } else if ((dataSnapshot.child(geofence.getRequestId() + "").child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_off) + ""))) {
+                                    bluetoothAdapter.disable();
+                                }
                             }
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (Settings.System.canWrite(getApplicationContext())) {
-                                    if (dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() != null) {
+                                    if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() != null) {
                                         RingtoneManager.setActualDefaultRingtoneUri(
                                                 GeofenceTransitionsIntentService.this,
                                                 RingtoneManager.TYPE_RINGTONE,
-                                                Uri.parse(dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() + "")
+                                                Uri.parse(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() + "")
                                         );
                                     }
                                 }
                             } else {
-                                if (dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() != null) {
+                                if (dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() != null) {
                                     RingtoneManager.setActualDefaultRingtoneUri(
                                             GeofenceTransitionsIntentService.this,
                                             RingtoneManager.TYPE_RINGTONE,
-                                            Uri.parse(dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() + "")
+                                            Uri.parse(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() + "")
                                     );
                                 }
                             }
-                            ShowLocalNotification(dataSnapshot.child((geofence.getRequestId() + "")).child("profileName").getValue() + "");
+                            ShowLocalNotification(dataSnapshot.child((geofence.getRequestId() + "")).child(getString(R.string.firebase_profile_name)).getValue() + "");
                         } else if (profile.chkDefaultProfile) {
-                            if (dataSnapshot.child("default").child("notificationVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_RING, Integer.parseInt(dataSnapshot.child("default").child("notificationVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_ringtone_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_RING, Integer.parseInt(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_ringtone_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child("default").child("musicVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_MUSIC, Integer.parseInt(dataSnapshot.child("default").child("musicVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_music_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_MUSIC, Integer.parseInt(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_music_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child("default").child("alarmVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_ALARM, Integer.parseInt(dataSnapshot.child("default").child("alarmVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_alarm_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_ALARM, Integer.parseInt(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_alarm_volume)).getValue() + ""), 0);
                             }
-                            if (dataSnapshot.child("default").child("callVolume").getValue() != null) {
-                                mobilemode.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Integer.parseInt(dataSnapshot.child("default").child("alarmVolume").getValue() + ""), 0);
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_call_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Integer.parseInt(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_call_volume)).getValue() + ""), 0);
                             }
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_notification_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_NOTIFICATION, Integer.parseInt(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_notification_volume)).getValue() + ""), 0);
+                            }
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_system_volume)).getValue() != null) {
+                                mobilemode.setStreamVolume(AudioManager.STREAM_SYSTEM, Integer.parseInt(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_system_volume)).getValue() + ""), 0);
+                            }
+
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_wifi_setting)).getValue() != null) {
+                                if ((dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_wifi_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_no_change) + ""))) {
+                                    //MAKE NO CHANGE
+                                } else if ((dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_wifi_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_on) + ""))) {
+                                    wifiManager.setWifiEnabled(true);
+                                } else if ((dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_wifi_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_off) + ""))) {
+                                    wifiManager.setWifiEnabled(false);
+                                }
+                            }
+                            if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() != null) {
+                                if ((dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_no_change) + ""))) {
+                                    //MAKE NO CHANGE
+                                } else if ((dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_on) + ""))) {
+                                    bluetoothAdapter.enable();
+                                } else if ((dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_bluetooth_setting)).getValue() + "")
+                                        .equals((getString(R.string.title_off) + ""))) {
+                                    bluetoothAdapter.disable();
+                                }
+                            }
+
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (Settings.System.canWrite(getApplicationContext())) {
-                                    if (dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() != null) {
+                                    if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() != null) {
                                         RingtoneManager.setActualDefaultRingtoneUri(
                                                 GeofenceTransitionsIntentService.this,
                                                 RingtoneManager.TYPE_RINGTONE,
-                                                Uri.parse(dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() + "")
+                                                Uri.parse(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() + "")
                                         );
                                     }
                                 }
                             } else {
-                                if (dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() != null) {
+                                if (dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() != null) {
                                     RingtoneManager.setActualDefaultRingtoneUri(
                                             GeofenceTransitionsIntentService.this,
                                             RingtoneManager.TYPE_RINGTONE,
-                                            Uri.parse(dataSnapshot.child((geofence.getRequestId() + "")).child("ringToneURI").getValue() + "")
+                                            Uri.parse(dataSnapshot.child(getString(R.string.firebase_default_profile)).child(getString(R.string.firebase_profile_ringtone_uri)).getValue() + "")
                                     );
                                 }
                             }
-                            ShowLocalNotification("Unknown Area");
+                            ShowLocalNotification(getString(R.string.unknown_area));
                         } else {
-                            ShowLocalNotification("Unknown Area");
+                            ShowLocalNotification(getString(R.string.unknown_area));
                         }
                         // Send notification and log the transition details.
                     }
@@ -265,17 +327,6 @@ public class GeofenceTransitionsIntentService extends IntentService
         return isExists;
     }
 
-    private String getTransitionString(int transitionType) {
-        switch (transitionType) {
-            case Geofence.GEOFENCE_TRANSITION_ENTER:
-                return getString(R.string.entering_geofence);
-            case Geofence.GEOFENCE_TRANSITION_EXIT:
-                return getString(R.string.exiting_geofence);
-            default:
-                return getString(R.string.unknown_geofence_transition);
-        }
-    }
-
     public void ShowLocalNotification(String msg) {
 
 
@@ -298,34 +349,8 @@ public class GeofenceTransitionsIntentService extends IntentService
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent).build();
 
-
-
-        /*final Notification.Builder builder = new Notification.Builder(this);
-        builder.setStyle(new Notification.BigTextStyle(builder)
-                .bigText(msg)
-                .setBigContentTitle(this.getResources().getString(R.string.app_name))
-                );
-        builder.setSmallIcon(R.mipmap.ic_launcher);*/
-        //.setSummaryText("Big summary"))
-        //.setContentTitle("Title")
-        //.setContentText("Summary")
-
-
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
-    }
-
-    /**
-     * Showing a toast message, using the Main thread
-     */
-    private void showToast(final Context context, final int resourceId) {
-        Handler mainThread = new Handler(Looper.getMainLooper());
-        mainThread.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, context.getString(resourceId), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override

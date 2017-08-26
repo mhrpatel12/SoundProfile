@@ -111,4 +111,5 @@
     <string name="title_on">On</string>
     <string name="title_off">Off</string>
     <string name="settings_bluetooth">Bluetooth</string>
+    <string name="seekbar_default_value">0</string>
 </resources>

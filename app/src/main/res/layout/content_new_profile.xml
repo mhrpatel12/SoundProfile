@@ -72,14 +72,14 @@
             android:padding="@dimen/margin_new_profile_control">
 
             <TextView
-                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:drawableLeft="@drawable/ic_ringtone_volume_24dp"
                 android:drawableStart="@drawable/ic_ringtone_volume_24dp"
                 android:gravity="center_vertical"
-                android:text="@string/title_ringtone_volume" />
+                android:text="@string/title_ringtone_volume"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/chkRingerVolume"
@@ -87,7 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:checked="true"
-                android:text="@string/title_notification_volume_disc" />
+                android:text="@string/title_notification_volume_disc"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -110,8 +111,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:gravity="center"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/seekbar_default_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
@@ -137,7 +138,8 @@
                 android:drawableLeft="@drawable/ic_music_note_black_24dp"
                 android:drawableStart="@drawable/ic_music_note_black_24dp"
                 android:gravity="center_vertical"
-                android:text="@string/title_media_volume" />
+                android:text="@string/title_media_volume"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/chkMediaVolume"
@@ -145,7 +147,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:checked="true"
-                android:text="@string/title_media_volume_disc" />
+                android:text="@string/title_media_volume_disc"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -168,8 +171,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:gravity="center"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/seekbar_default_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
@@ -195,7 +198,8 @@
                 android:drawableLeft="@drawable/ic_notifications_black_24dp"
                 android:drawableStart="@drawable/ic_notifications_black_24dp"
                 android:gravity="center_vertical"
-                android:text="@string/title_notification_volume" />
+                android:text="@string/title_notification_volume"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/chkNotificationVolume"
@@ -203,7 +207,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:checked="true"
-                android:text="@string/title_notification_volume_disc" />
+                android:text="@string/title_notification_volume_disc"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -226,8 +231,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:gravity="center"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/seekbar_default_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
@@ -253,7 +258,8 @@
                 android:drawableLeft="@drawable/ic_touch_black_24dp"
                 android:drawableStart="@drawable/ic_touch_black_24dp"
                 android:gravity="center_vertical"
-                android:text="@string/title_system_volume" />
+                android:text="@string/title_system_volume"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/chkSystemVolume"
@@ -261,7 +267,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:checked="true"
-                android:text="@string/title_system_volume_disc" />
+                android:text="@string/title_system_volume_disc"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -284,8 +291,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:gravity="center"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/seekbar_default_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
@@ -311,7 +318,8 @@
                 android:drawableLeft="@drawable/ic_access_alarm_black_24dp"
                 android:drawableStart="@drawable/ic_access_alarm_black_24dp"
                 android:gravity="center_vertical"
-                android:text="@string/title_alarm_volume" />
+                android:text="@string/title_alarm_volume"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/chkAlarmVolume"
@@ -319,7 +327,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:checked="true"
-                android:text="@string/title_alarm_volume_disc" />
+                android:text="@string/title_alarm_volume_disc"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -342,8 +351,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:gravity="center"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/seekbar_default_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
@@ -369,7 +378,8 @@
                 android:drawableLeft="@drawable/ic_call_black_24dp"
                 android:drawableStart="@drawable/ic_call_black_24dp"
                 android:gravity="center_vertical"
-                android:text="@string/title_call_volume" />
+                android:text="@string/title_call_volume"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/chkCallVolume"
@@ -377,7 +387,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
                 android:checked="true"
-                android:text="@string/title_call_volume_disc" />
+                android:text="@string/title_call_volume_disc"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -400,8 +411,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:gravity="center"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/seekbar_default_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
@@ -436,7 +447,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
-                android:text="@string/settings_wifi"
+                android:text="@string/title_no_change"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <View
@@ -470,7 +481,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
-                android:text="@string/settings_bluetooth"
+                android:text="@string/title_no_change"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <View

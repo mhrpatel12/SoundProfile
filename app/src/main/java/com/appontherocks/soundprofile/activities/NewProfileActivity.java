@@ -78,6 +78,7 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
     private Uri uri;
 
     private TextView txtWifiSetting, txtBluetoothSetting;
+    private TextView txtWifiSettingValue, txtBluetoothSettingValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -254,6 +255,7 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
         });
 
         txtWifiSetting = (TextView) findViewById(R.id.txtWifiSetting);
+        txtWifiSettingValue = (TextView) findViewById(R.id.txtWifiStatus);
         txtWifiSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -262,9 +264,7 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(NewProfileActivity.this,
-                                "Clicked popup menu item " + item.getTitle(),
-                                Toast.LENGTH_SHORT).show();
+                        txtWifiSettingValue.setText(item.getTitle());
                         return true;
                     }
                 });
@@ -273,6 +273,7 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
         });
 
         txtBluetoothSetting = (TextView) findViewById(R.id.txtBluetoothSetting);
+        txtBluetoothSettingValue = (TextView) findViewById(R.id.txtBluetoothStatus);
         txtBluetoothSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -281,9 +282,7 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(NewProfileActivity.this,
-                                "Clicked popup menu item " + item.getTitle(),
-                                Toast.LENGTH_SHORT).show();
+                        txtBluetoothSettingValue.setText(item.getTitle());
                         return true;
                     }
                 });

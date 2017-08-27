@@ -1,9 +1,12 @@
 package com.appontherocks.soundprofile.activities;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.appontherocks.soundprofile.R;
+import com.appontherocks.soundprofile.adapter.ProfilesListAdapter;
 import com.appontherocks.soundprofile.adapter.ProfilesSwipableAdapter;
 import com.appontherocks.soundprofile.event.ProfileDeletedEvent;
 import com.appontherocks.soundprofile.models.SoundProfile;
@@ -18,12 +21,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import in.arjsna.swipecardlib.SwipeCardView;
-
 public class ProfilesActivity extends BaseActivity {
 
-    public SwipeCardView swipeCardView;
+    //public SwipeCardView swipeCardView;
+    private RecyclerView recyclerViewProfiles;
     private ProfilesSwipableAdapter profilesSwipableAdapter;
+    private ProfilesListAdapter profilesListAdapter;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
 
     @Override
@@ -37,7 +40,10 @@ public class ProfilesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        swipeCardView = (SwipeCardView) findViewById(R.id.card_stack_view);
+        recyclerViewProfiles = (RecyclerView) findViewById(R.id.recyclerViewProfiles);
+        recyclerViewProfiles.setLayoutManager(new LinearLayoutManager(this));
+
+ /*       swipeCardView = (SwipeCardView) findViewById(R.id.card_stack_view);
         swipeCardView.setFlingListener(new SwipeCardView.OnCardFlingListener() {
             @Override
             public void onCardExitLeft(Object dataObject) {
@@ -72,7 +78,7 @@ public class ProfilesActivity extends BaseActivity {
             public void onItemClicked(int itemPosition, Object dataObject) {
 
             }
-        });
+        });*/
     }
 
     // This method will be called when a MessageEvent is posted (in the UI thread)
@@ -81,8 +87,9 @@ public class ProfilesActivity extends BaseActivity {
         if (profileDeletedEvent != null) {
             int profileDeleted = profileDeletedEvent.profileDeleted;
             profileArrayList.remove(profileDeleted);
-            profilesSwipableAdapter.notifyDataSetChanged();
-            swipeCardView.throwBottom();
+            //profilesSwipableAdapter.notifyDataSetChanged();
+            //swipeCardView.throwBottom();
+            profilesListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -111,8 +118,10 @@ public class ProfilesActivity extends BaseActivity {
                 if (profileArrayList.size() > 0) {
                     profileArrayList.remove(profileArrayList.size() - 1);
                 }
-                profilesSwipableAdapter = new ProfilesSwipableAdapter(ProfilesActivity.this, R.layout.list_item_profile, profileArrayList);
-                swipeCardView.setAdapter(profilesSwipableAdapter);
+                /*profilesSwipableAdapter = new ProfilesSwipableAdapter(ProfilesActivity.this, R.layout.list_item_profile, profileArrayList);
+                swipeCardView.setAdapter(profilesSwipableAdapter);*/
+                profilesListAdapter = new ProfilesListAdapter(ProfilesActivity.this, profileArrayList);
+                recyclerViewProfiles.setAdapter(profilesListAdapter);
                 FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).removeEventListener(this);
             }
 

@@ -49,13 +49,12 @@ public class DashboardActivity extends BaseActivity
     CircleImageView profilePicture;
     TextView txtDisplayName, txtEmail;
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume;
+    DefaultProfileFragment mDefaultProfileFragment;
     private Uri defaultRintoneUri;
     private DatabaseReference mSoundProfileReference;
     private boolean isServiceRunning = false;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-
-    DefaultProfileFragment mDefaultProfileFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -205,9 +204,9 @@ public class DashboardActivity extends BaseActivity
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.frame_Content, profilesFragment);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-/*                intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
-                startActivity(intent);*/
+                //fragmentTransaction.commit();
+                intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_default_profile:
                 DefaultProfileFragment defaultProfileFragment = new DefaultProfileFragment();

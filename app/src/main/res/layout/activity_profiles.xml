@@ -29,14 +29,19 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <in.arjsna.swipecardlib.SwipeCardView
-            android:id="@+id/card_stack_view"
+        <!--        <in.arjsna.swipecardlib.SwipeCardView
+                    android:id="@+id/card_stack_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:bottom_swipe_detect="true"
+                    app:rotation_degrees="15.5"
+                    tools:context=".CardSwipeActivity" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewProfiles"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:bottom_swipe_detect="true"
-            app:rotation_degrees="15.5"
-            tools:context=".CardSwipeActivity" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

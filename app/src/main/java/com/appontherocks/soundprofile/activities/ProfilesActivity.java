@@ -1,12 +1,14 @@
 package com.appontherocks.soundprofile.activities;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
-import com.appontherocks.soundprofile.adapter.ProfilesListAdapter;
+import com.appontherocks.soundprofile.adapter.ProfilesFoldingCellListAdapter;
 import com.appontherocks.soundprofile.adapter.ProfilesSwipableAdapter;
 import com.appontherocks.soundprofile.event.ProfileDeletedEvent;
 import com.appontherocks.soundprofile.models.SoundProfile;
@@ -14,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ramotion.foldingcell.FoldingCell;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,9 +27,9 @@ import java.util.ArrayList;
 public class ProfilesActivity extends BaseActivity {
 
     //public SwipeCardView swipeCardView;
-    private RecyclerView recyclerViewProfiles;
+    private ListView recyclerViewProfiles;
     private ProfilesSwipableAdapter profilesSwipableAdapter;
-    private ProfilesListAdapter profilesListAdapter;
+    private ProfilesFoldingCellListAdapter profilesListAdapter;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
 
     @Override
@@ -40,8 +43,7 @@ public class ProfilesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        recyclerViewProfiles = (RecyclerView) findViewById(R.id.recyclerViewProfiles);
-        recyclerViewProfiles.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewProfiles = (ListView) findViewById(R.id.mainListView);
 
  /*       swipeCardView = (SwipeCardView) findViewById(R.id.card_stack_view);
         swipeCardView.setFlingListener(new SwipeCardView.OnCardFlingListener() {
@@ -120,8 +122,24 @@ public class ProfilesActivity extends BaseActivity {
                 }
                 /*profilesSwipableAdapter = new ProfilesSwipableAdapter(ProfilesActivity.this, R.layout.list_item_profile, profileArrayList);
                 swipeCardView.setAdapter(profilesSwipableAdapter);*/
-                profilesListAdapter = new ProfilesListAdapter(ProfilesActivity.this, profileArrayList);
+                profilesListAdapter = new ProfilesFoldingCellListAdapter(ProfilesActivity.this, profileArrayList);
+                profilesListAdapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 recyclerViewProfiles.setAdapter(profilesListAdapter);
+                // set on click event listener to list view
+                recyclerViewProfiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                        // toggle clicked cell state
+                        ((FoldingCell) view).toggle(false);
+                        // register in adapter that state for selected cell is toggled
+                        profilesListAdapter.registerToggle(pos);
+                    }
+                });
                 FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).removeEventListener(this);
             }
 

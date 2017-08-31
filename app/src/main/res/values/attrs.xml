@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="ChristmasTree">
         <attr name="drawable_color" format="color" />
+        <attr name="drawable_color_inverse" format="color" />
         <attr name="checkbox_text_color" format="color" />
     </declare-styleable>
 </resources>

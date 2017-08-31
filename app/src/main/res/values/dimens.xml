@@ -38,4 +38,5 @@
     <dimen name="text_size_value">13sp</dimen>
     <dimen name="margin_layout_child">4dp</dimen>
     <dimen name="margin_new_profile_control">8dp</dimen>
+    <dimen name="padding_card_title">10dp</dimen>
 </resources>

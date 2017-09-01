@@ -15,6 +15,7 @@
     <color name="primary_dark_red">#D32F2F</color>
     <color name="primary_light_red">#FFCDD2</color>
     <color name="accent_red">#FF9800</color>
+    <color name="red_back">#FFEB3B</color>
     <color name="primary_text_red">#212121</color>
     <color name="secondary_text_red">#757575</color>
     <color name="icons_red">#FFFFFF</color>
@@ -22,6 +23,7 @@
 
     <color name="primary_green">#4CAF50</color>
     <color name="primary_dark_green">#388E3C</color>
+    <color name="green_back">#FFEE58</color>
     <color name="primary_light_green">#C8E6C9</color>
     <color name="accent_green">#8BC34A</color>
     <color name="primary_text_green">#212121</color>

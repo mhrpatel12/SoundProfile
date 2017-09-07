@@ -6,18 +6,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.Utility.ImageLoader;
 import com.appontherocks.soundprofile.activities.MainActivity;
+import com.appontherocks.soundprofile.event.ProfileDeletedEvent;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,7 +26,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Mihir on 3/15/2017.
@@ -69,8 +74,9 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
 
         TextView txtProfileName = holder.txtProfileName;
         CardView cardView = holder.cardView;
-        AppCompatImageView imageView = holder.imageView;
-        AppCompatImageView btnDelete = holder.btnDelete;
+        CircleImageView imageView = holder.imageView;
+        ImageView btnDelete = holder.btnDelete;
+        ImageView btnEdit = holder.btnEdit;
 
         String getMapURL = "";
         txtProfileName.setText(profileArrayList.get(listPosition).profileName);
@@ -94,7 +100,7 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
             cardView.setVisibility(View.GONE);
         }
 
-        cardView.setOnClickListener(new View.OnClickListener() {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -139,6 +145,7 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
                                     list.add(profileArrayList.get(listPosition).mKey);
                                     LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, list);
                                     FirebaseDatabase.getInstance().getReference().child("profiles").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(profileArrayList.get(listPosition).mKey).removeValue();
+                                    EventBus.getDefault().post(new ProfileDeletedEvent(listPosition));
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -180,16 +187,17 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
 
         TextView txtProfileName;
         CardView cardView;
-        AppCompatImageView imageView;
-        AppCompatImageView btnDelete;
-
+        CircleImageView imageView;
+        ImageView btnDelete;
+        ImageView btnEdit;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.cardView = (CardView) itemView.findViewById(R.id.cv);
             this.txtProfileName = (TextView) itemView.findViewById(R.id.txtProfileName);
-            this.imageView = (AppCompatImageView) itemView.findViewById(R.id.map_lite);
-            this.btnDelete = (AppCompatImageView) itemView.findViewById(R.id.btnDelete);
+            this.imageView = (CircleImageView) itemView.findViewById(R.id.map_lite);
+            this.btnDelete = (ImageView) itemView.findViewById(R.id.btnDelete);
+            this.btnEdit = (ImageView) itemView.findViewById(R.id.btnEdit);
         }
     }
 }

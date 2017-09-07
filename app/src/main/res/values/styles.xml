@@ -79,6 +79,7 @@
         <item name="colorAccent">@color/accent_green</item>
         <item name="checkbox_text_color">@color/primary_text_green</item>
         <item name="drawable_color">@color/accent_green</item>
+        <item name="card_view_back_color">@color/colorBackCard_green</item>
         <item name="drawable_color_inverse">@color/primary_dark_green</item>
         <item name="drawable_color_background">@color/green_back</item>
 

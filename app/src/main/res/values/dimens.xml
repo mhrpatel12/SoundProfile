@@ -39,4 +39,7 @@
     <dimen name="margin_layout_child">4dp</dimen>
     <dimen name="margin_new_profile_control">8dp</dimen>
     <dimen name="padding_card_title">10dp</dimen>
+    <dimen name="size_map_circle">75dp</dimen>
+    <dimen name="padding_card_icon">3dp</dimen>
+    <dimen name="margin_top_card_icons">10dp</dimen>
 </resources>

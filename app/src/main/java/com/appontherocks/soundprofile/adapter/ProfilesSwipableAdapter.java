@@ -86,7 +86,7 @@ public class ProfilesSwipableAdapter extends ArrayAdapter<SoundProfile> {
 
         ((TextView) view.findViewById(R.id.txtProfileName)).setText(card.profileName);
 
-        view.findViewById(R.id.imgEdit).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btnEdit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);

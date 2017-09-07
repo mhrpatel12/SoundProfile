@@ -38,7 +38,7 @@
                 android:textColor="@android:color/white" />
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/imgEdit"
+                android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

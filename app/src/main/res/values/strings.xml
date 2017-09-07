@@ -157,4 +157,5 @@
     <string name="deadline_time_mock">12:00 PM</string>
     <string name="request_btn_text">GOOO</string>
     <string name="btn_annotation_mock">YOO</string>
+    <string name="dummy_value">0</string>
 </resources>

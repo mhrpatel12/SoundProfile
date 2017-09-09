@@ -64,6 +64,7 @@
         <item name="android:textColor">@color/primary_text_red</item>
         <item name="android:textColorPrimary">@color/primary_text_red</item>
         <item name="android:textColorSecondary">@color/secondary_text_red</item>
+        <item name="card_view_back_color">@color/colorBackCard_green</item>
 
         <item name="colorControlNormal">@color/accent_red</item>
         <item name="colorControlActivated">@color/accent_red</item>
@@ -109,6 +110,7 @@
         <item name="android:textColor">@color/text_default_material_dark_primary</item>
         <item name="android:textColorPrimary">@color/text_default_material_dark_primary</item>
         <item name="android:textColorSecondary">@color/text_default_material_dark_secondary</item>
+        <item name="card_view_back_color">@color/colorBackCard_green</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
 
         <item name="alertDialogTheme">@style/dialog</item>

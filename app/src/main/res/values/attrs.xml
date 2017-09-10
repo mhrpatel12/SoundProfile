@@ -6,5 +6,6 @@
         <attr name="drawable_color_background" format="color" />
         <attr name="checkbox_text_color" format="color" />
         <attr name="card_view_back_color" format="color" />
+        <attr name="card_view_title_text_color" format="color" />
     </declare-styleable>
 </resources>

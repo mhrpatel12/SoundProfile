@@ -20,6 +20,7 @@
     <color name="secondary_text_red">#757575</color>
     <color name="icons_red">#FFFFFF</color>
     <color name="divider_red">#BDBDBD</color>
+    <color name="colorBackCard_red">#ff9800</color>
 
     <color name="primary_green">#5e35b1</color>
     <color name="primary_dark_green">#4527a0</color>

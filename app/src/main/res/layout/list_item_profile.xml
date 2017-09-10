@@ -18,7 +18,7 @@
             android:id="@+id/cv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/colorBackCard_green"
+            card_view:cardBackgroundColor="?attr/card_view_back_color"
             card_view:cardCornerRadius="5dp"
             card_view:contentPadding="10dp">
 
@@ -159,7 +159,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="Profile Name"
-            android:textColor="@android:color/white" />
+            android:textColor="?attr/card_view_title_text_color" />
 
     </RelativeLayout>
 

@@ -1,5 +1,6 @@
 package com.appontherocks.soundprofile.activities;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,12 +64,12 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, ResultCallback<Status> {
 
-    private static final String TAG = "MainActivty";
+    private static final String TAG = "MainActivity";
     final int RQS_RINGTONEPICKER = 1;
     final int REQUEST_CODE_MAP_ACTIVITY = 99;
-    TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume;
-    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume;
-    AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume;
+    TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume, textViewNotificationVolume, textViewSystemVolume;
+    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
+    AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     EditText edtProfileName;
     ImageButton btnChangeRingtone, btnChangeNotificationtone;
     Ringtone ringTone;
@@ -80,6 +82,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     private Uri uri;
     private ProgressDialog pDialog;
     private String mKey;
+
+    private TextView txtWifiSetting, txtBluetoothSetting;
+    private TextView txtWifiSettingValue, txtBluetoothSettingValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +132,16 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         textviewCallVolume = (TextView) findViewById(R.id.txtCallVolume);
         chkCallVolume = (AppCompatCheckBox) findViewById(R.id.chkCallVolume);
         chkCallVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(4));
+
+        seekBarNotificationVolume = (SeekBar) findViewById(R.id.seekBarNotificationVolume);
+        textViewNotificationVolume = (TextView) findViewById(R.id.txtViewNotificationVolume);
+        chkNotificationVolume = (AppCompatCheckBox) findViewById(R.id.chkNotificationVolume);
+        chkNotificationVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(5));
+
+        seekBarSystenVolume = (SeekBar) findViewById(R.id.seekBarSystemVolume);
+        textViewSystemVolume = (TextView) findViewById(R.id.txtViewSystemVolume);
+        chkSystemVolume = (AppCompatCheckBox) findViewById(R.id.chkSystemVolume);
+        chkSystemVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(6));
 
         edtProfileName = (EditText) findViewById(R.id.edtProfileName);
 
@@ -238,6 +253,44 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             }
         });
 
+        seekBarNotificationVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION));
+
+        seekBarNotificationVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textViewNotificationVolume.setText(i + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarSystenVolume.setMax(mobilemode.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
+
+        seekBarSystenVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textViewSystemVolume.setText(i + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         btnChangeRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,6 +306,42 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
                 startActivityForResult(intent, RQS_RINGTONEPICKER);
+            }
+        });
+
+        txtWifiSetting = (TextView) findViewById(R.id.txtWifiSetting);
+        txtWifiSettingValue = (TextView) findViewById(R.id.txtWifiStatus);
+        txtWifiSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.menu_wifi_bluetooth, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        txtWifiSettingValue.setText(item.getTitle());
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+
+        txtBluetoothSetting = (TextView) findViewById(R.id.txtBluetoothSetting);
+        txtBluetoothSettingValue = (TextView) findViewById(R.id.txtBluetoothStatus);
+        txtBluetoothSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.menu_wifi_bluetooth, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        txtBluetoothSettingValue.setText(item.getTitle());
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
 
@@ -443,19 +532,19 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (position) {
                 case 1:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("chkRinger").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).child("chkRinger").setValue(isChecked);
                     changeVisibility(seekbarRingerVolume, isChecked);
                     break;
                 case 2:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("chkMedia").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).child("chkMedia").setValue(isChecked);
                     changeVisibility(seekBarMediaVolume, isChecked);
                     break;
                 case 3:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("chkAlarm").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).child("chkAlarm").setValue(isChecked);
                     changeVisibility(seekBarAlarmVolume, isChecked);
                     break;
                 case 4:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).child("chkCall").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).child("chkCall").setValue(isChecked);
                     changeVisibility(seekBarCallVolume, isChecked);
                     break;
             }
@@ -484,7 +573,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
          */
         @Override
         protected String doInBackground(Void... f_url) {
-            FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
@@ -499,6 +588,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                             seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
                             seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
                             seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
+                            seekBarNotificationVolume.setProgress(Integer.parseInt(profile.notificationVolume));
+                            seekBarSystenVolume.setProgress(Integer.parseInt(profile.systemVolume));
                         }
 
                         if (((profile.latitude != null) && !(profile.latitude.equals(""))) &&
@@ -512,12 +603,21 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                                 }
                             });
                         }
+
+                        if (profile.wifiState != null) {
+                            txtWifiSettingValue.setText(profile.wifiState);
+                        }
+                        if (profile.bluetoothState != null) {
+                            txtBluetoothSettingValue.setText(profile.bluetoothState);
+                        }
                         chkRingerVolume.setEnabled(profile.chkRinger);
                         chkMediaVolume.setEnabled(profile.chkMedia);
                         chkAlarmVolume.setEnabled(profile.chkAlarm);
                         chkCallVolume.setEnabled(profile.chkCall);
+                        chkNotificationVolume.setEnabled(profile.chkNotification);
+                        chkSystemVolume.setEnabled(profile.chkSystem);
                     }
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey).removeEventListener(this);
+                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).removeEventListener(this);
                 }
 
                 @Override
@@ -544,11 +644,18 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         private String mediaVolume;
         private String alarmVolume;
         private String callVolume;
+        private String notificationVolume;
+        private String systemVolume;
 
         private Boolean isRingToneChecked;
         private Boolean isMediaChecked;
         private Boolean isAlarmChecked;
         private Boolean isCallChecked;
+        private Boolean isNotificationChecked;
+        private Boolean isSystemChecked;
+
+        private String wifiSetting;
+        private String bluetoothSetting;
 
         private DatabaseReference mProfileReference;
 
@@ -571,13 +678,20 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             mediaVolume = seekBarMediaVolume.getProgress() + "";
             alarmVolume = seekBarAlarmVolume.getProgress() + "";
             callVolume = seekBarCallVolume.getProgress() + "";
+            notificationVolume = seekBarNotificationVolume.getProgress() + "";
+            systemVolume = seekBarSystenVolume.getProgress() + "";
 
             isRingToneChecked = chkRingerVolume.isChecked();
             isMediaChecked = chkMediaVolume.isChecked();
             isAlarmChecked = chkAlarmVolume.isChecked();
             isCallChecked = chkCallVolume.isChecked();
+            isNotificationChecked = chkNotificationVolume.isChecked();
+            isSystemChecked = chkSystemVolume.isChecked();
 
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child(mKey);
+            wifiSetting = txtWifiSettingValue.getText().toString();
+            bluetoothSetting = txtBluetoothSettingValue.getText().toString();
+
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey);
         }
 
         /**
@@ -585,33 +699,30 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
          */
         @Override
         protected String doInBackground(Void... f_url) {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return null;
-            }
 
-            mProfileReference.child("profileName").setValue((profileName + ""));
+            mProfileReference.child(getString(R.string.firebase_profile_name)).setValue((profileName + ""));
 
-            mProfileReference.child("latitude").setValue((latLng.latitude + ""));
-            mProfileReference.child("longitude").setValue((latLng.longitude + ""));
+            mProfileReference.child(getString(R.string.firebase_profile_latitude)).setValue((latLng.latitude + ""));
+            mProfileReference.child(getString(R.string.firebase_profile_longitude)).setValue((latLng.longitude + ""));
 
-            mProfileReference.child("ringtoneVolume").setValue(ringerVolume);
-            mProfileReference.child("musicVolume").setValue(mediaVolume);
-            mProfileReference.child("alarmVolume").setValue(alarmVolume);
-            mProfileReference.child("callVolume").setValue(callVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_volume)).setValue(ringerVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_music_volume)).setValue(mediaVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_alarm_volume)).setValue(alarmVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_call_volume)).setValue(callVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_notification_volume)).setValue(notificationVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_system_volume)).setValue(systemVolume);
 
-            mProfileReference.child("chkRinger").setValue(isRingToneChecked);
-            mProfileReference.child("chkMedia").setValue(isMediaChecked);
-            mProfileReference.child("chkAlarm").setValue(isAlarmChecked);
-            mProfileReference.child("chkCall").setValue(isCallChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_chk)).setValue(isRingToneChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_music_chk)).setValue(isMediaChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_alarm_chk)).setValue(isAlarmChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_call_chl)).setValue(isCallChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_notification_chk)).setValue(isNotificationChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_system_chl)).setValue(isSystemChecked);
 
-            mProfileReference.child("ringToneURI").setValue(uri + "");
+            mProfileReference.child(getString(R.string.firebase_profile_wifi_setting)).setValue(wifiSetting);
+            mProfileReference.child(getString(R.string.firebase_profile_bluetooth_setting)).setValue(bluetoothSetting);
+
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uri + "");
 
             mGeofenceList.add(new Geofence.Builder()
                     // Set the request ID of the geofence. This is a string to identify this
@@ -628,6 +739,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                             Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
 
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return null;
+            }
             LocationServices.GeofencingApi.addGeofences(
                     mGoogleApiClient,
                     getGeofencingRequest(),

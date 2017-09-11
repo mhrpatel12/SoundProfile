@@ -69,7 +69,7 @@
 
         <item name="colorControlNormal">@color/accent_red</item>
         <item name="colorControlActivated">@color/accent_red</item>
-        <item name="colorControlHighlight">@color/accent_red</item>
+        <item name="colorControlHighlight">@color/accent_red_highlight</item>
 
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="alertDialogTheme">@style/dialog</item>
@@ -92,10 +92,9 @@
         <item name="android:textColorPrimary">@color/primary_text_green</item>
         <item name="android:textColorSecondary">@color/secondary_text_green</item>
 
-
         <item name="colorControlNormal">@color/accent_green</item>
         <item name="colorControlActivated">@color/accent_green</item>
-        <item name="colorControlHighlight">@color/accent_green</item>
+        <item name="colorControlHighlight">@color/drawable_dark_light</item>
 
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="alertDialogTheme">@style/dialog</item>
@@ -107,15 +106,15 @@
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="colorAccent">@android:color/black</item>
         <item name="drawable_color">@color/drawable_dark</item>
-        <item name="drawable_color_inverse">@color/material_gray_900</item>
+        <item name="drawable_color_inverse">@color/drawable_dark</item>
         <item name="checkbox_text_color">@color/text_default_material_dark_primary</item>
         <item name="android:textColor">@color/text_default_material_dark_primary</item>
         <item name="android:textColorPrimary">@color/text_default_material_dark_primary</item>
         <item name="android:textColorSecondary">@color/text_default_material_dark_secondary</item>
-        <item name="card_view_back_color">@color/colorBackCard_green</item>
+        <item name="card_view_back_color">@color/colorBackCard_black</item>
         <item name="card_view_title_text_color">@color/text_default_material_dark_secondary</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
-
+        <item name="drawable_color_background">@color/material_gray_900</item>
         <item name="alertDialogTheme">@style/dialog</item>
 
         <item name="android:colorBackground">@color/material_gray_850</item>
@@ -132,7 +131,7 @@
         <!--<item name="colorButtonNormal">@color/drawable_dark</item>-->
         <item name="colorControlNormal">@color/drawable_dark</item>
         <item name="colorControlActivated">@color/drawable_dark</item>
-        <item name="colorControlHighlight">@color/drawable_dark</item>
+        <item name="colorControlHighlight">@color/drawable_dark_light</item>
     </style>
 
     <style name="MyCardViewStyle" parent="Theme.AppCompat.Light">

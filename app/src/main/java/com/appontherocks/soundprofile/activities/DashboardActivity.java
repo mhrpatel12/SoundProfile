@@ -150,15 +150,32 @@ public class DashboardActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (fragments >= 2) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                Intent intent = new Intent(DashboardActivity.this, AuthenticationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("EXIT", true);
+                startActivity(intent);
+                //super.onBackPressed();
+            }
+        }
+
+        /*if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             Intent intent = new Intent(DashboardActivity.this, AuthenticationActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
             startActivity(intent);
-        }
+        }*/
     }
 
     @Override
@@ -204,9 +221,9 @@ public class DashboardActivity extends BaseActivity
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.frame_Content, profilesFragment);
                 fragmentTransaction.addToBackStack(null);
-                //fragmentTransaction.commit();
-                intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
-                startActivity(intent);
+                fragmentTransaction.commit();
+                /*intent = new Intent(DashboardActivity.this, ProfilesActivity.class);
+                startActivity(intent);*/
                 break;
             case R.id.nav_default_profile:
                 DefaultProfileFragment defaultProfileFragment = new DefaultProfileFragment();

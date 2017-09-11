@@ -15,6 +15,7 @@
     <color name="primary_dark_red">#D32F2F</color>
     <color name="primary_light_red">#FFCDD2</color>
     <color name="accent_red">#ffff00</color>
+    <color name="accent_red_highlight">#ffff8d</color>
     <color name="red_back">#d84315</color>
     <color name="primary_text_red">#FFFFFF</color>
     <color name="secondary_text_red">#757575</color>
@@ -33,7 +34,9 @@
     <color name="divider_green">#BDBDBD</color>
     <color name="colorBackCard_green">#5C6BC0</color>
 
+    <color name="colorBackCard_black">#424242</color>
     <color name="drawable_dark">#ffa000</color>
+    <color name="drawable_dark_light">#ffd54f</color>
 
     <color name="transpenrent_black">#B3000000</color>
 

@@ -1,11 +1,6 @@
 package com.appontherocks.soundprofile.activities;
 
-import android.app.ActivityManager;
-import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -26,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
@@ -34,11 +27,10 @@ import com.appontherocks.soundprofile.fragments.AdvancedSettingsFragment;
 import com.appontherocks.soundprofile.fragments.DashboardFragment;
 import com.appontherocks.soundprofile.fragments.DefaultProfileFragment;
 import com.appontherocks.soundprofile.fragments.ProfilesFragment;
-import com.appontherocks.soundprofile.service.SleepyHoursService;
+import com.appontherocks.soundprofile.fragments.SleepyHoursFragment;
 import com.google.firebase.database.DatabaseReference;
 
 import java.net.URL;
-import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -167,15 +159,6 @@ public class DashboardActivity extends BaseActivity
                 //super.onBackPressed();
             }
         }
-
-        /*if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(DashboardActivity.this, AuthenticationActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("EXIT", true);
-            startActivity(intent);
-        }*/
     }
 
     @Override
@@ -188,7 +171,7 @@ public class DashboardActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // THIS IS YOUR DRAWER/HAMBURGER BUTTON
+            //DRAWER/HAMBURGER BUTTON
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
                 return true;
@@ -235,7 +218,13 @@ public class DashboardActivity extends BaseActivity
                 startActivity(intent);*/
                 break;
             case R.id.nav_sleep_hours:
-                ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                SleepyHoursFragment sleepyHoursFragment = new SleepyHoursFragment();
+                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_Content, sleepyHoursFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+/*                ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                 isServiceRunning = false;
                 for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
                     if (SleepyHoursService.class.getName().equals(service.service.getClassName())) {
@@ -300,7 +289,7 @@ public class DashboardActivity extends BaseActivity
                     }, hour, minute, true);//Yes 24 hour time
                     mTimePicker.setMessage("Start Time");
                     mTimePicker.show();
-                }
+                }*/
                 break;
             case R.id.nav_advanced_settings:
                 AdvancedSettingsFragment advancedSettingsFragment = new AdvancedSettingsFragment();

@@ -117,6 +117,8 @@
         <item name="drawable_color_background">@color/material_gray_900</item>
         <item name="alertDialogTheme">@style/dialog</item>
 
+        <item name="android:timePickerStyle">@style/TimePickerDialogStyle</item>
+
         <item name="android:colorBackground">@color/material_gray_850</item>
         <item name="android:colorForeground">@android:color/white</item>
 

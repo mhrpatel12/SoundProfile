@@ -23,4 +23,28 @@
         <item name="android:divider">@color/divider</item>
         <item name="android:editTextStyle">@style/FirebaseUI.EditText</item>
     </style>
+
+
+    <style name="TimePickerDialogStyle" parent="AlertDialog.AppCompat">
+
+        <item name="colorAccent">#ff2d6073</item> <!-- colorAccent here seems to work just fine? -->
+
+        <item name="android:timePickerMode">clock</item>
+        <item name="android:headerBackground">#ff2d6073</item>
+        <item name="android:headerTimeTextAppearance">
+            @style/TextAppearance.TimePickerDialogStyle.TimeLabel
+        </item> <!-- TimePicker Time *TextAppearance* -->
+        <item name="android:numbersTextColor">#ff000000</item>
+        <item name="android:numbersSelectorColor">#ff2d6073</item>
+        <item name="android:numbersBackgroundColor">#ffdddddd</item>
+
+    </style>
+
+    <style name="TextAppearance.TimePickerDialogStyle.TimeLabel" parent="TextAppearance.AppCompat">
+
+        <item name="android:textSize">60sp</item> <!-- from -->
+        <item name="android:textColor">#ffD0D102</item>
+
+    </style>
+
 </resources>

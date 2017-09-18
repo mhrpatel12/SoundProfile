@@ -55,10 +55,9 @@
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnEnableSleepyHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_brightness_3_black_24dp"
-            android:drawableStart="@drawable/ic_brightness_3_black_24dp"
             android:text="@string/text_button_sleepy_hours" />
 
     </LinearLayout>

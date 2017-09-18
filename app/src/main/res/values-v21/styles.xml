@@ -25,18 +25,14 @@
     </style>
 
 
-    <style name="TimePickerDialogStyle" parent="AlertDialog.AppCompat">
+    <style name="TimePickerDialogStyle" parent="Base.ThemeOverlay.AppCompat.Dark">
 
-        <item name="colorAccent">#ff2d6073</item> <!-- colorAccent here seems to work just fine? -->
-
+        <item name="android:colorAccent">?attr/drawable_color_background</item>
+        <item name="android:colorPrimary">?attr/drawable_color_background</item>
+        <item name="android:colorPrimaryDark">?attr/drawable_color_background</item>
         <item name="android:timePickerMode">clock</item>
-        <item name="android:headerBackground">#ff2d6073</item>
-        <item name="android:headerTimeTextAppearance">
-            @style/TextAppearance.TimePickerDialogStyle.TimeLabel
-        </item> <!-- TimePicker Time *TextAppearance* -->
-        <item name="android:numbersTextColor">#ff000000</item>
-        <item name="android:numbersSelectorColor">#ff2d6073</item>
-        <item name="android:numbersBackgroundColor">#ffdddddd</item>
+        <item name="android:background">?attr/drawable_color_background</item>
+        <item name="android:headerBackground">?attr/drawable_color_background</item>
 
     </style>
 

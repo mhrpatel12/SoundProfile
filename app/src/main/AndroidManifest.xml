@@ -98,7 +98,6 @@
             android:name=".activities.DefaultProfileActivity"
             android:label="@string/title_activity_default_profile"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <activity
             android:name=".activities.AdvancedSettingsActivity"
             android:label="@string/title_activity_advanced_settings"
@@ -117,6 +116,9 @@
             android:name=".event.SleepyHoursEnd"
             android:process=":SleepyHours_Service" />
 
+        <activity
+            android:name=".activities.HomeActivity"
+            android:label="@string/title_activity_home"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_dashboard"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Dashboard" />
+    <item
+        android:id="@+id/nav_profiles"
+        android:icon="@drawable/ic_stars_white_24dp"
+        android:title="Profiles" />
+    <item
+        android:id="@+id/nav_default_profile"
+        android:icon="@drawable/ic_star_white_24dp"
+        android:title="Default Profile" />
+    <item
+        android:id="@+id/nav_sleep_hours"
+        android:icon="@drawable/ic_brightness_3_black_24dp"
+        android:title="Sleep Hours" />
+    <item
+        android:id="@+id/nav_advanced_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="Advanced Settings" />
+
+</menu>

@@ -104,7 +104,7 @@ public class AuthenticationActivity extends BaseActivity implements
 /*                    startActivity(new Intent(AuthenticationActivity.this, DashboardActivity.class));
                     finish();*/
 
-                    //new saveGeoFerncesAyncTask().execute();
+                    //new saveGeoFencesAsyncTask().execute();
                     break;
             }
         }
@@ -244,7 +244,7 @@ public class AuthenticationActivity extends BaseActivity implements
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     //fetchGeoFences();
-                    Intent intent = new Intent(AuthenticationActivity.this, DashboardActivity.class);
+                    Intent intent = new Intent(AuthenticationActivity.this, HomeActivity.class);
                     startActivity(intent);
                 } else {
                     // User is signed out

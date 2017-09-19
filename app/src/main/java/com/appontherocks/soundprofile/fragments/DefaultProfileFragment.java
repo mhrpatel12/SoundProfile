@@ -1,7 +1,6 @@
 package com.appontherocks.soundprofile.fragments;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,7 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
-import com.appontherocks.soundprofile.activities.DashboardActivity;
+import com.appontherocks.soundprofile.activities.BaseActivity;
+import com.appontherocks.soundprofile.activities.HomeActivity;
 import com.appontherocks.soundprofile.interfaces.AlertForDiscardDefaultProfileChanges;
 import com.appontherocks.soundprofile.models.SoundProfile;
 import com.google.firebase.database.DataSnapshot;
@@ -53,7 +53,6 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
     Uri uri;
     private Uri defaultRintoneUri;
     private DatabaseReference mSoundProfileReference;
-    private ProgressDialog pDialog;
 
     private Context mContext;
     private View view;
@@ -206,9 +205,22 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
     }
 
     @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+
+        if (getView() != null) {
+            new saveGeoFencesAsyncTask().execute();
+        }
+        if (visible) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            new loadDataAyncTask().execute();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        new loadDataAyncTask().execute();
     }
 
     public void showDismissWarning(int navigationID) {
@@ -217,7 +229,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                 .setCancelable(true)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        new saveGeoFerncesAyncTask().execute();
+                        new saveGeoFencesAsyncTask().execute();
                     }
                 })
                 .setNegativeButton("Discard", new DialogInterface.OnClickListener() {
@@ -265,19 +277,19 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (position) {
                 case 1:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").child("chkRinger").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").child("chkRinger").setValue(isChecked);
                     changeVisibility(seekbarRingerVolume, isChecked);
                     break;
                 case 2:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").child("chkMedia").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").child("chkMedia").setValue(isChecked);
                     changeVisibility(seekBarMediaVolume, isChecked);
                     break;
                 case 3:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").child("chkAlarm").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").child("chkAlarm").setValue(isChecked);
                     changeVisibility(seekBarAlarmVolume, isChecked);
                     break;
                 case 4:
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").child("chkCall").setValue(isChecked);
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").child("chkCall").setValue(isChecked);
                     changeVisibility(seekBarCallVolume, isChecked);
                     break;
             }
@@ -293,10 +305,11 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(mContext);
+            //((BaseActivity) getActivity()).showProgressDialog();
+/*            pDialog = new ProgressDialog(mContext);
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
-            pDialog.show();
+            pDialog.show();*/
         }
 
         /**
@@ -304,7 +317,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
          */
         @Override
         protected String doInBackground(Void... f_url) {
-            FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
@@ -331,9 +344,9 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                                 getString(R.string.title_no_change), getString(R.string.title_no_change), //DEFAULT STATE OF WIFI / BLUETOOTH
                                 "", "", //BLANK LATITUDE & LONGITUDE
                                 defaultRintoneUri + ""); //DEFAULT RINGTONE URI
-                        mSoundProfileReference.child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").setValue(profile);
+                        mSoundProfileReference.child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").setValue(profile);
                     }
-                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default").removeEventListener(this);
+                    FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").removeEventListener(this);
                 }
 
                 @Override
@@ -348,11 +361,11 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
         @Override
         protected void onPostExecute(String result) {
-            pDialog.dismiss();
+            //((BaseActivity) getActivity()).hideProgressDialog();
         }
     }
 
-    public class saveGeoFerncesAyncTask extends AsyncTask<Void, String, String> {
+    public class saveGeoFencesAsyncTask extends AsyncTask<Void, String, String> {
 
         private String ringerVolume;
         private String mediaVolume;
@@ -375,10 +388,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pDialog = new ProgressDialog(mContext);
-            pDialog.setMessage("Loading...");
-            pDialog.setCancelable(false);
-            pDialog.show();
+            ((BaseActivity) getActivity()).showProgressDialog();
 
             ringerVolume = seekbarRingerVolume.getProgress() + "";
             mediaVolume = seekBarMediaVolume.getProgress() + "";
@@ -391,7 +401,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
             isAlarmChecked = chkAlarmVolume.isChecked();
             isCallChecked = chkCallVolume.isChecked();
 
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(((DashboardActivity) getActivity()).getUid()).child("default");
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default");
         }
 
         /**
@@ -421,8 +431,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
         @Override
         protected void onPostExecute(String result) {
-            pDialog.dismiss();
-            //finish();
+            ((BaseActivity) getActivity()).hideProgressDialog();
         }
     }
 }

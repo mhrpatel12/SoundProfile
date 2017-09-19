@@ -138,7 +138,7 @@ public class SleepyHoursFragment extends Fragment implements BottomSheetTimePick
                     editor.putInt("startMinute", startMinute);
                     editor.putInt("endHour", endHour);
                     editor.putInt("endMinute", endMinute);
-                    editor.commit();
+                    editor.apply();
                     Intent intent = new Intent(mContext, SleepyHoursService.class);
                     intent.putExtra("startHour", startHour);
                     intent.putExtra("startMinute", startMinute);

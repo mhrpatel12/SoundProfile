@@ -81,4 +81,5 @@
     <color name="material_deep_teal_a200">#ff80cbc4</color>
     <color name="tw__blue_default">#FF5BAAF4</color>
     <color name="bgBackSideColor">#f4f0ff</color>
+    <color name="tab_unchecked">#FFFFFF</color>
 </resources>

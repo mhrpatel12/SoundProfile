@@ -1,7 +1,5 @@
 package com.appontherocks.soundprofile.models;
 
-import com.ramotion.expandingcollection.ECCardData;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,7 @@ import java.util.List;
  * Created by Mihir on 3/13/2017.
  */
 
-public class SoundProfile implements ECCardData<SoundProfile> {
+public class SoundProfile{
     public String profileName;
     public boolean chkDefaultProfile;
     public boolean chkRinger;
@@ -91,27 +89,4 @@ public class SoundProfile implements ECCardData<SoundProfile> {
 
         return list;
     }
-
-    @Override
-    public Integer getMainBackgroundResource() {
-        return mainBackgroundResource;
-    }
-
-    @Override
-    public Integer getHeadBackgroundResource() {
-        return headBackgroundResource;
-    }
-
-    @Override
-    public List<SoundProfile> getListItems() {
-        return listItems;
-    }
-
-/*    public static List<ECCardData> generateListData(ArrayList<SoundProfile> listItems) {
-        List<ECCardData> list = new ArrayList<>();
-        for (int i = 0; i < listItems.size(); i++) {
-            list.add(new SoundProfile(listItems.get(i).profileName, R.drawable.staticmap, R.drawable.staticmap, listItems));
-        }
-        return list;
-    }*/
 }

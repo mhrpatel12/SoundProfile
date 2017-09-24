@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="dialTimePicker-8d263fc3a1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/41e2cf9cc4236f0f7dd50aebf0c9f4210ffb1ab0/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/41e2cf9cc4236f0f7dd50aebf0c9f4210ffb1ab0/output/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/dialTimePicker-8d263fc3a1.aar/44d03b07110991f6532004466ba42e5b/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/dialTimePicker-8d263fc3a1.aar/44d03b07110991f6532004466ba42e5b/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

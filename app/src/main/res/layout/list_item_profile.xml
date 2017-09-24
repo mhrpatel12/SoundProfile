@@ -31,8 +31,7 @@
                     android:id="@+id/map_lite"
                     android:layout_width="@dimen/size_map_circle"
                     android:layout_height="@dimen/size_map_circle"
-                    android:layout_gravity="center"
-                    android:src="@drawable/map" />
+                    android:layout_gravity="center" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

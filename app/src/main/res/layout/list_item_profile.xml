@@ -124,7 +124,6 @@
                         android:id="@+id/btnEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
                         android:padding="@dimen/padding_card_icon"
                         card_view:srcCompat="@drawable/ic_edit_black_24dp" />
 
@@ -132,7 +131,6 @@
                         android:id="@+id/btnDelete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
                         android:padding="@dimen/padding_card_icon"
                         card_view:srcCompat="@drawable/ic_delete_black_24dp" />
 

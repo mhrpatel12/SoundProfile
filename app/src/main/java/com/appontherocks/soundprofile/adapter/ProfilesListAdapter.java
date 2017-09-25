@@ -44,9 +44,9 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
     private GoogleApiClient mGoogleApiClient;
 
     public ProfilesListAdapter(Activity activity, ArrayList<SoundProfile> data) {
-        this.profileArrayList = data;
+        this.mContext = activity;
         this.activity = activity;
-        this.mContext = activity.getApplicationContext();
+        this.profileArrayList = data;
         this.imageLoader = new ImageLoader(mContext);
 
         if (mGoogleApiClient == null) {
@@ -83,7 +83,7 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
 
         if (((profileArrayList.get(listPosition).latitude != null) && (!(profileArrayList.get(listPosition).latitude + "").equals(""))) && ((profileArrayList.get(listPosition).longitude != null) && (!(profileArrayList.get(listPosition).longitude + "").equals("")))) {
 
-            getMapURL = "http://maps.googleapis.com/maps/api/staticmap?zoom=16&size=450x900&scale=2&markers=size:mid|color:red|"
+            getMapURL = "http://maps.googleapis.com/maps/api/staticmap?zoom=19&size=300x300&scale=2&markers=size:mid|color:red|"
                     + profileArrayList.get(listPosition).latitude
                     + ","
                     + profileArrayList.get(listPosition).longitude

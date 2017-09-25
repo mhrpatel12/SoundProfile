@@ -604,11 +604,11 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                             });
                         }
 
-                        if (profile.wifiState != null) {
-                            txtWifiSettingValue.setText(profile.wifiState);
+                        if (profile.wifiSetting != null) {
+                            txtWifiSettingValue.setText(profile.wifiSetting);
                         }
-                        if (profile.bluetoothState != null) {
-                            txtBluetoothSettingValue.setText(profile.bluetoothState);
+                        if (profile.bluetoothSetting != null) {
+                            txtBluetoothSettingValue.setText(profile.bluetoothSetting);
                         }
                         chkRingerVolume.setEnabled(profile.chkRinger);
                         chkMediaVolume.setEnabled(profile.chkMedia);

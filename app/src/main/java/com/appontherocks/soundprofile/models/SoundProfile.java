@@ -23,8 +23,8 @@ public class SoundProfile{
     public String notificationVolume;
     public String systemVolume;
 
-    public String wifiState;
-    public String bluetoothState;
+    public String wifiSetting;
+    public String bluetoothSetting;
 
     public String latitude;
     public String longitude;
@@ -48,7 +48,7 @@ public class SoundProfile{
             String profileName,
             boolean chkDefaultProfile, boolean chkRinger, boolean chkMedia, boolean chkAlarm, boolean chkCall, boolean chkNotification, boolean chkSystem,
             String ringtoneVolume, String musicVolume, String alarmVolume, String callVolume, String notificationVolume, String systemVolume,
-            String wifiState, String bluetoothState,
+            String wifiSetting, String bluetoothSetting,
             String latitude, String longitude,
             String ringToneURI) {
         this.profileName = profileName;
@@ -59,8 +59,8 @@ public class SoundProfile{
         this.chkCall = chkCall;
         this.chkNotification = chkNotification;
         this.chkSystem = chkSystem;
-        this.wifiState = wifiState;
-        this.bluetoothState = bluetoothState;
+        this.wifiSetting = wifiSetting;
+        this.bluetoothSetting = bluetoothSetting;
 
         this.ringtoneVolume = ringtoneVolume;
         this.musicVolume = musicVolume;

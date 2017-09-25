@@ -83,7 +83,7 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
 
         if (((profileArrayList.get(listPosition).latitude != null) && (!(profileArrayList.get(listPosition).latitude + "").equals(""))) && ((profileArrayList.get(listPosition).longitude != null) && (!(profileArrayList.get(listPosition).longitude + "").equals("")))) {
 
-            getMapURL = "http://maps.googleapis.com/maps/api/staticmap?zoom=19&size=300x300&scale=2&markers=size:mid|color:red|"
+            getMapURL = "http://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&scale=2&markers=size:mid|color:red|"
                     + profileArrayList.get(listPosition).latitude
                     + ","
                     + profileArrayList.get(listPosition).longitude
@@ -92,8 +92,6 @@ public class ProfilesListAdapter extends RecyclerView.Adapter<ProfilesListAdapte
             Glide.with(mContext)
                     .load(getMapURL)
                     .into(imageView);
-            //new downloadMapImage().execute(getMapURL);
-            //imageLoader.DisplayImage(getMapURL, holder.imageView);
         }
 
         if ((profileArrayList.get(listPosition).profileName + "").equals("Default Profile")) {

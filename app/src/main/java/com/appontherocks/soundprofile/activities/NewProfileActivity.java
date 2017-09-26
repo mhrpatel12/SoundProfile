@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -27,10 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.Utility.Constants;
@@ -59,14 +58,14 @@ import java.util.List;
 public class NewProfileActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
     final int RQS_RINGTONEPICKER = 1;
+    final int RQS_NOTIFICATION_TONE_PICKER = 2;
     final int REQUEST_CODE_MAP_ACTIVITY = 99;
     TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume, textViewNotificationVolume, textViewSystemVolume;
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     EditText edtProfileName;
     List<Geofence> mGeofenceList;
-    ImageButton btnChangeRingtone, btnChangeNotificationtone;
-    Ringtone ringTone;
+    AppCompatButton btnChangeRingtone, btnChangeNotificationtone;
     LatLng latLng;
     Uri defaultRintoneUri;
     Ringtone defaultRingtone;
@@ -75,18 +74,22 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
     private Location mLastLocation;
     private String mKey;
     private ProgressDialog pDialog;
-    private Uri uri;
 
     private TextView txtWifiSetting, txtBluetoothSetting;
     private TextView txtWifiSettingValue, txtBluetoothSettingValue;
+
+    Ringtone ringTone;
+    private Uri uriRingTone;
+
+    Ringtone notificationTone;
+    private Uri uriNotificationTone;
+
+    TextView txtRingTone, txtNotificationTone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_profile);
-
-        defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(this.getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
-        defaultRingtone = RingtoneManager.getRingtone(this, defaultRintoneUri);
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -142,8 +145,19 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
 
         edtProfileName = (EditText) findViewById(R.id.edtProfileName);
 
-        btnChangeRingtone = (ImageButton) findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (ImageButton) findViewById(R.id.btnChangeNotificationTone);
+        btnChangeRingtone = (AppCompatButton) findViewById(R.id.btnChangeRingTone);
+        btnChangeNotificationtone = (AppCompatButton) findViewById(R.id.btnChangeNotificationTone);
+
+        txtRingTone = (TextView) findViewById(R.id.txtRingTone);
+        txtNotificationTone = (TextView) findViewById(R.id.txtNotificationTone);
+
+        defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(this.getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
+        defaultRingtone = RingtoneManager.getRingtone(this, defaultRintoneUri);
+        uriRingTone = defaultRintoneUri;
+        txtRingTone.setText(defaultRingtone.getTitle(this));
+        txtNotificationTone.setText(RingtoneManager.getRingtone(this,
+                RingtoneManager.getActualDefaultRingtoneUri(this.getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION)).getTitle(this));
+        uriNotificationTone = RingtoneManager.getActualDefaultRingtoneUri(this.getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -417,11 +431,14 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQS_RINGTONEPICKER:
-                    uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    ringTone = RingtoneManager.getRingtone(getApplicationContext(), uri);
-                    Toast.makeText(NewProfileActivity.this,
-                            ringTone.getTitle(NewProfileActivity.this),
-                            Toast.LENGTH_LONG).show();
+                    uriRingTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    ringTone = RingtoneManager.getRingtone(this, uriRingTone);
+                    txtRingTone.setText(ringTone.getTitle(this));
+                    break;
+                case RQS_NOTIFICATION_TONE_PICKER:
+                    uriNotificationTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    notificationTone = RingtoneManager.getRingtone(this, uriNotificationTone);
+                    txtNotificationTone.setText(notificationTone.getTitle(this));
                     break;
                 case REQUEST_CODE_MAP_ACTIVITY:
                     if (data.getStringExtra("lat") != null && (data.getStringExtra("lng") != null)) {
@@ -610,7 +627,8 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
             mProfileReference.child(getString(R.string.firebase_profile_wifi_setting)).setValue(wifiSetting);
             mProfileReference.child(getString(R.string.firebase_profile_bluetooth_setting)).setValue(bluetoothSetting);
 
-            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uri + "");
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uriRingTone + "");
+            mProfileReference.child(getString(R.string.firebase_profile_notification_tone_uri)).setValue(uriNotificationTone + "");
 
             mGeofenceList.add(new Geofence.Builder()
                     // Set the request ID of the geofence. This is a string to identify this

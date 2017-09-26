@@ -130,6 +130,7 @@
     <string name="firebase_profile_system_chl">chkSystem</string>
     <string name="firebase_default_profile">default</string>
     <string name="firebase_profile_ringtone_uri">ringToneURI</string>
+    <string name="firebase_profile_notification_tone_uri">notificationToneURI</string>
     <string name="unknown_area">Unknown Area</string>
     <string name="firebase_profile_wifi_setting">wifiSetting</string>
     <string name="firebase_profile_bluetooth_setting">bluetoothSetting</string>
@@ -167,4 +168,5 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="promps_double_back">Tap back again to exit App.</string>
+    <string name="firebase_default_profiles">default</string>
 </resources>

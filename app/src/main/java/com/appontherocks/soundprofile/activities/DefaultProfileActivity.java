@@ -42,6 +42,7 @@ public class DefaultProfileActivity extends BaseActivity {
     Ringtone ringTone;
     Uri uri;
     private Uri defaultRintoneUri;
+    private Uri defaultNotificationToneUri;
     private DatabaseReference mSoundProfileReference;
     private ProgressDialog pDialog;
 
@@ -56,6 +57,7 @@ public class DefaultProfileActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(DefaultProfileActivity.this.getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
+        defaultNotificationToneUri = RingtoneManager.getActualDefaultRingtoneUri(DefaultProfileActivity.this.getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION);
 
         initializeViews();
     }
@@ -331,7 +333,7 @@ public class DefaultProfileActivity extends BaseActivity {
                                 "0", "0", "0", "0", "0", "0", //DEFAULT VOLUME LEVEL
                                 getString(R.string.title_no_change), getString(R.string.title_no_change), //DEFAULT STATE OF WIFI / BLUETOOTH
                                 "", "", //BLANK LATITUDE & LONGITUDE
-                                defaultRintoneUri + ""); //DEFAULT RINGTONE URI
+                                defaultRintoneUri + "", defaultNotificationToneUri + ""); //DEFAULT RINGTONE URI
                         mSoundProfileReference.child("profiles").child(getUid()).child("default").setValue(profile);
                     }
                     FirebaseDatabase.getInstance().getReference().child("profiles").child(getUid()).child("default").removeEventListener(this);

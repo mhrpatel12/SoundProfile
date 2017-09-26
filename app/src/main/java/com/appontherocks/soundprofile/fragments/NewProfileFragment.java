@@ -22,16 +22,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.Utility.Constants;
@@ -69,14 +68,15 @@ import static android.app.Activity.RESULT_OK;
 public class NewProfileFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener, OnMapReadyCallback {
 
     final int RQS_RINGTONEPICKER = 1;
+    final int RQS_NOTIFICATION_TONE_PICKER = 2;
     final int REQUEST_CODE_MAP_ACTIVITY = 99;
     TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume;
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume;
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume;
     EditText edtProfileName;
     List<Geofence> mGeofenceList;
-    ImageButton btnChangeRingtone, btnChangeNotificationtone;
-    Ringtone ringTone;
+    AppCompatButton btnChangeRingtone, btnChangeNotificationtone;
+    TextView txtRingTone, txtNotificationTone;
     LatLng latLng;
     Uri defaultRintoneUri;
     Ringtone defaultRingtone;
@@ -85,7 +85,12 @@ public class NewProfileFragment extends Fragment implements ConnectionCallbacks,
     private Location mLastLocation;
     private String mKey;
     private ProgressDialog pDialog;
-    private Uri uri;
+
+    Ringtone ringTone;
+    private Uri uriRingTone;
+
+    Ringtone notificationTone;
+    private Uri uriNotificationTone;
 
     private View view;
     private Context mContext;
@@ -145,8 +150,10 @@ public class NewProfileFragment extends Fragment implements ConnectionCallbacks,
 
         edtProfileName = (EditText) view.findViewById(R.id.edtProfileName);
 
-        btnChangeRingtone = (ImageButton) view.findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (ImageButton) view.findViewById(R.id.btnChangeNotificationTone);
+        btnChangeRingtone = (AppCompatButton) view.findViewById(R.id.btnChangeRingTone);
+        btnChangeNotificationtone = (AppCompatButton) view.findViewById(R.id.btnChangeNotificationTone);
+        txtRingTone = (TextView) view.findViewById(R.id.txtRingTone);
+        txtNotificationTone = (TextView) view.findViewById(R.id.txtNotificationTone);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -263,7 +270,7 @@ public class NewProfileFragment extends Fragment implements ConnectionCallbacks,
             public void onClick(View view) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-                startActivityForResult(intent, RQS_RINGTONEPICKER);
+                startActivityForResult(intent, RQS_NOTIFICATION_TONE_PICKER);
             }
         });
 
@@ -314,11 +321,14 @@ public class NewProfileFragment extends Fragment implements ConnectionCallbacks,
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQS_RINGTONEPICKER:
-                    uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    ringTone = RingtoneManager.getRingtone(mContext.getApplicationContext(), uri);
-                    Toast.makeText(mContext,
-                            ringTone.getTitle(mContext),
-                            Toast.LENGTH_LONG).show();
+                    uriRingTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    ringTone = RingtoneManager.getRingtone(mContext.getApplicationContext(), uriRingTone);
+                    txtRingTone.setText(ringTone.getTitle(mContext));
+                    break;
+                case RQS_NOTIFICATION_TONE_PICKER:
+                    uriNotificationTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    notificationTone = RingtoneManager.getRingtone(mContext.getApplicationContext(), uriNotificationTone);
+                    txtNotificationTone.setText(notificationTone.getTitle(mContext));
                     break;
                 case REQUEST_CODE_MAP_ACTIVITY:
                     if (data.getStringExtra("lat") != null && (data.getStringExtra("lng") != null)) {
@@ -483,7 +493,7 @@ public class NewProfileFragment extends Fragment implements ConnectionCallbacks,
             mProfileReference.child("chkAlarm").setValue(isAlarmChecked);
             mProfileReference.child("chkCall").setValue(isCallChecked);
 
-            mProfileReference.child("ringToneURI").setValue(uri + "");
+            mProfileReference.child("ringToneURI").setValue(uriRingTone + "");
 
             mGeofenceList.add(new Geofence.Builder()
                     // Set the request ID of the geofence. This is a string to identify this

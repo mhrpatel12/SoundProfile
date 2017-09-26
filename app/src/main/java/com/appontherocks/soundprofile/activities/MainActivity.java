@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,25 +66,32 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
 
     private static final String TAG = "MainActivity";
     final int RQS_RINGTONEPICKER = 1;
+    final int RQS_NOTIFICATION_TONE_PICKER = 2;
     final int REQUEST_CODE_MAP_ACTIVITY = 99;
     TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume, textViewNotificationVolume, textViewSystemVolume;
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     EditText edtProfileName;
-    ImageButton btnChangeRingtone, btnChangeNotificationtone;
-    Ringtone ringTone;
+    AppCompatButton btnChangeRingtone, btnChangeNotificationtone;
     LatLng latLng;
     List<Geofence> mGeofenceList;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private MapFragment mapFragment;
-    private Uri uri;
     private ProgressDialog pDialog;
     private String mKey;
 
     private TextView txtWifiSetting, txtBluetoothSetting;
     private TextView txtWifiSettingValue, txtBluetoothSettingValue;
+
+    TextView txtRingTone, txtNotificationTone;
+
+    Ringtone ringTone;
+    private Uri uriRingTone;
+
+    Ringtone notificationTone;
+    private Uri uriNotificationTone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,8 +152,11 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
 
         edtProfileName = (EditText) findViewById(R.id.edtProfileName);
 
-        btnChangeRingtone = (ImageButton) findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (ImageButton) findViewById(R.id.btnChangeNotificationTone);
+        btnChangeRingtone = (AppCompatButton) findViewById(R.id.btnChangeRingTone);
+        btnChangeNotificationtone = (AppCompatButton) findViewById(R.id.btnChangeNotificationTone);
+
+        txtRingTone = (TextView) findViewById(R.id.txtRingTone);
+        txtNotificationTone = (TextView) findViewById(R.id.txtNotificationTone);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -345,6 +355,18 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             }
         });
 
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
     }
 
     @Override
@@ -446,11 +468,14 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQS_RINGTONEPICKER:
-                    uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    ringTone = RingtoneManager.getRingtone(getApplicationContext(), uri);
-                    Toast.makeText(MainActivity.this,
-                            ringTone.getTitle(MainActivity.this),
-                            Toast.LENGTH_LONG).show();
+                    uriRingTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    ringTone = RingtoneManager.getRingtone(this, uriRingTone);
+                    txtRingTone.setText(ringTone.getTitle(this));
+                    break;
+                case RQS_NOTIFICATION_TONE_PICKER:
+                    uriNotificationTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    notificationTone = RingtoneManager.getRingtone(this, uriNotificationTone);
+                    txtNotificationTone.setText(notificationTone.getTitle(this));
                     break;
                 case REQUEST_CODE_MAP_ACTIVITY:
                     if (data.getStringExtra("lat") != null && (data.getStringExtra("lng") != null)) {
@@ -573,7 +598,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
          */
         @Override
         protected String doInBackground(Void... f_url) {
-            FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
@@ -602,6 +627,16 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                                     mGoogleApiClient.connect();
                                 }
                             });
+                        }
+
+
+                        if ((profile.ringToneURI) != null) {
+                            txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.ringToneURI)).getTitle(MainActivity.this));
+                            uriRingTone = Uri.parse(profile.ringToneURI);
+                        }
+                        if ((profile.notificationToneURI) != null) {
+                            uriNotificationTone = Uri.parse(profile.notificationToneURI);
+                            txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.notificationToneURI)).getTitle(MainActivity.this));
                         }
 
                         if (profile.wifiSetting != null) {
@@ -722,7 +757,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             mProfileReference.child(getString(R.string.firebase_profile_wifi_setting)).setValue(wifiSetting);
             mProfileReference.child(getString(R.string.firebase_profile_bluetooth_setting)).setValue(bluetoothSetting);
 
-            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uri + "");
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uriRingTone + "");
+            mProfileReference.child(getString(R.string.firebase_profile_notification_tone_uri)).setValue(uriNotificationTone + "");
 
             mGeofenceList.add(new Geofence.Builder()
                     // Set the request ID of the geofence. This is a string to identify this

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Mihir on 3/13/2017.
  */
 
-public class SoundProfile{
+public class SoundProfile {
     public String profileName;
     public boolean chkDefaultProfile;
     public boolean chkRinger;
@@ -29,6 +29,7 @@ public class SoundProfile{
     public String latitude;
     public String longitude;
     public String ringToneURI;
+    public String notificationToneURI;
     public String mKey;
     private Integer mainBackgroundResource;
     private Integer headBackgroundResource;
@@ -50,7 +51,7 @@ public class SoundProfile{
             String ringtoneVolume, String musicVolume, String alarmVolume, String callVolume, String notificationVolume, String systemVolume,
             String wifiSetting, String bluetoothSetting,
             String latitude, String longitude,
-            String ringToneURI) {
+            String ringToneURI, String notificationToneURI) {
         this.profileName = profileName;
         this.chkDefaultProfile = chkDefaultProfile;
         this.chkRinger = chkRinger;
@@ -72,6 +73,7 @@ public class SoundProfile{
         this.latitude = latitude;
         this.longitude = longitude;
         this.ringToneURI = ringToneURI;
+        this.notificationToneURI = notificationToneURI;
     }
 
     public SoundProfile(String cardTitle, Integer mainBackgroundResource, Integer headBackgroundResource, List<SoundProfile> listItems) {

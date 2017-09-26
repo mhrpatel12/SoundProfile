@@ -41,6 +41,7 @@ public class DashboardFragment extends Fragment {
     private View view;
     private Context mContext;
     private Uri defaultRintoneUri;
+    private Uri defaultNotificationToneUri;
     private DatabaseReference mSoundProfileReference;
     private boolean isServiceRunning = false;
 
@@ -62,6 +63,7 @@ public class DashboardFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);*/
 
         defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
+        defaultNotificationToneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(getApplicationContext())) {
@@ -103,7 +105,7 @@ public class DashboardFragment extends Fragment {
                             "0", "0", "0", "0", "0", "0", //DEFAULT VOLUME LEVEL
                             getString(R.string.title_no_change), getString(R.string.title_no_change), //DEFAULT STATE OF WIFI / BLUETOOTH
                             "", "", //BLANK LATITUDE & LONGITUDE
-                            defaultRintoneUri + ""); //DEFAULT RINGTONE URI
+                            defaultRintoneUri + "", defaultNotificationToneUri + ""); //DEFAULT RINGTONE URI
 
                     String key = mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).push().getKey();
                     mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).setValue(profile);

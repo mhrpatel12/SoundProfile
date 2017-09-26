@@ -14,12 +14,14 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,15 +46,28 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
     private static final String TAG = "Default Profile Fragment";
     final int RQS_RINGTONEPICKER = 1;
-    TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume;
-    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume;
-    AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume;
+    final int RQS_NOTIFICATION_TONE_PICKER = 2;
+    TextView textviewRingerVolume, textViewMediaVolume, textviewAlarmVolume, textviewCallVolume, textViewNotificationVolume, textViewSystemVolume;
+    SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
+    AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     AppCompatCheckBox chkDefaultProfile;
-    ImageButton btnChangeRingtone, btnChangeNotificationtone;
-    Ringtone ringTone;
-    Uri uri;
+    AppCompatButton btnChangeNotificationtone;
+    AppCompatButton btnChangeRingtone;
+
+    private TextView txtWifiSetting, txtBluetoothSetting;
+    private TextView txtWifiSettingValue, txtBluetoothSettingValue;
+
     private Uri defaultRintoneUri;
+    private Uri defaultNotificationToneUri;
     private DatabaseReference mSoundProfileReference;
+
+    Ringtone ringTone;
+    private Uri uriRingTone;
+
+    Ringtone notificationTone;
+    private Uri uriNotificationTone;
+
+    TextView txtRingTone, txtNotificationTone;
 
     private Context mContext;
     private View view;
@@ -71,6 +86,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         mContext = view.getContext();
 
         defaultRintoneUri = RingtoneManager.getActualDefaultRingtoneUri(mContext.getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
+        defaultNotificationToneUri = RingtoneManager.getActualDefaultRingtoneUri(mContext.getApplicationContext(), RingtoneManager.TYPE_NOTIFICATION);
         initializeViews();
 
         return view;
@@ -88,6 +104,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         textviewRingerVolume = (TextView) view.findViewById(R.id.txtViewRingerVolume);
         chkRingerVolume = (AppCompatCheckBox) view.findViewById(R.id.chkRingerVolume);
         chkRingerVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(1));
+
         seekBarMediaVolume = (SeekBar) view.findViewById(R.id.seekBarMediaVolume);
         textViewMediaVolume = (TextView) view.findViewById(R.id.txtViewMediaVolume);
         chkMediaVolume = (AppCompatCheckBox) view.findViewById(R.id.chkMediaVolume);
@@ -102,8 +119,22 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         textviewCallVolume = (TextView) view.findViewById(R.id.txtCallVolume);
         chkCallVolume = (AppCompatCheckBox) view.findViewById(R.id.chkCallVolume);
         chkCallVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(4));
-        btnChangeRingtone = (ImageButton) view.findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (ImageButton) view.findViewById(R.id.btnChangeNotificationTone);
+
+        seekBarNotificationVolume = (SeekBar) view.findViewById(R.id.seekBarNotificationVolume);
+        textViewNotificationVolume = (TextView) view.findViewById(R.id.txtViewNotificationVolume);
+        chkNotificationVolume = (AppCompatCheckBox) view.findViewById(R.id.chkNotificationVolume);
+        chkNotificationVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(5));
+
+        seekBarSystenVolume = (SeekBar) view.findViewById(R.id.seekBarSystemVolume);
+        textViewSystemVolume = (TextView) view.findViewById(R.id.txtViewSystemVolume);
+        chkSystemVolume = (AppCompatCheckBox) view.findViewById(R.id.chkSystemVolume);
+        chkSystemVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(6));
+
+        btnChangeRingtone = (AppCompatButton) view.findViewById(R.id.btnChangeRingTone);
+        btnChangeNotificationtone = (AppCompatButton) view.findViewById(R.id.btnChangeNotificationTone);
+
+        txtRingTone = (TextView) view.findViewById(R.id.txtRingTone);
+        txtNotificationTone = (TextView) view.findViewById(R.id.txtNotificationTone);
 
         view.findViewById(R.id.layout_profile_name).setVisibility(View.GONE);
 
@@ -185,6 +216,43 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
             }
         });
 
+
+        txtWifiSetting = (TextView) view.findViewById(R.id.txtWifiSetting);
+        txtWifiSettingValue = (TextView) view.findViewById(R.id.txtWifiStatus);
+        txtWifiSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(mContext, v);
+                popup.getMenuInflater().inflate(R.menu.menu_wifi_bluetooth, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        txtWifiSettingValue.setText(item.getTitle());
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+
+        txtBluetoothSetting = (TextView) view.findViewById(R.id.txtBluetoothSetting);
+        txtBluetoothSettingValue = (TextView) view.findViewById(R.id.txtBluetoothStatus);
+        txtBluetoothSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(mContext, v);
+                popup.getMenuInflater().inflate(R.menu.menu_wifi_bluetooth, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        txtBluetoothSettingValue.setText(item.getTitle());
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+
         btnChangeRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,12 +311,19 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RQS_RINGTONEPICKER && resultCode == RESULT_OK) {
-            uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            ringTone = RingtoneManager.getRingtone(mContext.getApplicationContext(), uri);
-            Toast.makeText(mContext,
-                    ringTone.getTitle(mContext),
-                    Toast.LENGTH_LONG).show();
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case RQS_RINGTONEPICKER:
+                    uriRingTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    ringTone = RingtoneManager.getRingtone(mContext, uriRingTone);
+                    txtRingTone.setText(ringTone.getTitle(mContext));
+                    break;
+                case RQS_NOTIFICATION_TONE_PICKER:
+                    uriNotificationTone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    notificationTone = RingtoneManager.getRingtone(mContext, uriNotificationTone);
+                    txtNotificationTone.setText(notificationTone.getTitle(mContext));
+                    break;
+            }
         }
     }
 
@@ -329,6 +404,15 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                             seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
                             seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
                             seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
+                            seekBarNotificationVolume.setProgress(Integer.parseInt(profile.notificationVolume));
+                            seekBarSystenVolume.setProgress(Integer.parseInt(profile.systemVolume));
+                        }
+
+                        if ((profile.ringToneURI) != null) {
+                            txtRingTone.setText(RingtoneManager.getRingtone(mContext, Uri.parse(profile.ringToneURI)).getTitle(mContext));
+                        }
+                        if ((profile.notificationToneURI) != null) {
+                            txtNotificationTone.setText(RingtoneManager.getRingtone(mContext, Uri.parse(profile.notificationToneURI)).getTitle(mContext));
                         }
 
                         chkDefaultProfile.setChecked(profile.chkDefaultProfile);
@@ -336,6 +420,8 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                         chkMediaVolume.setChecked(profile.chkMedia);
                         chkAlarmVolume.setChecked(profile.chkAlarm);
                         chkCallVolume.setChecked(profile.chkCall);
+                        chkSystemVolume.setChecked(profile.chkSystem);
+                        chkNotificationVolume.setChecked(profile.chkNotification);
                     } else {
                         profile = new SoundProfile("New Profile",//PROFILE NAME
                                 false,//ACTIVE DEFAULT PROFILE ON UNKNOWN AREA ?
@@ -343,7 +429,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                                 "0", "0", "0", "0", "0", "0", //DEFAULT VOLUME LEVEL
                                 getString(R.string.title_no_change), getString(R.string.title_no_change), //DEFAULT STATE OF WIFI / BLUETOOTH
                                 "", "", //BLANK LATITUDE & LONGITUDE
-                                defaultRintoneUri + ""); //DEFAULT RINGTONE URI
+                                defaultRintoneUri + "", defaultNotificationToneUri + ""); //DEFAULT RINGTONE URI
                         mSoundProfileReference.child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").setValue(profile);
                     }
                     FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default").removeEventListener(this);
@@ -367,16 +453,26 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
     public class saveGeoFencesAsyncTask extends AsyncTask<Void, String, String> {
 
+        private Boolean isDefaultProfileChecked;
+
+        private String profileName;
+
         private String ringerVolume;
         private String mediaVolume;
         private String alarmVolume;
         private String callVolume;
+        private String notificationVolume;
+        private String systemVolume;
 
-        private Boolean isDefaultProfileChecked;
         private Boolean isRingToneChecked;
         private Boolean isMediaChecked;
         private Boolean isAlarmChecked;
         private Boolean isCallChecked;
+        private Boolean isNotificationChecked;
+        private Boolean isSystemChecked;
+
+        private String wifiSetting;
+        private String bluetoothSetting;
 
         private DatabaseReference mProfileReference;
 
@@ -389,19 +485,26 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
             super.onPreExecute();
 
             ((BaseActivity) getActivity()).showProgressDialog();
+            isDefaultProfileChecked = chkDefaultProfile.isChecked();
 
             ringerVolume = seekbarRingerVolume.getProgress() + "";
             mediaVolume = seekBarMediaVolume.getProgress() + "";
             alarmVolume = seekBarAlarmVolume.getProgress() + "";
             callVolume = seekBarCallVolume.getProgress() + "";
+            notificationVolume = seekBarNotificationVolume.getProgress() + "";
+            systemVolume = seekBarSystenVolume.getProgress() + "";
 
-            isDefaultProfileChecked = chkDefaultProfile.isChecked();
             isRingToneChecked = chkRingerVolume.isChecked();
             isMediaChecked = chkMediaVolume.isChecked();
             isAlarmChecked = chkAlarmVolume.isChecked();
             isCallChecked = chkCallVolume.isChecked();
+            isNotificationChecked = chkNotificationVolume.isChecked();
+            isSystemChecked = chkSystemVolume.isChecked();
 
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("profiles").child(((HomeActivity) getActivity()).getUid()).child("default");
+            wifiSetting = txtWifiSettingValue.getText().toString();
+            bluetoothSetting = txtBluetoothSettingValue.getText().toString();
+
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(((HomeActivity) getActivity()).getUid()).child(getString(R.string.firebase_default_profiles));
         }
 
         /**
@@ -413,18 +516,25 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
                 return null;
             }
 
-            mProfileReference.child("ringtoneVolume").setValue(ringerVolume);
-            mProfileReference.child("musicVolume").setValue(mediaVolume);
-            mProfileReference.child("alarmVolume").setValue(alarmVolume);
-            mProfileReference.child("callVolume").setValue(callVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_volume)).setValue(ringerVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_music_volume)).setValue(mediaVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_alarm_volume)).setValue(alarmVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_call_volume)).setValue(callVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_notification_volume)).setValue(notificationVolume);
+            mProfileReference.child(getString(R.string.firebase_profile_system_volume)).setValue(systemVolume);
 
-            mProfileReference.child("chkDefaultProfile").setValue(isDefaultProfileChecked);
-            mProfileReference.child("chkRinger").setValue(isRingToneChecked);
-            mProfileReference.child("chkMedia").setValue(isMediaChecked);
-            mProfileReference.child("chkAlarm").setValue(isAlarmChecked);
-            mProfileReference.child("chkCall").setValue(isCallChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_chk)).setValue(isRingToneChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_music_chk)).setValue(isMediaChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_alarm_chk)).setValue(isAlarmChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_call_chl)).setValue(isCallChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_notification_chk)).setValue(isNotificationChecked);
+            mProfileReference.child(getString(R.string.firebase_profile_system_chl)).setValue(isSystemChecked);
 
-            mProfileReference.child("ringToneURI").setValue(uri + "");
+            mProfileReference.child(getString(R.string.firebase_profile_wifi_setting)).setValue(wifiSetting);
+            mProfileReference.child(getString(R.string.firebase_profile_bluetooth_setting)).setValue(bluetoothSetting);
+
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uriRingTone + "");
+            mProfileReference.child(getString(R.string.firebase_profile_notification_tone_uri)).setValue(uriNotificationTone + "");
 
             return null;
         }

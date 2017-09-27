@@ -433,8 +433,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutWifiSetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:orientation="vertical"
             android:padding="@dimen/margin_new_profile_control">
 
@@ -443,7 +445,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
-                android:drawableLeft="@drawable/ic_wifi_24dp"
                 android:drawableStart="@drawable/ic_wifi_24dp"
                 android:gravity="center_vertical"
                 android:text="@string/settings_wifi"
@@ -467,8 +468,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutBluetoothSetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:orientation="vertical"
             android:padding="@dimen/margin_new_profile_control">
 
@@ -477,7 +480,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_layout_child"
-                android:drawableLeft="@drawable/ic_bluetooth_24dp"
                 android:drawableStart="@drawable/ic_bluetooth_24dp"
                 android:gravity="center_vertical"
                 android:text="@string/settings_bluetooth"
@@ -501,63 +503,66 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutChangeRingTone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_new_profile_control">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/btnChangeRingTone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
+                android:layout_margin="@dimen/margin_layout_child"
+                android:drawableStart="@drawable/ic_music_note_black_24dp"
+                android:text="@string/title_ringtone_picker" />
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btnChangeRingTone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_new_profile_control"
-                    android:background="@drawable/custom_background_button"
-                    android:drawableStart="@drawable/ic_music_note_black_24dp"
-                    android:paddingEnd="10dp"
-                    android:paddingStart="10dp"
-                    android:text="@string/title_ringtone_picker" />
-
-                <TextView
-                    android:id="@+id/txtRingTone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_new_profile_control"
-                    android:gravity="center"
-                    android:text="@string/title_ringtone_picker" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/txtRingTone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
+                android:layout_margin="@dimen/margin_layout_child"
+                android:text="@string/title_ringtone_picker" />
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btnChangeNotificationTone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_new_profile_control"
-                    android:background="@drawable/custom_background_button"
-                    android:drawableStart="@drawable/ic_notifications_none_black_24dp"
-                    android:paddingEnd="10dp"
-                    android:paddingStart="10dp"
-                    android:text="@string/title_notificationtone_picker" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="@dimen/margin_layout_child"
+                android:background="@android:color/black"
+                android:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/txtNotificationTone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_new_profile_control"
-                    android:gravity="center"
-                    android:text="@string/title_notificationtone_picker" />
+        </LinearLayout>
 
-            </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutChangeNotificationTone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_new_profile_control">
+
+            <TextView
+                android:id="@+id/btnChangeNotificationTone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_layout_child"
+                android:drawableStart="@drawable/ic_notifications_none_black_24dp"
+                android:text="@string/title_notificationtone_picker" />
+
+            <TextView
+                android:id="@+id/txtNotificationTone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_layout_child"
+                android:text="@string/title_notificationtone_picker" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="@dimen/margin_layout_child"
+                android:background="@android:color/black"
+                android:visibility="visible" />
 
         </LinearLayout>
 

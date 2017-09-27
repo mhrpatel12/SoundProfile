@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +51,10 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     AppCompatCheckBox chkDefaultProfile;
-    AppCompatButton btnChangeNotificationtone;
-    AppCompatButton btnChangeRingtone;
+    LinearLayout layoutChangeNotificationtone;
+    LinearLayout layoutChangeRingtone;
 
+    private LinearLayout layoutWifiSetting, layoutBluetoothSetting;
     private TextView txtWifiSetting, txtBluetoothSetting;
     private TextView txtWifiSettingValue, txtBluetoothSettingValue;
 
@@ -130,8 +131,8 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
         chkSystemVolume = (AppCompatCheckBox) view.findViewById(R.id.chkSystemVolume);
         chkSystemVolume.setOnCheckedChangeListener(new MyCheckedChangeListener(6));
 
-        btnChangeRingtone = (AppCompatButton) view.findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (AppCompatButton) view.findViewById(R.id.btnChangeNotificationTone);
+        layoutChangeRingtone = (LinearLayout) view.findViewById(R.id.layoutChangeRingTone);
+        layoutChangeNotificationtone = (LinearLayout) view.findViewById(R.id.layoutChangeNotificationTone);
 
         txtRingTone = (TextView) view.findViewById(R.id.txtRingTone);
         txtNotificationTone = (TextView) view.findViewById(R.id.txtNotificationTone);
@@ -219,7 +220,8 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
         txtWifiSetting = (TextView) view.findViewById(R.id.txtWifiSetting);
         txtWifiSettingValue = (TextView) view.findViewById(R.id.txtWifiStatus);
-        txtWifiSetting.setOnClickListener(new View.OnClickListener() {
+        layoutWifiSetting = (LinearLayout) view.findViewById(R.id.layoutWifiSetting);
+        layoutWifiSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(mContext, v);
@@ -237,7 +239,8 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
         txtBluetoothSetting = (TextView) view.findViewById(R.id.txtBluetoothSetting);
         txtBluetoothSettingValue = (TextView) view.findViewById(R.id.txtBluetoothStatus);
-        txtBluetoothSetting.setOnClickListener(new View.OnClickListener() {
+        layoutBluetoothSetting = (LinearLayout) view.findViewById(R.id.layoutBluetoothSetting);
+        layoutBluetoothSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(mContext, v);
@@ -253,7 +256,7 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
             }
         });
 
-        btnChangeRingtone.setOnClickListener(new View.OnClickListener() {
+        layoutChangeRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
@@ -262,12 +265,12 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
             }
         });
 
-        btnChangeNotificationtone.setOnClickListener(new View.OnClickListener() {
+        layoutChangeNotificationtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-                startActivityForResult(intent, RQS_RINGTONEPICKER);
+                startActivityForResult(intent, RQS_NOTIFICATION_TONE_PICKER);
             }
         });
     }
@@ -532,6 +535,9 @@ public class DefaultProfileFragment extends Fragment implements AlertForDiscardD
 
             mProfileReference.child(getString(R.string.firebase_profile_wifi_setting)).setValue(wifiSetting);
             mProfileReference.child(getString(R.string.firebase_profile_bluetooth_setting)).setValue(bluetoothSetting);
+
+            mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uriRingTone + "");
+            mProfileReference.child(getString(R.string.firebase_profile_notification_tone_uri)).setValue(uriNotificationTone + "");
 
             mProfileReference.child(getString(R.string.firebase_profile_ringtone_uri)).setValue(uriRingTone + "");
             mProfileReference.child(getString(R.string.firebase_profile_notification_tone_uri)).setValue(uriNotificationTone + "");

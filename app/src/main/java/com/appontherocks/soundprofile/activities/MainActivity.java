@@ -93,6 +93,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     Ringtone notificationTone;
     private Uri uriNotificationTone;
 
+    private DatabaseReference databaseReference;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,6 +194,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             } catch (NumberFormatException e) {
             }
         }
+
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey);
 
         AudioManager mobilemode = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 
@@ -315,7 +319,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             public void onClick(View view) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-                startActivityForResult(intent, RQS_RINGTONEPICKER);
+                startActivityForResult(intent, RQS_NOTIFICATION_TONE_PICKER);
             }
         });
 
@@ -354,19 +358,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                 popup.show();
             }
         });
-
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
     }
 
     @Override
@@ -465,6 +456,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        valueEventListener = null;
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RQS_RINGTONEPICKER:
@@ -576,6 +568,70 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         }
     }
 
+    private ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            databaseReference.removeEventListener(this);
+            SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
+
+            if (profile != null) {
+                if (profile.profileName != null) {
+                    edtProfileName.setText(profile.profileName + "");
+                }
+
+                if ((profile.ringtoneVolume != null)) {
+                    seekbarRingerVolume.setProgress(Integer.parseInt(profile.ringtoneVolume));
+                    seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
+                    seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
+                    seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
+                    seekBarNotificationVolume.setProgress(Integer.parseInt(profile.notificationVolume));
+                    seekBarSystenVolume.setProgress(Integer.parseInt(profile.systemVolume));
+                }
+
+                if (((profile.latitude != null) && !(profile.latitude.equals(""))) &&
+                        ((profile.longitude != null) && !(profile.longitude.equals("")))) {
+                    latLng = new LatLng(Double.parseDouble(profile.latitude + ""), Double.parseDouble(profile.longitude + ""));
+                    mapFragment.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(GoogleMap googleMap) {
+                            mMap = googleMap;
+                            mGoogleApiClient.connect();
+                        }
+                    });
+                }
+
+
+                if ((profile.ringToneURI) != null) {
+                    txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.ringToneURI)).getTitle(MainActivity.this));
+                    uriRingTone = Uri.parse(profile.ringToneURI);
+                }
+                if ((profile.notificationToneURI) != null) {
+                    uriNotificationTone = Uri.parse(profile.notificationToneURI);
+                    txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.notificationToneURI)).getTitle(MainActivity.this));
+                }
+
+                if (profile.wifiSetting != null) {
+                    txtWifiSettingValue.setText(profile.wifiSetting);
+                }
+                if (profile.bluetoothSetting != null) {
+                    txtBluetoothSettingValue.setText(profile.bluetoothSetting);
+                }
+                chkRingerVolume.setEnabled(profile.chkRinger);
+                chkMediaVolume.setEnabled(profile.chkMedia);
+                chkAlarmVolume.setEnabled(profile.chkAlarm);
+                chkCallVolume.setEnabled(profile.chkCall);
+                chkNotificationVolume.setEnabled(profile.chkNotification);
+                chkSystemVolume.setEnabled(profile.chkSystem);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Toast.makeText(MainActivity.this, "Failed to load data.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
+
     public class loadDataAyncTask extends AsyncTask<Void, String, String> {
 
         /**
@@ -598,70 +654,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
          */
         @Override
         protected String doInBackground(Void... f_url) {
-            FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
-
-                    if (profile != null) {
-                        if (profile.profileName != null) {
-                            edtProfileName.setText(profile.profileName + "");
-                        }
-
-                        if ((profile.ringtoneVolume != null)) {
-                            seekbarRingerVolume.setProgress(Integer.parseInt(profile.ringtoneVolume));
-                            seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
-                            seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
-                            seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
-                            seekBarNotificationVolume.setProgress(Integer.parseInt(profile.notificationVolume));
-                            seekBarSystenVolume.setProgress(Integer.parseInt(profile.systemVolume));
-                        }
-
-                        if (((profile.latitude != null) && !(profile.latitude.equals(""))) &&
-                                ((profile.longitude != null) && !(profile.longitude.equals("")))) {
-                            latLng = new LatLng(Double.parseDouble(profile.latitude + ""), Double.parseDouble(profile.longitude + ""));
-                            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                                @Override
-                                public void onMapReady(GoogleMap googleMap) {
-                                    mMap = googleMap;
-                                    mGoogleApiClient.connect();
-                                }
-                            });
-                        }
-
-
-                        if ((profile.ringToneURI) != null) {
-                            txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.ringToneURI)).getTitle(MainActivity.this));
-                            uriRingTone = Uri.parse(profile.ringToneURI);
-                        }
-                        if ((profile.notificationToneURI) != null) {
-                            uriNotificationTone = Uri.parse(profile.notificationToneURI);
-                            txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.notificationToneURI)).getTitle(MainActivity.this));
-                        }
-
-                        if (profile.wifiSetting != null) {
-                            txtWifiSettingValue.setText(profile.wifiSetting);
-                        }
-                        if (profile.bluetoothSetting != null) {
-                            txtBluetoothSettingValue.setText(profile.bluetoothSetting);
-                        }
-                        chkRingerVolume.setEnabled(profile.chkRinger);
-                        chkMediaVolume.setEnabled(profile.chkMedia);
-                        chkAlarmVolume.setEnabled(profile.chkAlarm);
-                        chkCallVolume.setEnabled(profile.chkCall);
-                        chkNotificationVolume.setEnabled(profile.chkNotification);
-                        chkSystemVolume.setEnabled(profile.chkSystem);
-                    }
-                    FirebaseDatabase.getInstance().getReference().child(getString(R.string.firebase_profiles)).child(getUid()).child(mKey).removeEventListener(this);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, "Failed to load data.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            if (valueEventListener != null) {
+                databaseReference.addListenerForSingleValueEvent(valueEventListener);
+            }
             return null;
         }
 

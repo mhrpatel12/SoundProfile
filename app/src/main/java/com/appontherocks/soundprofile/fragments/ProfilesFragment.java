@@ -85,7 +85,7 @@ public class ProfilesFragment extends Fragment {
                 }
 
                 profilesListAdapter.notifyDataSetChanged();
-                FirebaseDatabase.getInstance().getReference().child("profiles").child(((BaseActivity) getActivity()).getUid()).removeEventListener(this);
+                //FirebaseDatabase.getInstance().getReference().child("profiles").child(((BaseActivity) getActivity()).getUid()).removeEventListener(this);
             }
 
             @Override

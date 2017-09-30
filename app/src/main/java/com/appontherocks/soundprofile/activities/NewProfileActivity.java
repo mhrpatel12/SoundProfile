@@ -20,7 +20,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -65,26 +64,22 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     EditText edtProfileName;
     List<Geofence> mGeofenceList;
-    AppCompatButton btnChangeRingtone, btnChangeNotificationtone;
+    TextView btnChangeRingtone, btnChangeNotificationtone;
     LatLng latLng;
     Uri defaultRintoneUri;
     Ringtone defaultRingtone;
+    Ringtone ringTone;
+    Ringtone notificationTone;
+    TextView txtRingTone, txtNotificationTone;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private String mKey;
     private ProgressDialog pDialog;
-
     private TextView txtWifiSetting, txtBluetoothSetting;
     private TextView txtWifiSettingValue, txtBluetoothSettingValue;
-
-    Ringtone ringTone;
     private Uri uriRingTone;
-
-    Ringtone notificationTone;
     private Uri uriNotificationTone;
-
-    TextView txtRingTone, txtNotificationTone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,8 +140,8 @@ public class NewProfileActivity extends BaseActivity implements OnMapReadyCallba
 
         edtProfileName = (EditText) findViewById(R.id.edtProfileName);
 
-        btnChangeRingtone = (AppCompatButton) findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (AppCompatButton) findViewById(R.id.btnChangeNotificationTone);
+        btnChangeRingtone = (TextView) findViewById(R.id.btnChangeRingTone);
+        btnChangeNotificationtone = (TextView) findViewById(R.id.btnChangeNotificationTone);
 
         txtRingTone = (TextView) findViewById(R.id.txtRingTone);
         txtNotificationTone = (TextView) findViewById(R.id.txtNotificationTone);

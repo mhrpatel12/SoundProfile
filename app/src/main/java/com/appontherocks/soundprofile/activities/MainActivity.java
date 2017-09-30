@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -72,28 +71,87 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     SeekBar seekbarRingerVolume, seekBarMediaVolume, seekBarAlarmVolume, seekBarCallVolume, seekBarNotificationVolume, seekBarSystenVolume;
     AppCompatCheckBox chkRingerVolume, chkMediaVolume, chkAlarmVolume, chkCallVolume, chkNotificationVolume, chkSystemVolume;
     EditText edtProfileName;
-    AppCompatButton btnChangeRingtone, btnChangeNotificationtone;
+    TextView btnChangeRingtone, btnChangeNotificationtone;
     LatLng latLng;
     List<Geofence> mGeofenceList;
+    TextView txtRingTone, txtNotificationTone;
+    Ringtone ringTone;
+    Ringtone notificationTone;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private MapFragment mapFragment;
     private ProgressDialog pDialog;
     private String mKey;
-
     private TextView txtWifiSetting, txtBluetoothSetting;
     private TextView txtWifiSettingValue, txtBluetoothSettingValue;
-
-    TextView txtRingTone, txtNotificationTone;
-
-    Ringtone ringTone;
     private Uri uriRingTone;
-
-    Ringtone notificationTone;
     private Uri uriNotificationTone;
 
     private DatabaseReference databaseReference;
+    private ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            databaseReference.removeEventListener(this);
+            SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
+
+            if (profile != null) {
+                if (profile.profileName != null) {
+                    edtProfileName.setText(profile.profileName + "");
+                }
+
+                if ((profile.ringtoneVolume != null)) {
+                    seekbarRingerVolume.setProgress(Integer.parseInt(profile.ringtoneVolume));
+                    seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
+                    seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
+                    seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
+                    seekBarNotificationVolume.setProgress(Integer.parseInt(profile.notificationVolume));
+                    seekBarSystenVolume.setProgress(Integer.parseInt(profile.systemVolume));
+                }
+
+                if (((profile.latitude != null) && !(profile.latitude.equals(""))) &&
+                        ((profile.longitude != null) && !(profile.longitude.equals("")))) {
+                    latLng = new LatLng(Double.parseDouble(profile.latitude + ""), Double.parseDouble(profile.longitude + ""));
+                    mapFragment.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(GoogleMap googleMap) {
+                            mMap = googleMap;
+                            mGoogleApiClient.connect();
+                        }
+                    });
+                }
+
+
+                if ((profile.ringToneURI) != null) {
+                    txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.ringToneURI)).getTitle(MainActivity.this));
+                    uriRingTone = Uri.parse(profile.ringToneURI);
+                }
+                if ((profile.notificationToneURI) != null) {
+                    uriNotificationTone = Uri.parse(profile.notificationToneURI);
+                    txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.notificationToneURI)).getTitle(MainActivity.this));
+                }
+
+                if (profile.wifiSetting != null) {
+                    txtWifiSettingValue.setText(profile.wifiSetting);
+                }
+                if (profile.bluetoothSetting != null) {
+                    txtBluetoothSettingValue.setText(profile.bluetoothSetting);
+                }
+                chkRingerVolume.setEnabled(profile.chkRinger);
+                chkMediaVolume.setEnabled(profile.chkMedia);
+                chkAlarmVolume.setEnabled(profile.chkAlarm);
+                chkCallVolume.setEnabled(profile.chkCall);
+                chkNotificationVolume.setEnabled(profile.chkNotification);
+                chkSystemVolume.setEnabled(profile.chkSystem);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Toast.makeText(MainActivity.this, "Failed to load data.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,8 +212,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
 
         edtProfileName = (EditText) findViewById(R.id.edtProfileName);
 
-        btnChangeRingtone = (AppCompatButton) findViewById(R.id.btnChangeRingTone);
-        btnChangeNotificationtone = (AppCompatButton) findViewById(R.id.btnChangeNotificationTone);
+        btnChangeRingtone = (TextView) findViewById(R.id.btnChangeRingTone);
+        btnChangeNotificationtone = (TextView) findViewById(R.id.btnChangeNotificationTone);
 
         txtRingTone = (TextView) findViewById(R.id.txtRingTone);
         txtNotificationTone = (TextView) findViewById(R.id.txtNotificationTone);
@@ -567,70 +625,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             }
         }
     }
-
-    private ValueEventListener valueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            databaseReference.removeEventListener(this);
-            SoundProfile profile = dataSnapshot.getValue(SoundProfile.class);
-
-            if (profile != null) {
-                if (profile.profileName != null) {
-                    edtProfileName.setText(profile.profileName + "");
-                }
-
-                if ((profile.ringtoneVolume != null)) {
-                    seekbarRingerVolume.setProgress(Integer.parseInt(profile.ringtoneVolume));
-                    seekBarMediaVolume.setProgress(Integer.parseInt(profile.musicVolume));
-                    seekBarAlarmVolume.setProgress(Integer.parseInt(profile.alarmVolume));
-                    seekBarCallVolume.setProgress(Integer.parseInt(profile.callVolume));
-                    seekBarNotificationVolume.setProgress(Integer.parseInt(profile.notificationVolume));
-                    seekBarSystenVolume.setProgress(Integer.parseInt(profile.systemVolume));
-                }
-
-                if (((profile.latitude != null) && !(profile.latitude.equals(""))) &&
-                        ((profile.longitude != null) && !(profile.longitude.equals("")))) {
-                    latLng = new LatLng(Double.parseDouble(profile.latitude + ""), Double.parseDouble(profile.longitude + ""));
-                    mapFragment.getMapAsync(new OnMapReadyCallback() {
-                        @Override
-                        public void onMapReady(GoogleMap googleMap) {
-                            mMap = googleMap;
-                            mGoogleApiClient.connect();
-                        }
-                    });
-                }
-
-
-                if ((profile.ringToneURI) != null) {
-                    txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.ringToneURI)).getTitle(MainActivity.this));
-                    uriRingTone = Uri.parse(profile.ringToneURI);
-                }
-                if ((profile.notificationToneURI) != null) {
-                    uriNotificationTone = Uri.parse(profile.notificationToneURI);
-                    txtRingTone.setText(RingtoneManager.getRingtone(MainActivity.this, Uri.parse(profile.notificationToneURI)).getTitle(MainActivity.this));
-                }
-
-                if (profile.wifiSetting != null) {
-                    txtWifiSettingValue.setText(profile.wifiSetting);
-                }
-                if (profile.bluetoothSetting != null) {
-                    txtBluetoothSettingValue.setText(profile.bluetoothSetting);
-                }
-                chkRingerVolume.setEnabled(profile.chkRinger);
-                chkMediaVolume.setEnabled(profile.chkMedia);
-                chkAlarmVolume.setEnabled(profile.chkAlarm);
-                chkCallVolume.setEnabled(profile.chkCall);
-                chkNotificationVolume.setEnabled(profile.chkNotification);
-                chkSystemVolume.setEnabled(profile.chkSystem);
-            }
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Toast.makeText(MainActivity.this, "Failed to load data.",
-                    Toast.LENGTH_SHORT).show();
-        }
-    };
 
     public class loadDataAyncTask extends AsyncTask<Void, String, String> {
 

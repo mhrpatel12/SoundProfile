@@ -1,6 +1,6 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:color="?attr/drawable_color"
+    android:color="?attr/drawable_color_background"
     tools:targetApi="lollipop">
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
@@ -11,7 +11,7 @@
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
             <corners android:radius="30dp" />
-            <solid android:color="?attr/drawable_color_background" />
+            <solid android:color="?attr/drawable_color" />
         </shape>
     </item>
 </ripple>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.event.SleepyHoursEnd;
 import com.appontherocks.soundprofile.event.SleepyHoursStart;
 
@@ -27,8 +28,8 @@ public class SleepyHoursService extends Service {
             Log.d("Service", "null");
         else {
             Log.d("Service", "not null");
-            sleepyHoursStart.setSleepyHoursStart(SleepyHoursService.this, (int) extras.get("startHour"), (int) extras.get("startMinute"));
-            sleepyHoursEnd.setSleepyHoursEnd(SleepyHoursService.this, (int) extras.get("endHour"), (int) extras.get("endMinute"));
+            sleepyHoursStart.setSleepyHoursStart(SleepyHoursService.this, (int) extras.get(getString(R.string.startHour)), (int) extras.get(getString(R.string.startMinute)));
+            sleepyHoursEnd.setSleepyHoursEnd(SleepyHoursService.this, (int) extras.get(getString(R.string.endHour)), (int) extras.get(getString(R.string.endMinute)));
         }
         return START_STICKY;
     }

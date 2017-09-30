@@ -42,4 +42,5 @@
     <dimen name="size_map_circle">75dp</dimen>
     <dimen name="padding_card_icon">3dp</dimen>
     <dimen name="margin_top_card_icons">10dp</dimen>
+    <dimen name="padding_time_picker">35dp</dimen>
 </resources>

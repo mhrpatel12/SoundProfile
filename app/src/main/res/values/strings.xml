@@ -159,7 +159,7 @@
     <string name="request_btn_text">GOOO</string>
     <string name="btn_annotation_mock">YOO</string>
     <string name="dummy_value">0</string>
-    <string name="text_start_time">I sleep at :</string>
+    <string name="text_start_time">I go to bed at :</string>
     <string name="text_end_time">I wake up at :</string>
     <string name="text_dummy_time">00:00</string>
     <string name="text_button_sleepy_hours">Enable sleepy hours</string>
@@ -169,4 +169,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="promps_double_back">Tap back again to exit App.</string>
     <string name="firebase_default_profiles">default</string>
+    <string name="startHour">startHour</string>
+    <string name="startMinute">startMinute</string>
+    <string name="endHour">endHour</string>
+    <string name="endMinute">endMinute</string>
 </resources>

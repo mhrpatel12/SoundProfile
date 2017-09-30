@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,59 +7,62 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/layoutStartHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/fab_margin"
-            android:weightSum="1">
+            android:orientation="vertical"
+            android:padding="@dimen/fab_margin">
 
             <android.support.v7.widget.AppCompatTextView
-                android:layout_width="0dp"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:drawableEnd="@drawable/ic_sleep"
                 android:text="@string/text_start_time" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/txtStartTime"
-                android:layout_width="0dp"
+            <TimePicker
+                android:id="@+id/startTime"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="@string/text_dummy_time" />
+                android:headerBackground="?attr/card_view_title_text_color"
+                android:numbersTextColor="?attr/card_view_back_color"
+                android:padding="@dimen/padding_time_picker" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layoutEndHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/fab_margin"
-            android:weightSum="1">
+            android:orientation="vertical"
+            android:padding="@dimen/fab_margin">
 
             <android.support.v7.widget.AppCompatTextView
-                android:layout_width="0dp"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:drawableEnd="@drawable/ic_wake_up"
                 android:text="@string/text_end_time" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/txtEndTime"
-                android:layout_width="0dp"
+            <TimePicker
+                android:id="@+id/endTime"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="@string/text_dummy_time" />
+                android:headerBackground="?attr/card_view_title_text_color"
+                android:numbersTextColor="?attr/card_view_back_color"
+                android:padding="@dimen/padding_time_picker" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnEnableSleepyHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/custom_background_button"
             android:text="@string/text_button_sleepy_hours" />
 
     </LinearLayout>
-
-</FrameLayout>
+</ScrollView>

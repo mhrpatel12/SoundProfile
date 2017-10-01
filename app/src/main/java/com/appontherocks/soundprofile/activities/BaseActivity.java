@@ -28,9 +28,9 @@ public class BaseActivity extends AppCompatActivity {
         if (selectedTheme.equals(getString(R.string.theme_dark))) {
             setTheme(R.style.DarkTheme);
         } else if (selectedTheme.equals(getString(R.string.theme_green))) {
-            setTheme(R.style.GreenTheme);
+            setTheme(R.style.PurpleTheme);
         } else if (selectedTheme.equals(getString(R.string.theme_purple))) {
-            setTheme(R.style.RedTheme);
+            setTheme(R.style.GreenTheme);
         }
         super.onCreate(savedInstanceState);
     }

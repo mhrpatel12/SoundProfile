@@ -178,12 +178,12 @@ public class AdvancedSettingsFragment extends Fragment implements GoogleApiClien
                         return true;
                     case R.id.theme_green:
                         themeSettingEdit.putString(getString(R.string.theme), getString(R.string.theme_green)).commit();
-                        mContext.setTheme(R.style.GreenTheme);
+                        mContext.setTheme(R.style.PurpleTheme);
                         getActivity().recreate();
                         return true;
                     case R.id.theme_purple:
                         themeSettingEdit.putString(getString(R.string.theme), getString(R.string.theme_purple)).commit();
-                        mContext.setTheme(R.style.RedTheme);
+                        mContext.setTheme(R.style.GreenTheme);
                         getActivity().recreate();
                         return true;
                     default:

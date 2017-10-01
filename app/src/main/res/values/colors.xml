@@ -11,28 +11,28 @@
     <color name="icons">#3E50B4</color>
     <color name="divider">#BDBDBD</color>
 
-    <color name="primary_red">#F44336</color>
-    <color name="primary_dark_red">#D32F2F</color>
-    <color name="primary_light_red">#FFCDD2</color>
-    <color name="accent_red">#ffff00</color>
-    <color name="accent_red_highlight">#ffff8d</color>
-    <color name="red_back">#d84315</color>
-    <color name="primary_text_red">#FFFFFF</color>
-    <color name="secondary_text_red">#757575</color>
-    <color name="icons_red">#FFFFFF</color>
-    <color name="divider_red">#BDBDBD</color>
-    <color name="colorBackCard_red">#ff9800</color>
-
-    <color name="primary_green">#5e35b1</color>
-    <color name="primary_dark_green">#4527a0</color>
-    <color name="green_back">#673ab7</color>
-    <color name="primary_light_green">#b39ddb</color>
-    <color name="accent_green">#ffc107</color>
+    <color name="primary_green">#FFFFFF</color>
+    <color name="primary_dark_green">#ff6f00</color>
+    <color name="primary_light_green">#ffb74d</color>
+    <color name="accent_green">#f44336</color>
+    <color name="accent_green_highlight">#ffcc80</color>
+    <color name="green_back">#ffa000</color>
     <color name="primary_text_green">#FFFFFF</color>
     <color name="secondary_text_green">#757575</color>
     <color name="icons_green">#FFFFFF</color>
     <color name="divider_green">#BDBDBD</color>
-    <color name="colorBackCard_green">#5C6BC0</color>
+    <color name="colorBackCard_green">#ff6d00</color>
+
+    <color name="primary_purple">#5e35b1</color>
+    <color name="primary_dark_purple">#4527a0</color>
+    <color name="purple_back">#673ab7</color>
+    <color name="primary_light_purple">#b39ddb</color>
+    <color name="accent_purple">#ffc107</color>
+    <color name="primary_text_purple">#FFFFFF</color>
+    <color name="secondary_text_purple">#757575</color>
+    <color name="icons_purple">#FFFFFF</color>
+    <color name="divider_purple">#BDBDBD</color>
+    <color name="colorBackCard_purple">#5C6BC0</color>
 
     <color name="colorBackCard_black">#424242</color>
     <color name="drawable_dark">#ffa000</color>

@@ -1,6 +1,7 @@
 package com.appontherocks.soundprofile.fragments;
 
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -188,12 +189,21 @@ public class DashboardFragment extends Fragment {
         ((ToggleButton) view.findViewById(R.id.toggle_profile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((ToggleButton) view.findViewById(R.id.toggle_profile)).getText().toString().equals(getString(R.string.text_on))) {
-                    mobilemode.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    Toast.makeText(mContext, "SILENT profile activated ", Toast.LENGTH_LONG).show();
-                } else if (((ToggleButton) view.findViewById(R.id.toggle_profile)).getText().toString().equals(getString(R.string.text_off))) {
-                    mobilemode.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    Toast.makeText(mContext, "LOUD profile activated !", Toast.LENGTH_LONG).show();
+                NotificationManager n = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (n.isNotificationPolicyAccessGranted()) {
+                        if (((ToggleButton) view.findViewById(R.id.toggle_profile)).getText().toString().equals(getString(R.string.text_on))) {
+                            mobilemode.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            Toast.makeText(mContext, "SILENT profile activated ", Toast.LENGTH_LONG).show();
+                        } else if (((ToggleButton) view.findViewById(R.id.toggle_profile)).getText().toString().equals(getString(R.string.text_off))) {
+                            mobilemode.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                            Toast.makeText(mContext, "LOUD profile activated !", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Ask the user to grant access
+                        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                        startActivity(intent);
+                    }
                 }
             }
         });

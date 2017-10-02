@@ -4,93 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/layout_margin_seek"
-    android:layout_marginTop="@dimen/layout_margin_seek"
     android:orientation="vertical"
+    android:padding="@dimen/fab_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_advanced_settings">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/layout_wifi_setting"
+        <TextView
+            android:id="@+id/txtRadius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_seek"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:text="@string/geofence_radius_setting_description" />
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkAutoWifi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/wifi_setting_description"
-                android:textColor="?attr/checkbox_text_color" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_geofense_radius"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edtGeofenceRadius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_seek"
-            android:orientation="vertical">
+            android:hint="@string/geofence_radius_setting_description"
+            android:paddingBottom="@dimen/fab_margin" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_textview_desc"
-                android:layout_weight="0.95"
-                android:text="@string/geofence_radius_setting_description" />
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edtGeofenceRadius"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_left_edit_text"
-                android:layout_weight="0.95"
-                android:hint="@string/geofence_radius_setting_description" />
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkGeofenceRadius"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.05"
-                android:checked="false"
-                android:text="@string/geofence_radius_setting"
-                android:textColor="?attr/checkbox_text_color" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/chkGeofenceRadius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_seek"
-            android:orientation="horizontal">
+            android:checked="false"
+            android:paddingBottom="@dimen/fab_margin"
+            android:paddingTop="@dimen/fab_margin"
+            android:text="@string/geofence_radius_setting"
+            android:textColor="?attr/checkbox_text_color" />
 
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_change_theme"
-                android:layout_marginStart="@dimen/margin_change_theme"
-                android:gravity="center_vertical"
-                app:srcCompat="@drawable/ic_format_paint_black_24dp" />
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/chkAutoWifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:paddingBottom="@dimen/fab_margin"
+            android:paddingTop="@dimen/fab_margin"
+            android:text="@string/wifi_setting_description"
+            android:textColor="?attr/checkbox_text_color" />
 
-            <TextView
-                android:id="@+id/txtChangeTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_change_theme"
-                android:layout_marginStart="@dimen/margin_change_theme"
-                android:text="@string/change_theme" />
-
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/txtChangeTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:drawableStart="@drawable/ic_format_paint_black_24dp"
+            android:paddingBottom="@dimen/fab_margin"
+            android:paddingTop="@dimen/fab_margin"
+            android:text="@string/change_theme" />
 
     </LinearLayout>
 

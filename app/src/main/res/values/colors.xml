@@ -11,17 +11,17 @@
     <color name="icons">#3E50B4</color>
     <color name="divider">#BDBDBD</color>
 
-    <color name="primary_green">#FFFFFF</color>
-    <color name="primary_dark_green">#ff6f00</color>
-    <color name="primary_light_green">#ffb74d</color>
-    <color name="accent_green">#f44336</color>
-    <color name="accent_green_highlight">#ffcc80</color>
-    <color name="green_back">#ffa000</color>
-    <color name="primary_text_green">#FFFFFF</color>
-    <color name="secondary_text_green">#757575</color>
-    <color name="icons_green">#FFFFFF</color>
-    <color name="divider_green">#BDBDBD</color>
-    <color name="colorBackCard_green">#ff6d00</color>
+    <color name="primary_indigo">#3f51b5</color>
+    <color name="primary_dark_indigo">#3949ab</color>
+    <color name="primary_light_indigo">#5c6bc0</color>
+    <color name="accent_indigo">#2196f3</color>
+    <color name="accent_indigo_highlight">#90caf9</color>
+    <color name="indigo_back">#e3f2fd</color>
+    <color name="primary_text_indigo">#212121</color>
+    <color name="secondary_text_indigo">#757575</color>
+    <color name="icons_indigo">#2196f3</color>
+    <color name="divider_indigo">#BDBDBD</color>
+    <color name="colorBackCard_indigo">#82b1ff</color>
 
     <color name="primary_purple">#5e35b1</color>
     <color name="primary_dark_purple">#4527a0</color>

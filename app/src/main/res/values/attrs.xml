@@ -7,5 +7,7 @@
         <attr name="checkbox_text_color" format="color" />
         <attr name="card_view_back_color" format="color" />
         <attr name="card_view_title_text_color" format="color" />
+
+        <attr name="tab_color_unchecked" format="color" />
     </declare-styleable>
 </resources>

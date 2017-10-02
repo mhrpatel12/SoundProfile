@@ -30,7 +30,7 @@ public class BaseActivity extends AppCompatActivity {
         } else if (selectedTheme.equals(getString(R.string.theme_green))) {
             setTheme(R.style.PurpleTheme);
         } else if (selectedTheme.equals(getString(R.string.theme_purple))) {
-            setTheme(R.style.GreenTheme);
+            setTheme(R.style.IndigoTheme);
         }
         super.onCreate(savedInstanceState);
     }

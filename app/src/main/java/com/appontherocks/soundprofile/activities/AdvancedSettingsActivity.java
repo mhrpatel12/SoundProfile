@@ -108,7 +108,7 @@ public class AdvancedSettingsActivity extends BaseActivity implements GoogleApiC
             }
         });
 
-        ((AppCompatCheckBox) findViewById(R.id.chkGeofenceRadius)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((AppCompatCheckBox) findViewById(R.id.btnGeofenceRadius)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {

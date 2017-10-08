@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
@@ -116,13 +117,11 @@ public class AdvancedSettingsFragment extends Fragment implements GoogleApiClien
             }
         });
 
-        ((AppCompatCheckBox) view.findViewById(R.id.chkGeofenceRadius)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((AppCompatButton) view.findViewById(R.id.btnGeofenceRadius)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        fetchGeoFences();
-                    }
+            public void onClick(View view) {
+                if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    fetchGeoFences();
                 }
             }
         });

@@ -579,7 +579,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         SharedPreferences prefs = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE);
-        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_dark));
+        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_green));
         if (selectedTheme.equals(getString(R.string.theme_dark))) {
             MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.google_maps_night_mode);
             mMap.setMapStyle(style);

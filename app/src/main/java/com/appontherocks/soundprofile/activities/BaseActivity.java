@@ -23,7 +23,7 @@ public class BaseActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         SharedPreferences prefs = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE);
-        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_dark));
+        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_green));
 
         if (selectedTheme.equals(getString(R.string.theme_dark))) {
             setTheme(R.style.DarkTheme);

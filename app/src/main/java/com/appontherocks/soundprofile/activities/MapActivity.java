@@ -39,7 +39,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +103,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
 
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName() + "").draggable(true));
+                //mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName() + "").draggable(true));
                 CameraUpdate center = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16);
                 mMap.moveCamera(center);
                 circle = mMap.addCircle(new CircleOptions()
@@ -209,12 +208,22 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         SharedPreferences prefs = getSharedPreferences(getString(R.string.theme), MODE_PRIVATE);
-        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_dark));
+        String selectedTheme = prefs.getString(getString(R.string.theme), getString(R.string.theme_green));
         if (selectedTheme.equals(getString(R.string.theme_dark))) {
             MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(MapActivity.this, R.raw.google_maps_night_mode);
             mMap.setMapStyle(style);
         }
         mGoogleApiClient.connect();
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                latLng = new LatLng(mMap.getCameraPosition().target.latitude, mMap.getCameraPosition().target.longitude);
+                if (latLng != null && circle != null) {
+                    circle.setCenter(latLng);
+                }
+            }
+        });
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -264,7 +273,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         if (latLng != null) {
             CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 16);
 
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Sydney").draggable(true));
+            //mMap.addMarker(new MarkerOptions().position(latLng).title("Sydney").draggable(true));
             mMap.moveCamera(center);
 
             circle = mMap.addCircle(new CircleOptions()
@@ -277,7 +286,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
             latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 17);
 
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Sydney").draggable(true));
+            //mMap.addMarker(new MarkerOptions().position(latLng).title("Sydney").draggable(true));
             mMap.moveCamera(center);
 
             circle = mMap.addCircle(new CircleOptions()

@@ -39,6 +39,7 @@
     <color name="drawable_dark_light">#ffd54f</color>
 
     <color name="transpenrent_black">#B3000000</color>
+    <color name="transpenrent_black2">#33000000</color>
 
     <color name="authui_colorPrimary">#3E50B4</color>
     <color name="authui_colorPrimaryDark">#2F3E9E</color>

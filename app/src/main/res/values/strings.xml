@@ -174,4 +174,6 @@
     <string name="endHour">endHour</string>
     <string name="endMinute">endMinute</string>
     <string name="tooltip_geofence_radius">Ideal radius is 100 meters, keeping this value to very low will increase power consumption.</string>
+    <string name="no_profiles">It\'s lonely here !</string>
+    <string name="new_profile">Create new Profile Now.</string>
 </resources>

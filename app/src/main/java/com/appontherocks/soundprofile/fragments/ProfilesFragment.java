@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.appontherocks.soundprofile.R;
 import com.appontherocks.soundprofile.activities.BaseActivity;
@@ -35,6 +36,8 @@ public class ProfilesFragment extends Fragment {
     private ProfilesListAdapter profilesListAdapter;
     private ArrayList<SoundProfile> profileArrayList = new ArrayList<>();
 
+    private LinearLayout layoutNoProfiles;
+
     private View view;
 
     private Context mContext;
@@ -55,6 +58,8 @@ public class ProfilesFragment extends Fragment {
 
         profilesListAdapter = new ProfilesListAdapter(getActivity(), profileArrayList);
         recyclerViewProfiles.setAdapter(profilesListAdapter);
+
+        layoutNoProfiles = (LinearLayout) view.findViewById(R.id.layoutNoProfiles);
 
         return view;
     }
@@ -84,6 +89,13 @@ public class ProfilesFragment extends Fragment {
                     profileArrayList.remove(profileArrayList.size() - 1);
                 }
 
+                if (profileArrayList.size() == 0) {
+                    layoutNoProfiles.setVisibility(View.VISIBLE);
+                    recyclerViewProfiles.setVisibility(View.GONE);
+                } else {
+                    layoutNoProfiles.setVisibility(View.GONE);
+                    recyclerViewProfiles.setVisibility(View.VISIBLE);
+                }
                 profilesListAdapter.notifyDataSetChanged();
                 //FirebaseDatabase.getInstance().getReference().child("profiles").child(((BaseActivity) getActivity()).getUid()).removeEventListener(this);
             }

@@ -100,7 +100,7 @@ public class DashboardFragment extends Fragment {
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     ((BaseActivity) getActivity()).buildAlertMessageNoGps();
                 } else {
-                    SoundProfile profile = new SoundProfile("New Profile",//PROFILE NAME
+                    SoundProfile profile = new SoundProfile(getString(R.string.title_new_profile),//PROFILE NAME
                             false,//ACTIVE DEFAULT PROFILE ON UNKNOWN AREA ?
                             true, true, true, true, true, true, // DEFAULT VALUES FOR CHANGING SOUND SETTING
                             "0", "0", "0", "0", "0", "0", //DEFAULT VOLUME LEVEL
@@ -108,11 +108,11 @@ public class DashboardFragment extends Fragment {
                             "", "", //BLANK LATITUDE & LONGITUDE
                             defaultRintoneUri + "", defaultNotificationToneUri + ""); //DEFAULT RINGTONE URI
 
-                    String key = mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).push().getKey();
-                    mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).setValue(profile);
-                    mSoundProfileReference.child("profiles").child(((BaseActivity) getActivity()).getUid()).child(key).child("mKey").setValue(key + "");
+                    String key = mSoundProfileReference.child(getString(R.string.firebase_profiles)).child(((BaseActivity) getActivity()).getUid()).push().getKey();
+                    mSoundProfileReference.child(getString(R.string.firebase_profiles)).child(((BaseActivity) getActivity()).getUid()).child(key).setValue(profile);
+                    mSoundProfileReference.child(getString(R.string.firebase_profiles)).child(((BaseActivity) getActivity()).getUid()).child(key).child(getString(R.string.mKey)).setValue(key + "");
                     Intent intent = new Intent(mContext, NewProfileActivity.class);
-                    intent.putExtra("key", key + "");
+                    intent.putExtra(getString(R.string.key), key + "");
                     startActivity(intent);
                 }
             }

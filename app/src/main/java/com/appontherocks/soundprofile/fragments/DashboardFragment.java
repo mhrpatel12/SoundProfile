@@ -114,14 +114,6 @@ public class DashboardFragment extends Fragment {
                     Intent intent = new Intent(mContext, NewProfileActivity.class);
                     intent.putExtra("key", key + "");
                     startActivity(intent);
-                    /*NewProfileFragment newProfileFragment = new NewProfileFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(getString(R.string.key), key + "");
-                    newProfileFragment.setArguments(bundle);
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_Content, newProfileFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();*/
                 }
             }
         });
